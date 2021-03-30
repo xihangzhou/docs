@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type='text' id='i'>
+    <div id='content'>123</div>
+    <script>
+
+        let input = document.getElementById('i');
+        let content = document.getElementById('content');
+
+        let obj = {
+            name:'zxh'
+        }
+
+        //数据=>视图
+        Object.defineProperty(obj,'name',{
+            get:function(){
+                console.log('获取user')
+            },
+            set:function(val){
+                console.log('修改obj')
+                content.innerText=val;
+                input.value = val;
+            }
+        })
+
+        //视图=>数据
+        input.addEventListener('input',function(){
+            obj.name = input.value;
+        })
+    </script>
+</body>
+</html>

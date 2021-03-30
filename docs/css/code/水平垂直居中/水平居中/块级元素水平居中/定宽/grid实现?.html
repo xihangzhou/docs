@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #container{
+        /* 定义grid布局 */
+        display: grid;
+        /* 定义一个1X2的宽高为100的格子 */
+        grid-template-columns: 100px 100px;
+        grid-template-rows: 100px;
+        /* 把这个格子划在a,b区域 */
+        grid-template-areas: 'a a';
+        /* 把区域居中 */
+        justify-content: center;
+        /* 把单元格内的内容居中 */
+        justify-items: center;
+        background-color: blue;
+    }
+    #item1{
+        background-color: blueviolet;
+    }
+    #item2{
+        background-color:rgb(78, 53, 53);
+    }
+</style>
+<body>
+    <div id='container'>
+        <div id='item1'>
+            <p>123112312312312312312312</p>
+        </div>
+        <div id='item2'>
+            <p>234123123123213123</p>
+        </div>
+    </div>
+</body>
+</html>

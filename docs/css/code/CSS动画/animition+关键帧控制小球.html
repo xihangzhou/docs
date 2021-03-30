@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    .ball{
+        background-color: blue;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+    }
+
+        /* animation-name:  动画的名称（自定义@keyframes）
+       animation-duration  动画持续的时间(单位s   0.2s =  .2s)
+       animation-timing-function 动画曲线
+       animation-delay: 动画延迟的时间
+       animation-iteration-count: infinite; 运动次数 无限次
+       animation-direction: alternate; 动画的交替运动
+        animation-play-state: paused /running;   动画的运动/暂停
+        animation-fill-mode: forwards/both;  动画运动完之后 状态:  forwards  停在结束100%的位置
+                             backwards  停在开始0%的位置  
+     */
+
+     .ball{
+         animation-name: Move;
+         animation-duration: 3s;
+         animation-timing-function: linear;
+         animation-iteration-count: infinite;
+         animation-direction:alternate ;
+     }
+
+    @keyframes Move {
+        0%{
+            transform: translate(0) rotate(0);
+        }
+        50%{
+            transform: translate(100px,0px) rotate(45deg);
+        }
+        100%{
+            transform: translate(200px,0px) rotate(90deg);
+            background-color: red
+        }
+
+    }
+</style>
+<body>
+    <div class='ball'></div>
+</body>
+</html>

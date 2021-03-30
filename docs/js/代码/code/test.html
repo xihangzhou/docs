@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <style >
+            #box{
+                width: 100px;
+                height: 100px;
+                background-color: pink;
+                position: absolute;/* 开启box1的绝对定位*/
+            }
+            
+        </style>
+        
+        <script >
+            window.onload = function(){
+                
+                /*使div可以跟随鼠标移动 */
+                
+                /*获取box*/
+                var box = document.getElementById("box");
+                //绑定鼠标移动事件
+                document.onmousemove = function(event){
+                    /*获取到鼠标的坐标 */
+                    var left = event.clientX;
+                    var　top = event.clientY;
+                    //设置div的偏移量
+                    box.style.left = left  + "px";
+                    box.style.top = top  + "px";
+/*必须要加单位px,否则显示不出来*/
+                    
+                };
+            };
+        </script>
+    </head>
+    <body >
+        <div id="box"></div>
+    </body>
+</html>

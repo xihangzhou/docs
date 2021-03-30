@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .header {
+            background-color: pink;
+            line-height: 200px;
+            height: 200px;
+            font-size: 0px;
+            color: white;
+        }
+
+        .toggle-menu{
+            margin-left: 10px;
+            display: inline-block;
+            font-size: 20px;
+            width: 50px;
+            height: 50px;
+            color: white;
+            background-color: black;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 50px;
+        }
+
+        .welcome{
+            margin-left:10px ;
+            vertical-align: middle;
+            display: inline-block;
+            line-height: 200px;
+            font-size: 2vw;
+        }
+
+        .main {
+            overflow: hidden;
+            display: flex;
+        }
+
+        .menu {
+            background-color: #5ed5e4;
+            flex:0 0 140px;
+        }
+
+        .menu .li{
+            border-bottom:1px solid white ;
+        }
+
+
+        .nav {
+            background-color: wheat;
+            overflow: hidden;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .nav .box {
+            flex-grow: 1;
+            flex-shrink: 1;
+            /* flex-basis: 50%; */
+            min-width: 160px;
+            box-sizing: border-box;
+            text-decoration: none;
+            text-align: center;
+            height: 100px;
+            font-size: 18px;
+            line-height: 100px;
+            border: 1px solid black;
+        }
+
+        @media screen and (min-width: 500px){
+            .toggle-menu{
+                display: none;
+            }
+        }
+
+        @media screen and (max-width: 500px){
+            .toggle-menu{
+                display: inline-block;
+            }
+
+            .menu{
+                display: none;
+            }
+        }
+    </style>
+    <div class="MLGB">
+        <!-- 头部 -->
+        <div class="header">
+            <div class='toggle-menu'>菜</div>
+            <p class='welcome'>欢迎大家来到，双十一天猫主会场！</p>
+        </div>
+        <div class='main'>
+            <div class="menu">
+                <div class="li">购物车</div>
+                <div class="li">我的收藏</div>
+                <div class="li">浏览记录</div>
+                <div class="li">已经购买</div>
+                <div class="li">设置</div>
+                <div class="li">退出</div>
+            </div>
+            <!-- 分会场入口 -->
+            <div class="nav">
+                <a class="box" href="##">鞋子</a>
+                <a class="box" href="##">箱包</a>
+                <a class="box" href="##">数码</a>
+                <a class="box" href="##">服装</a>
+                <a class="box" href="##">乐器</a>
+                <a class="box" href="##">户外</a>
+                <a class="box" href="##">家具</a>
+                <a class="box" href="##">家具</a>
+                <a class="box" href="##">影视</a>
+                <a class="box" href="##">美食</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

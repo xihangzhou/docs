@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <header>header</header>
+    <div class="box">
+        <div class="left">left</div>
+        <div class="content">content</div>
+        <div class="right">right</div>
+    </div>
+    <footer>footer</footer>
+
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+
+        .box {
+            position: relative;
+        }
+
+        header,
+        footer {
+            background-color: green;
+            min-height: 100px;
+        }
+
+        footer {
+            position: absolute;
+            top: 200px;
+            width: 100%;
+        }
+
+        /* step1:定义三栏绝对定位*/
+        .box>div {
+            /* 最小高度  */
+            min-height: 100px;
+            position: absolute;
+        }
+
+        /* step2:设定left的宽度和right宽度并设置left:0px,right:0px使其贴住容器两侧 */
+        .left {
+            left: 0px;
+            width: 100px;
+            background: red;
+        }
+
+        /* step3:让中间一栏的两侧距离容器一段距离，这段距离正好使左右两栏各自的宽度 */
+        .content {
+            left: 100px;
+            right: 100px;
+            background: yellow;
+        }
+
+        .right {
+            right: 0px;
+            width: 100px;
+            background: blue;
+        }
+    </style>
+
+</body>
+
+</html>

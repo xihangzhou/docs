@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>左右定宽 中间自适应-四种方法(左中右结构)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* float + position + flex + grid
+    calc()
+    */
+        #parent {
+            overflow: hidden;
+            padding: 0px 200px;
+        }
+
+        #left {
+            position: relative;
+            left: -200px;
+            width: 200px;
+            height: 500px;
+            background-color: blueviolet;
+            margin-left:-100%;
+        }
+
+        #center {
+            height: 500px;
+            background-color: blue;
+            /* 注意这里宽度要给百分百，因为设置了浮动块级元素不能自动占满一行 */
+            /* 自我扩展伸缩的父级宽度是可以通过百分比获取的，但是高度不行 */
+            width: 100%;
+        }
+
+        #right {
+            position: relative;
+            left: 200px;
+            width: 200px;
+            height: 500px;
+            margin-left:-200px ;
+            background-color: greenyellow;
+        }
+
+        /* 注意是三个元素都要浮动，这样左右两个元素才能通过负margin上来，否则就会一直在一行移动 */
+        #left,#right,#center {
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 设计思想 - center优先加载 dom结构靠前 这就是圣杯的意义 -->
+    <div id="parent">
+      <div id="center"></div>
+      <div id="left"></div>
+      <div id="right"></div>
+  </div>
+</body>
+
+</html>

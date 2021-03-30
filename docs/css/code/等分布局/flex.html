@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>等分布局解决方法3-flex</title>
+  <style>
+    *{margin: 0;padding: 0;}
+    #parent>div:nth-child(2n){background-color: greenyellow;}
+    #parent>div:nth-child(2n+1){background-color: gold;}
+
+    /*同样用margin-left清除第一个morder  */
+    #parent{display: flex;margin-left: -10px;}
+    #parent>div{flex:1;height:500px;border-left:10px solid #fff}
+  </style>
+</head>
+
+<body>
+  <!-- 作为父级容器 -->
+  <div id="parent">
+    <div class="col1">
+    </div>
+    <div class="col2">
+    </div>
+    <div class="col3">
+    </div>
+    <div class="col4">
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        #clock{
+            width:500px;
+            height:500px;
+        }
+        #second{
+            width:2px;
+            height:100%;
+            background-color:black;
+            margin:auto;
+            animation:rotate 60s linear infinite;
+        }
+    @keyframes rotate{
+        0%{
+            transform:rotate(0deg);
+        }
+        100%{
+            transform:rotate(360deg);
+        }
+    }
+    </style>
+    <div id='clock'>
+        <div id='second'> </div>
+    </div>
+</body>
+</html>

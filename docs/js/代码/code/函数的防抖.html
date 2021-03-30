@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="button" id='bt'>
+    <script>
+        //防抖分两种：一种是立即执行一次，然后必须在wait时间内不触发事件才能执行下一次
+        //另外一种是延后执行，即是在wait事件内不触发事件才能执行最近的一次事件的对应方法
+        function debounce(func, wait, immediate) {
+            //用闭包存储timeout
+            let timeout = null;
+            return function (...args) {
+
+                //注意每次都要清除计时器使得多触发的事件的方法不执行
+                clearTimeout(timeout);
+
+                if (immediate) {
+                    //timeout为null才执行
+                    if (!timeout) {
+                        func.apply(this, args);
+                    }
+                    timeout = setTimeout(_ => {
+                        timeout = null;
+                    }, wait);
+                } else {
+                    timeout = setTimeout(() => {
+                        func.apply(this, args);
+                    }, wait);
+                }
+            }
+        }
+
+        let a = '1';
+        document.querySelector('#bt').onclick = debounce(function () {
+            //这个this应该指向元素
+            console.log(this);
+        }, 1000, true);
+    </script>
+</body>
+
+</html>

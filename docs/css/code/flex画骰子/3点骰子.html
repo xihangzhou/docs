@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flex画骰子</title>
+</head>
+<style>
+    .dice{
+        background-color: blanchedalmond;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        justify-content: space-between;
+        border-radius: 5%;
+        padding:10px;
+    }
+    .dot{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: black;
+    }
+    .dot:nth-child(2){
+        align-self:center;
+    }
+    .dot:nth-child(3){
+        align-self:flex-end;
+    }
+</style>
+<body>
+    <div class='dice'>
+        <div class='dot'></div>
+        <div class='dot'></div>
+        <div class='dot'></div>
+    </div>
+</body>
+</html>

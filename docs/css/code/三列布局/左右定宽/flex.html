@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>左右定宽 中间自适应-四种方法(左中右结构)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #parent {
+            display: flex;
+            overflow: hidden;
+        }
+
+        #left {
+            order: 1;
+            flex:0 0 200px;
+            height: 500px;
+            background-color: blueviolet;
+        }
+
+        #center {
+            order: 2;
+            flex:1;
+            background-color: brown;
+            height: 500px;
+        }
+
+        #right {
+            order: 3;
+            flex:0 0 200px;
+            width: 200px;
+            height: 500px;
+            background-color: greenyellow;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 设计思想 - center优先加载 dom结构靠前 这就是圣杯的意义 -->
+    <div id="parent">
+        <div id="center"></div>
+        <div id="left"></div>
+        <div id="right"></div>
+    </div>
+</body>
+
+</html>

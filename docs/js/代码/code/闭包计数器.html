@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    function main(){
+        function create_counter(x){
+            x = x || 0;
+            return () => {
+                return x++;
+            }
+        }
+        var a = 1;
+        var counter = create_counter(0);
+        console.log(counter());
+        console.log(counter());
+        console.log(counter());
+        console.log(counter());
+    }
+    main();
+    var a = {a:1,b:2};
+    console.log(JSON.stringify(a));
+    </script>
+</body>
+</html>

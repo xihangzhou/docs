@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <p>ajax实现</p>
+    <script>
+        //要用open with live server打开不然的话域名协议端口都为null都没有肯定发什么请求都是跨域
+        function ajax(url) {
+            return new Promise((resolve, reject) => {
+                console.log(1);
+                let x = new XMLHttpRequest();
+                x.open('GET',url);
+                x.withCredentials = true;
+                x.onreadystatechange = () => {
+                    if (x.readyState === 4) {
+                        if (x.status === 200) {//注意是数组不是字符串
+                            console.log(2)
+                            resolve(JSON.parse(x.responseText));//如果不解析得到的就是字符串，解析得到对象
+                        }
+                    }else if(x.status === 404 || x.status === 500){
+                        reject(new Error('404 not found'));
+                    }
+                }
+                x.send();
+            })
+        }
+        const url = 'https://www.baidu.com/'
+        ajax(url)
+            .then(res => console.log(res))
+            .catch(err => console.error(err))
+
+    </script>
+</body>
+
+</html>

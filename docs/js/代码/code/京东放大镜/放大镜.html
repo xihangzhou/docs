@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .container {
+        overflow: hidden;
+        position: relative;
+    }
+
+    .display{
+        vertical-align: middle;
+    }
+    .wrapper {
+        position: relative;
+        float: left;
+    }
+
+    .mark {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 500px;
+        height: 500px;
+        z-index: 10;
+        opacity: 0;
+    }
+
+    .glass {
+        float: left;
+        margin-left: 10px;
+        overflow: hidden;
+        background-image: url(./img/glgodpclov.jpeg);
+        background-size: 1000px 1000px;
+        background-repeat: no-repeat;
+        width: 500px;
+        height: 500px;
+    }
+
+    #box {
+        visibility: visible;
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background-color: rgba(1, 1, 1, 0.5);
+    }
+</style>
+
+<body>
+    <div class='container'>
+        <div class='wrapper'>
+            <img class='display' src='./img/glgodpclov.jpeg'>
+            <div id='box'></div>
+        </div>
+        <!-- 注意这个mark的使用很重要，要让它覆盖下面的内容，这样才不会频繁触发mouseover事件 -->
+        <div class='mark'></div>
+        <div class='glass'>
+        </div>
+    </div>
+    <script>
+        // 实现一个绝对定位元素跟ele在taregt元素内随鼠标移动的函数
+        function followMouse(ele, target) {
+            // 首先获取鼠标相对视口的位置
+            // 注意mousemove事件触发是指的是在元素上移动，所以要用document来监听
+            // 通过把函数写成目标对象的一个属性的形式，可以在移除的时候只移除这一个行为
+            let paramBigger = 2;//放大系数
+            ele.followMouseFunc = function () {
+                // 获取鼠标相对于视口的距离
+                let mouseClientX = event.clientX;
+                let mouseClientY = event.clientY;
+                // 获取target元素相对于视口的距离
+                let pos = target.getBoundingClientRect();
+                let targetClientX = pos.left;
+                let targetClientY = pos.top;
+                //获取鼠标相对于target元素的距离
+                let relaLeft = mouseClientX - targetClientX;
+                let relaTop = mouseClientY - targetClientY;
+                //获取ele元素的宽高半径
+                let eleWidth = ele.offsetWidth;
+                let eleHeight = ele.offsetHeight;
+                //获取target元素的宽高
+                let targetWidth = target.offsetWidth;
+                let targetHeight = target.offsetHeight;
+                // 获取ele元素左边到target元素左边的距离和上边到上边的距离
+                let left = relaLeft - eleWidth / 2;
+                let top = relaTop - eleHeight / 2;
+                // ele的left的左上边界范围
+                let leftDown = 0;
+                let leftUp = targetWidth - eleWidth;
+                let topDown = 0;
+                let topUp = targetHeight - eleHeight;
+                // 确定ele的左上距离
+                if (left < leftDown) left = leftDown;
+                if (left > leftUp) left = leftUp;
+                if (top < topDown) top = topDown;
+                if (top > topUp) top = topUp;
+                ele.style.left = left + 'px';
+                ele.style.top = top + 'px';
+                //实现放大镜图片的等比例移动
+                let glass = document.getElementsByClassName('glass')[0];
+                let moveParamX = (targetWidth * paramBigger - targetWidth) / (targetWidth - eleWidth);
+                let moveParamY = (targetHeight * paramBigger - targetHeight) / (targetHeight - eleHeight);
+                console.log('left:', moveParamX);
+                console.log('top:', moveParamY);
+                glass.style.backgroundPosition = `${-1 * moveParamX * left}px  ${-1 * moveParamY * top}px`;
+            };
+            document.addEventListener('mousemove', ele.followMouseFunc)
+        }
+
+        function unfollowMouse(ele) {
+            document.removeEventListener('mousemove', ele.followMouseFunc);
+        }
+
+        //实现
+        window.onload = function () {
+            let mark = document.getElementsByClassName('mark')[0];
+            let box = document.getElementById('box');
+            let wrapper = document.getElementsByClassName('wrapper')[0];
+
+            mark.addEventListener('mouseenter', function () {
+                box.style.visibility = 'visible';
+                followMouse(box, wrapper);
+            })
+            mark.addEventListener('mouseout', function () {
+                box.style.visibility = 'hidden';
+                unfollowMouse(box);
+            })
+        }
+    </script>
+</body>
+
+</html>

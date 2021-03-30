@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .container{
+        overflow: hidden;
+        /* 采用绝对定位占满整个屏幕 */
+        /* position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0; */
+    }
+
+    .left,.right{
+        word-break: break-all;
+        /* 采用-margin的方式实现两列等高 */
+        margin-bottom: -100000px;
+        padding-bottom: 100000px;
+    }
+    .left{
+        width: 100px;
+        background-color:green;
+        font-size: 30px;
+        float: left;
+    }
+    .right{
+        margin-left:100px;
+        /* 利用了block元素自动占满一行和BFC不容纳float元素来实现*/
+        overflow: hidden;
+        background-color: brown;
+    }
+</style>
+
+<body>
+    <div class="container">
+
+        <div class="left">
+
+            leftwdqwdqwdqwdqwdqwdqsdsqdqwdqwdqwd
+
+        </div>
+
+        <div class="right">
+
+            right
+
+        </div>
+
+    </div>
+</body>
+
+</html>

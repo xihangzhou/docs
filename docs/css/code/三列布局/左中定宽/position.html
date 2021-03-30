@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <style>
+        /* 左中 定宽   右自适应 */
+        /* 可以用float决定左右位置，也可以用position对三列位置同时进行定义 */
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #left {
+            width: 200px;
+            height: 400px;
+            background-color: saddlebrown;
+        }
+
+        #center {
+            width: 200px;
+            height: 400px;
+            background-color: green;
+        }
+
+        #right {
+            height: 600px;
+            background-color: blue;
+            position: absolute;
+            left: 400px;
+            right: 0px;
+            top:0px;
+        }
+
+        #left,
+        #center {
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="parent">
+        <div id="left"></div>
+        <div id="center"></div>
+        <div id="right"></div>
+    </div>
+</body>
+
+</html>

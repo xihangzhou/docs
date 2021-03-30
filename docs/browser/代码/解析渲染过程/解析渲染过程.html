@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>js阻塞</title>
+</head>
+<body>
+	<div id="wrapper">
+		<script defer src='./script1.js'></script>
+		<p id='p1'>line1</p>
+		<script async src='./script2.js'></script>
+		<p id='p2'>line2</p>
+		<script src='./script3.js'></script>
+		<p id='p3'>line3</p>
+		<script src='./script4.js'></script>
+		<p id='p4'>line4</p>
+		<script src='./script5.js'></script>
+		<p id='p5'>line5</p>
+	</div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="button" id='bt'>
+    <script>
+        //方法1:使用计时器
+        //函数的节流：执行了一个函数过后要等wait才能执行
+        function throttle1(func, wait) {
+            //注意1: 要用闭包把timeout的值保存下来
+            let timeout = null;
+            return function (...args) {
+
+                if (!timeout) {
+                    //注意2:此时匿名闭包函数的this指向的是对应的元素，要让func函数执行的时候也指向这个元素
+                    func.apply(this, args);
+                    //注意3:setTimeout的返回值timeoutID是一个正整数，表示定时器的编号。
+                    timeout = setTimeout(() => {
+                        //计时结束过后清除这个计时器,但是timeout的值还是为这个正整数
+                        clearTimeout(timeout);
+                        //需要手动把这个值清除设置为null
+                        timeout = null;
+                    }, wait);
+                }
+
+            }
+        }
+
+        //方法2:使用日期
+        function throttle2(func, wait) {
+            //同样要用闭包保存
+            let pre = 0;
+            return function (...args) {
+                //Date.now()是返回一个距离1970年1月1号的秒数时间，是number
+                let now = Date.now();
+                console.log()
+                if(now - pre > wait){
+                    func.apply(this,args);
+                    pre = now;
+                }
+            }
+        }
+
+        let a = '1';
+        document.querySelector('#bt').onclick = throttle1(function () {
+            //这个this应该指向元素
+            console.log(this);
+        }, 1000,1);
+    </script>
+</body>
+
+</html>

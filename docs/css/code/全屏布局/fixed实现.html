@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>全屏布局解决方案-定位position:fixed</title>
+    <style>
+        /*  定位 - 同时设置方位  fixed/absolute */
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* left:0;right:0; = width:100% */
+        header,
+        footer {
+            position: fixed;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background-color: rosybrown;
+        }
+
+        header {
+            top: 0;
+        }
+
+        footer {
+            bottom: 0;
+        }
+
+        /* left:0;right:0;top:80px;bottom:80px;   =  width:100%;height:100% - 80px - 80px */
+        .content {
+            background-color: royalblue;
+            position: fixed;
+            top: 80px;
+            bottom: 80px;
+            left: 0px;
+            right: 0px;
+        }
+
+        .left {
+            width: 80px;
+            height: 100%;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <header></header>
+    <div class="content">
+        <!-- 左定宽  右自适应 -->
+        <div class="left">
+            <ul>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+                <li>珠峰培训</li>
+            </ul>
+        </div>
+        <div class="right"></div>
+    </div>
+    <footer></footer>
+</body>
+
+</html>

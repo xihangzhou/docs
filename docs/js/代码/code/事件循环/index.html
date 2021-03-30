@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id='box'></div>
+</body>
+<script>
+    let box = document.getElementById('box');
+    box.textContent = 'display';
+    setTimeout(()=>{alert('宏任务执行')},0)
+    Promise.resolve().then(()=>{
+        alert('微任务执行');
+    })
+    Promise.resolve().then(()=>{
+        alert('微任务执行');
+    })
+    Promise.resolve().then(()=>{
+        alert('微任务执行');
+    })
+    Promise.resolve().then(()=>{
+        alert('微任务执行');
+    })
+</script>
+</html>

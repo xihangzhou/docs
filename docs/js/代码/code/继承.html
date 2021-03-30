@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function SuperType(name) {
+            this.name = name;
+        }
+
+        SuperType.prototype.sayname = function () {
+            alert(this.name);
+        }
+
+        //组合继承
+        function SubType1(name, age) {
+            SuperType.call(this, name);
+            this.age = age;
+        }
+
+        SubType1.prototype = new SuperType();
+        SubType1.prototype.constructor = SubType1;
+
+        SubType1.prototype.sayage = function () {
+            alert(this.age);
+        }
+
+        //寄生组合
+        function SubType2(name, age) {
+            SuperType.call(this, name);
+            this.age = age;
+        }
+
+        SubType2.prototype = Object.create(SuperType.prototype);
+        SubType2.prototype.constructor = SubType2;
+
+        SubType2.prototype.sayage = function () {
+            alert(this.age);
+        }
+
+        //ES6 class
+        class Person {
+            constructor(name, gender) {
+                this.name = name;
+                this.gender = gender;
+            }
+            sayName() {
+                console.log(this.name);
+            }
+        }
+        class Student extends Person {
+            constructor(name, gender, grade) {
+                super(name, gender);
+                this.grade = grade;
+            }
+
+            sayGrade() {
+                console.log(this.grade);
+            }
+        }
+
+        let s = new SuperType();
+        let sub1 = new SubType1();
+        let sub2 = new SubType2();
+        let student = new Student();
+        console.log(s);
+        console.log(sub1);
+        console.log(sub2);
+        console.log(student);
+    </script>
+
+</body>
+
+</html>

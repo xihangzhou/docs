@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function Person(name) {
+            this.getName = function () {
+                return name;
+            }
+            this.setName = function (newName) {
+                name = newName;
+            }
+        }
+
+        let person = new Person("zz");
+        console.log(person.getName());
+        person.setName("zxh");
+        console.log(person.getName());
+        for (var i = 0; i < 10; i++) {
+            ((j) => {
+                setTimeout(function () {
+                    console.log(j)//1-10
+                }, 1000)
+            })(i)
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src='./手写jsonp.js'></script>
+    <script>
+        function jsonp(url, data, callback = 'callback') {
+            //首先处理data对象
+            data.callback = callback;//给data对象一个callback属性值为callback
+            //提取参数
+            let params = [];
+            for (let key in data) {
+                params.push(`${key}=${data[key]}`);
+            }
+            let script = document.createElement('script');
+            script.src = url + '?' + params.join('&');
+            document.body.appendChild(script);
+            return new Promise((resolve, reject) => {
+                //这个地方相当与把resolve和reject方法放在闭包传给了window的callback方法中，用window.callback方法来触发
+                window[callback] = (result) => {
+                    // try{
+                    //     resolve(result);
+                    // }catch(error){
+                    //     reject(error.message);
+                    // }finally{
+                    //     script.parentNode.removeChild(script);
+                    //     console.log(script);
+                    // }
+                    if(result === undefined){
+                        reject('no result');
+                    }else{
+                        resolve(result);
+                    }
+                    script.parentNode.removeChild(script);
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

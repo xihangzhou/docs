@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #test {
+        width: 0px;
+        height: 0px;
+        /* 背景色包括border */
+        background-color: blue;
+        border: 100px solid transparent;
+        border-top-color:green;
+    }
+
+    /* 上 */
+    #triangle1 {
+        width: 0px;
+        height: 0px;
+        border: 250px solid transparent;
+        border-top-color: red;
+    }
+
+    /* 右 */
+    #triangle2 {
+        width: 0px;
+        height: 0px;
+        border: 250px solid transparent;
+        border-right-color: red;
+    }
+
+    /* 下 */
+    #triangle3 {
+        width: 0px;
+        height: 0px;
+        border: 250px solid transparent;
+        border-bottom-color: red;
+    }
+
+    /* 左 */
+    #triangle4 {
+        width: 0px;
+        height: 0px;
+        border: 250px solid transparent;
+        border-left-color: red;
+    }
+</style>
+
+<body>
+    <div>
+        <div id='triangle1'></div>
+        <div id='triangle2'></div>
+        <div id='triangle3'></div>
+        <div id='triangle4'></div>
+    </div>
+    <div id='test'></div>
+</body>
+
+</html>

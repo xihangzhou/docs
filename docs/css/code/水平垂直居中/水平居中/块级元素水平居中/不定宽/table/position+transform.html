@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #parent {
+        background-color: red;
+        position: relative;
+        width: 1000px;
+        height: 500px;
+    }
+
+    #block {
+        background-color: blue;
+        position: absolute;
+        left: 50%;
+        width: 100px;
+        /* 不需要知道宽高 */
+        /* 向左平移本来元素的宽度的一半*/
+        /* 元素宽度会随着内容自动扩展 */
+        transform: translate(-50%, 0);
+        /* margin-left: -50px; */
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div id='parent'>
+        <div id='block'>123</div>
+    </div>
+
+</body>
+
+</html>

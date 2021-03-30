@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>等高布局解决方案2-margin+padding</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    #left{background-color: gold;}
+    #right{background-color: blue;}
+    /* margin 负值技巧  margin-top/bottom/left/right :  负值
+       padding : 计算在实际宽度里面
+
+       overflow: hidden;   伪等高布局
+      1.清除浮动
+      2.溢出隐藏
+    */
+   #parent{overflow: hidden;}
+    #left,#right{float:left;width:400px;padding-bottom:9999px;margin-bottom:-9999px;}
+  </style>
+</head>
+
+<body>
+  <div id="parent">
+    <div id="left">zhfueng</div>
+    <div id="right">Never underestimate your power to change?Whatever is worth doing is worth doing well.Never
+      underestimate your power to change?Whatever is worth doing is worth doing well.Never underestimate your power to
+      change?Whatever is worth doing is worth doing wellNever underestimate your power to change?Whatever is worth doing
+      is worth doing well.Never underestimate your power to change?Whatever is worth doing is worth doing well.Never
+      underestimate your power to change?Whatever is worth doing is worth doing well.hgfgfhgftfutfutftfutfutfutfutfutfutfutfut</div>
+  </div>
+</body>
+
+</html>

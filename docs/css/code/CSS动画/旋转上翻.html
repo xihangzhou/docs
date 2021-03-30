@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+                    /* CSS属性名称： 指定 +  多于1个及以上   =>  all 
+               CSS动画运动的曲线  transition-timing-function: ;
+               +  ease  匀速曲线
+               +  ease-in
+               +  ease-out
+               +  ease-in-out
+               +  linear     线性曲线
+               +  贝塞尔曲线
+
+               技巧: 控制台F12/ 鼠标右建 - 检查   esc  可以调取  aninmations面板   - 专门用来调式动画
+
+             */
+            /* transition:all 1s ease 2s; */
+        .bar {
+            width: 100px;
+            height: 100px;
+            position: fixed;
+            bottom: 300px;
+            right: 20px;
+            overflow: hidden
+        }
+
+        .icon,
+        .bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%
+        }
+
+        .icon {
+            background-color: blue;
+        }
+
+        .bg {
+            background-color: rgba(255, 255, 255, .5);
+            /* 固定的原点  bg围绕这个点进行的旋转 */
+            transform-origin: left bottom;
+            /*角度旋转的动画  =>  角度让bg 隐藏下icon模块的下面*/
+            transform: rotate(90deg);
+            transition:transform 1s ease;
+        }
+
+        .bar:hover .bg {
+            /* 结合transition过渡 */
+            transform:rotate(0deg)
+        }
+    </style>
+    <div class="bar">
+        <div class="icon"></div>
+        <div class="bg"></div>
+    </div>
+</body>
+
+</html>

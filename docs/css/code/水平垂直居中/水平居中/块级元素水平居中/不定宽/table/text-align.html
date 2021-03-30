@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #block{
+        background-color: blue;
+        /* 对子元素的内联元素居中*/
+        text-align: center;
+    }
+
+    p{
+        /* 把子元素居中，强行转换成内联的方式 */
+        /* inline的宽高只会根据需要自动定义不能设置但是inline-block可以设置宽高 */
+        display: inline-block;
+    }
+
+</style>
+<body>
+    <div id = 'block'>
+        <p>123</p>
+    </div>
+    
+</body>
+</html>

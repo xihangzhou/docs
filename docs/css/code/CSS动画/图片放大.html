@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        .wrap {
+            width: 1226px;
+            margin: 0 auto;
+        }
+
+        .item {
+            float: left;
+            width: calc(33.33% - 20px);
+            height: 234px;
+            margin-left: 20px;
+            overflow: hidden
+        }
+
+        .item:first-child {
+            margin: 0;
+        }
+
+        .item img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            transition: all 1s ease;
+        }
+
+        .item:hover img {
+            /* 结合 transition 过渡  */
+            transform: scale(1.5);
+
+        }
+    </style>
+    <div class="wrap">
+        <div class="inner">
+            <div class="item">
+                <img src="https://s.syzs.qq.com/syzs_cms/202011/1endbjnp00.r3bit9dsjvg.jpeg" alt="">
+            </div>
+            <div class="item">
+                <img src="https://s.syzs.qq.com/syzs_cms/202011/1endbjnp00.r3bit9dsjvg.jpeg" alt="">
+            </div>
+            <div class="item">
+                <img src="https://s.syzs.qq.com/syzs_cms/202011/1endbjnp00.r3bit9dsjvg.jpeg" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

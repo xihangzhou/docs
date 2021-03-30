@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>左右定宽 中间自适应-四种方法(左中右结构)</title>
+    <style>
+        /* 总结：
+     双飞翼把圣杯的定位位移的属性给优化掉了  margin + padding
+  */
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #parent {
+            overflow: hidden;
+        }
+
+        #left {
+            width: 200px;
+            height: 500px;
+            background-color: blueviolet;
+            margin-left: -100%;
+        }
+
+        #center {
+            background-color: brown;
+            height: 500px;
+            width: 100%;
+        }
+
+        #content {
+            /* 一定要注意这个padding是加在要展示的那个box上 */
+            padding: 0px 200px;
+            height: 500px;
+            background-color: blue;
+        }
+
+        #right {
+            width: 200px;
+            height: 500px;
+            margin-left: -200px;
+            background-color: greenyellow;
+        }
+
+        #left,
+        #right,
+        #center {
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 设计思想 - center优先加载 dom结构靠前 这就是圣杯的意义 -->
+    <div id="parent">
+        <div id="center">
+            <div id='content'></div>
+        </div>
+        <div id="left"></div>
+        <div id="right"></div>
+    </div>
+</body>
+
+</html>

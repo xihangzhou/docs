@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* 150px或50%是最大的合理半径 */
+    .circle1{
+        text-align: center;
+        line-height: 300px;
+        width: 300px;
+        height: 300px;
+        border-radius: 150px;
+        background-color: rosybrown;
+    }
+    /* 若超过了150px浏览器会默认调整到150px，所以还是圆 */
+    .circle2{
+        text-align: center;
+        line-height: 300px;
+        width: 300px;
+        height: 300px;
+        border-radius: 300px;
+        background-color: rosybrown;
+    }
+</style>
+<body>
+    <div class='circle1'>半径为150px</div>
+    <div class='circle2'>半径为300px</div>
+</body>
+</html>

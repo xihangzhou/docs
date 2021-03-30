@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>等分布局解决方法1-float+width</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .col1 {
+      background-color: hotpink;
+    }
+
+    .col2 {
+      background-color: lightblue;
+    }
+
+    .col3 {
+      background-color: green;
+    }
+
+    .col4 {
+      background-color: yellow;
+    }
+
+    .col5 {
+      background-color: pink;
+    }
+
+    #parent>div{
+        float: left;
+        width: 20%;
+        padding-left: 10px;
+        box-sizing: border-box;
+    }
+
+    /* 用这个margin-left来清除第一个空白，块级元素使用负的margin-left了之后先移动再尝试占满一行 */
+    #parent{
+        margin-left:-10px;
+    }
+    /* float / display:inline-block
+    盒子模型    width/height/padding/border/margin box-sizing:border-box/content-box
+    盒模型布局  display:box / flex
+    */
+    .col1,.col2,.col3,.col4,.col5{height:400px;}
+  </style>
+</head>
+
+<body>
+  <!-- 作为父级容器 -->
+  <div id="parent" class="clearfix">
+    <!-- 用个div包起来从而用padding-left区分背景颜色 -->
+    <div><div class="col1"></div></div>
+    <div><div class="col2"></div></div>
+    <div><div class="col3"></div></div>
+    <div><div class="col4"></div></div>
+    <div><div class="col5"></div></div>
+  </div>
+</body>
+
+</html>

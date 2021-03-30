@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+         * {
+      margin: 0;
+      padding: 0;
+    }
+    body{
+      background-color: #000;
+    }
+    li {
+      list-style: none;
+    }
+
+    .main {
+      margin: 50px auto 0;
+      overflow: hidden;
+      width: 1226px
+    }
+
+    .left {
+      float: left;
+      width: 234px;
+      height: 614px;
+      background-color: gold;
+    }
+
+    .right {
+      float: left;
+      width: 992px;
+      height: 614px;
+    }
+
+    .right li {
+      float: left;
+      width: 234px;
+      height: 260px;
+      background-color: green;
+      padding: 20px 0;
+      margin: 0 0 14px 14px;
+       /* css属性 :transform  0,0  =>  0 -5  
+       技巧: 为了鼠标移入移出中都有过渡动画的效果 - transition加在没有hover元素本身的身上
+        */
+      transition: all 0.2s ease;
+    }
+
+    .right li:hover {
+      /* transition 一起使用 - 过渡 */
+      /* transform: translateY(-5px); */
+      transform: translate(0,-5px);
+    }
+
+    </style>
+    <div class="main">
+        <div class="left"></div>
+        <div class="right">
+          <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </div>
+      </div>
+</body>
+</html>

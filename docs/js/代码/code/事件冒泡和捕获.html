@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>事件冒泡</title>
+</head>
+
+<body>
+	<div id="obj1">
+		外层文本
+		<div id="obj2">第一段文本</div>
+		<div id="obj3">第二段文本</div>
+	</div>
+</body>
+<script type="text/javascript">
+	var obj1 = document.getElementById("obj1");
+	var obj2 = document.getElementById("obj2");
+	var obj3 = document.getElementById("obj3");
+	//false为冒泡，true为捕获
+	obj1.addEventListener('click', function (e) {
+		alert("obj1:::外层文本");
+
+	}, false)
+	obj2.addEventListener('click', function (e) {
+		window.event? window.event.cancelBubble = true : e.stopPropagation();	// 添加的代码
+		alert("obj2:::第一段文本");
+	}, false);
+	obj3.addEventListener('click', function (e) {
+		alert("obj3:::第二段文本");
+	}, false);
+</script>
+
+</html>

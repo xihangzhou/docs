@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        h1 {
+            margin: 0;
+            background: #cff;
+        }
+
+        #div1 {
+            border-top: 1px solid transparent;
+            margin: 40px 0 25px 0;
+            background: #999;
+        }
+
+        #div2 {
+            margin: 20px 0 10px 0;
+            background: #cff;
+        }
+    </style>
+    <h1>这是一个标题</h1>
+    <!-- div1的上外边距是40px,div2的上外边距是20px.本来应该是60px -->
+    <!-- 但是由于外边距折叠，所以最终的呈现出来的div2到h1的上外边距还是40px -->
+    <div id="div1">
+        <div id="div2">这是第一个块级盒子</div>
+    </div>
+
+</body>
+
+</html>

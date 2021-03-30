@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #container{
+        background-color: brown;
+        height: 100px;
+        display: table;
+    }
+    p{
+        /* display把两个p合并到一行 */
+        display: table-cell;
+        /* vertical-align把合并到一行的内容垂直居中 */
+        vertical-align: middle;
+    }
+    a{
+        /* 这个a也会被合并到一行 */
+        display: table-cell;
+        vertical-align: middle;
+    }
+</style>
+<body>
+    <div id='container'>
+        <p>1234123123</p>
+        <p>1234123123</p>
+        <a href="www.baidu.com">baidu</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .wrap .item {
+        width: 25%;
+        height: 260px;
+        float: left;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        overflow: hidden;
+    }
+
+    /* pad  1080 */
+    @media screen and (max-width: 1080px) {
+        .wrap .item {
+            width: 25%;
+        }
+    }
+
+    /* 手机 640 */
+    @media screen and (max-width: 640px) {
+        .wrap .item {
+            width: 50%;
+        }
+    }
+</style>
+
+<body>
+    <div class="wrap">
+        <div class="item" style="background-image:url(https://mobike.com/cn/assets/themes/moby/img/promo-01.jpg);">
+        </div>
+        <div class="item" style="background-image:url(https://mobike.com/cn/assets/themes/moby/img/promo-02.jpg);">
+        </div>
+        <div class="item" style="background-image:url(https://mobike.com/cn/assets/themes/moby/img/promo-03.jpg);">
+        </div>
+        <div class="item" style="background-image:url(https://mobike.com/cn/assets/themes/moby/img/promo-04.jpg);">
+        </div>
+    </div>
+</body>
+
+</html>

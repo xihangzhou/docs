@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+ <div id='app'>
+   <input type="text" v-model='text'>
+   {{text}}
+ </div>
+</body>
+<script>
+  //1.绑定vue中的内容到对应的数值中
+  //1.1 劫持结点的所有子结点生成文档片段
+function nodeToFragment(node,vm) {
+  let fragment = document.createDocumentFragment()
+  let child
+  while(child = node.firstChild){//赋值node.firstChild给child,以child的值为=表达式的返回值
+    //1.3 每一个都处理一下
+    compile(child,vm)
+    fragment.appendChild(child)//注意通过appendChild加入文档碎片后child就不在app中了
+  }
+  return fragment
+}
+
+  //1.2 编译函数去处理每一个节点，把{{}}中的值和v-model属性中对应的值用vue实例中的值替换到value上
+  function compile(node,vm) {
+    let reg = /\{\{(.*)\}\}/
+    if(node.nodeType===1){//如果该节点是元素类型
+     let attr = node.attributes
+     for(let i = 0;i < attr.length;i++){
+       if(attr[i].nodeName === 'v-model'){
+        let name = attr[i].nodeValue
+        node.addEventListener('input',function(e){
+          vm[name] = e.target.value//注意此时绑定到vm的对应属性上
+        })
+        //  node.value = vm.data[name]
+        // node.value = vm[name]//注意此时绑定到vm的对应属性上
+        new Watcher(vm,node,name)//使用watcher监管node的值,有几个视图就有几个watcher
+         node.removeAttribute('v-model')
+       }
+     }
+    }
+    if(node.nodeType===3){//如果该节点是文本类型
+      if(reg.test(node.nodeValue)){
+        let name = reg.exec(node.nodeValue)[1]
+        name.trim()
+        // node.nodeValue = vm.data[name]
+        new Watcher(vm,node,name)
+        node.nodeValue = vm[name]
+      }
+    }
+  }
+
+  //1.4 创建一个vue实例化函数
+  function Vue(options) {
+    this.data = options.data
+
+    observe(this.data,this)
+
+    let id = options.el
+    let dom = nodeToFragment(document.getElementById(id),this)
+    //处理完后还回dom到原来的节点下
+    document.getElementById(id).appendChild(dom)
+  }
+
+  //2. 实现input更新引起数据的更新 view=>model
+  //2.1 实现一个监听数据变化的函数
+  function defineReactive(obj,key,val) {
+    let dep = new Dep()//Dep用来发布更新给对应的Watchers,一个数据对应一个dep
+    Object.defineProperty(obj,key,{//使用Object.defineProperty不仅对obj对象新建了一个key属性，而且还将这个属性的值绑定给val
+      get:function(){//读取这个属性都返回val这个值
+      if(Dep.target){
+        dep.addSub(Dep.target)
+      }
+        return val
+      },
+      set:function(newVal){//设置属性的时候也是作用与val这个值
+        if(newVal === val){
+          return
+        }
+        val = newVal
+        console.log('add',val)
+        dep.notify()
+      }
+    })
+  }
+  //2.2 实现一个观察者，观察数据的每一个属性
+  function observe(obj,vm){
+    for(let key of Object.keys(obj)){//注意观察者是在vm上新建了obj上的属性，然后观察vm上的新建属性
+      defineReactive(vm,key,obj[key])
+    }
+  }
+
+  Watcher.prototype.update = function () {
+    this.get()
+    this.node.nodeValue = this.value
+    this.node.value = this.value
+  }
+
+  Watcher.prototype.get = function(){
+    this.value = this.vm[this.name]
+  }
+  //3.0 model => view 数据的更新同步到视图
+  function Watcher(vm,node,name){
+    this.vm = vm //传入vm生成闭包
+    this.node = node
+    this.name = name
+    Dep.target = this
+    this.update()
+    Dep.target = null
+  }
+
+  function Dep(){
+    this.subs = []
+  }
+
+  Dep.prototype.addSub = function(sub){
+    this.subs.push(sub)
+  }
+
+  Dep.prototype.notify = function(sub){
+    this.subs.forEach((sub)=>{
+      sub.update()
+    })
+  }
+
+    let app = new Vue({
+    el:'app',
+    data:{
+      text:'hello world'
+    }
+  })
+</script>
+</html>

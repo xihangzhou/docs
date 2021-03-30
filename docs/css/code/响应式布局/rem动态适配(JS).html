@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html {
+            font-size: 100px;
+        }
+
+        .box {
+            /* w 160px h 160px */
+            width: 1.6rem;
+            height: 1.6rem;
+            background-color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box"></div>
+
+    <script>
+        // 针对视口宽度为750的设计稿
+        function refresh(){
+            let desWidth = 750;
+            let desFont = 100;
+            let curWidth = document.documentElement.clientWidth;
+            let ratio = desWidth / curWidth;
+            document.documentElement.style.fontSize = desFont / ratio + 'px';
+        }
+
+        refresh();
+
+        window.addEventListener('resize',refresh)
+    </script>
+</body>
+
+</html>

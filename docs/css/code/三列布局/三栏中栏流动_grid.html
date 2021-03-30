@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    .container{
+        display: grid;
+        grid-template-rows: 100px 1fr 100px;
+    }
+    header,footer{
+        background-color: green;
+        text-align: center;
+        line-height: 100px;
+    }
+    .box{
+        display: grid;
+        grid-template-columns: 100px 1fr 100px;
+        grid-template-rows: 100px;
+    }
+    .left{
+        text-align: center;
+        line-height: 100px;
+        background-color: greenyellow;
+    }
+    .center{
+        text-align: center;
+        line-height: 100px;
+        background-color: hotpink;
+    }
+    .right{
+        text-align: center;
+        line-height: 100px;
+        background-color: indigo;
+    }
+</style>
+
+<body>
+    <div class='container'>
+        <header>header</header>
+        <div class='box'>
+            <div class='left'>left</div>
+            <div class='center'>center</div>
+            <div class='right'>right</div>
+        </div>
+        <footer>footer</footer>
+    </div>
+</body>
+
+</html>

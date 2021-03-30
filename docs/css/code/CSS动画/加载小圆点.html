@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <style>
+        button{
+            width: 200px;
+        }
+
+        span{
+            margin-left:10px ;
+            display: inline-block;
+            min-width: 2px;
+            min-height: 2px;
+            box-shadow: 2px 0, 6px 0, 10px 0;
+            animation: loading 2s steps(1,start) infinite;
+        }
+
+        @keyframes loading {
+            0%{
+                box-shadow: none;
+            }
+            25%{
+                box-shadow: 2px 0;
+            }
+            50%{
+                box-shadow: 2px 0,6px 0;
+            }
+            75%{
+                box-shadow: 2px 0,6px 0,10px 0;
+            }
+            100%{
+                box-shadow: none;
+            }
+        }
+    </style>
+<body>
+    <button>订单提交中<span></span></button>
+</body>
+</html>

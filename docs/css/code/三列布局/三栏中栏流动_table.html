@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Stylin' with CSS - Figure 1.1 A Simple Ordered List</title>
+    <style>
+        /* 这种布局比较简单，并且每一栏的高度会自适应 */
+        div.container {
+            width: 100%;
+        }
+
+        #center {
+            background-color: green;
+            /* 允许换行 */
+            word-wrap:break-word;
+            display: table-cell;
+
+        }
+
+        #left {
+            width: 150px;
+            background-color: red;
+            height: 200px;
+            display: table-cell;
+        }
+        #right {
+            width: 250px;
+            background-color: peachpuff;
+            height: 200px;
+            display: table-cell;
+        }
+    </style>
+</head>
+
+<body>
+    <div class='container'>
+        <div id="left">Left content</div>
+        <div id="center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam eleifend libero et risus aliquam a
+            cursus felis gravida. Etiam ultricies tristique tellus, vulputate euismod neque elementum ac.
+            Integer at neque in magna lacinia bibendum sit amet sit amet dolor. Nam consequat ullamcorper eros,
+            sed bibendum metus faucibus sit amet. Sed convallis accumsan dui, eu sodales odio mollis nec.
+            Curabitur in nunc sed leo tempor luctus in a dolor. Sed sit amet facilisis sem. Donec scelerisque
+            consectetur velit, vitae bibendum mauris rutrum quis.</div>
+        <div id="right">Right content</div>
+    </div>
+</body>
+
+</html>

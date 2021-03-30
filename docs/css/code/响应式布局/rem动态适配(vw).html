@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+
+        /* 假设设计稿上的视口宽度为750,html字体大小为100px,那么html字体大小相对于视口的比例就为100 / 750 = 0.13333，转化为vw单位就是13.33333vw */
+        html{
+            font-size: 13.333vw;
+        }
+        /* 其他的元素的长宽使用rem就可以保留设计稿的比例关系
+            这是目前最流行的方式
+         */
+        .box{
+            width: 1.6rem;
+            height: 1.6rem;
+            background-color: aqua;
+        }
+    </style>
+    <div class='box'></div> 
+</body>
+</html>

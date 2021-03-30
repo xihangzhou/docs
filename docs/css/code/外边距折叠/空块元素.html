@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        #div1,
+        #div2 {
+            margin: 0px;
+        }
+
+        #voidDiv {
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+    </style>
+    <div id="div1">这是第一个块级盒子</div>
+    <!-- 本来由于voidDiv没有内容，上下外边距加起来才应该是div1,div2的边距 -->
+    <!-- 但是由于外边距折叠，所以最后仍然是40px -->
+    <div id="voidDiv"></div>
+    <div id="div2">这是第二个块级盒子</div>
+</body>
+
+</html>

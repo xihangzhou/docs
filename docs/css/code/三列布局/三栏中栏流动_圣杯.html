@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        header {
+            background-color: teal;
+        }
+
+        /* step2:清除footer浮动 */
+        footer {
+            background-color: tomato;
+            /* clear: both; */
+        }
+
+        /* 使用clearfix伪类的方法也可以清除footer的浮动 */
+        #footer::before{
+            content:'';
+            display:block;
+            clear: both;
+        }
+
+        /*step5:padding-left:100px给left留出空间  */
+        #container {
+            background-color: black;
+            height: 100%;
+            padding-left: 100px;
+            padding-right: 150px;
+            overflow: hidden;
+        }
+
+
+        /* step1:设置浮动 */
+        /* step6:设置相对位置给left */
+        .column {
+            height: 100px;
+            float: left;
+            position: relative;
+            margin-bottom: -10000px;
+            padding-bottom: 10000px;
+        }
+
+        /* step3:center宽度设置100% */
+        #center {
+            background-color: yellow;
+            width: 100%;
+            height: auto;
+            font-size: 50px;
+            word-break: break-all;
+        }
+
+        /* step4:margin-left:-100%把left移动到center的最左边覆盖center */
+        /* step7:把left相对移动使其覆盖自己的空间 */
+        #left {
+            background-color: blue;
+            height: 100%;
+            width: 100px;
+            margin-left: -100%;
+            right: 100px
+        }
+
+        /* step8:对rightmargin-left,然后改变padding-right参照left的做法 */
+        #right {
+            background-color: blueviolet;
+            width: 150px;
+            height: 100px;
+            margin-left: -150px;
+            left: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        header
+    </header>
+    <div id='container'>
+        <div id='center' class='column'>
+            center
+            leftqsqwdqwdqwdqwdqsdqsdqwdqwdqsdqsdqwdqwdwdqwdasdadasdss
+            sqsqwqwdqwdqdqsdqsdqwdqwdqsdqsdqwdqdqsdq
+        </div>
+        <div id='left' class='column'>
+            left
+        </div>
+        <div id='right' class='column'>
+            right
+        </div>
+    </div>
+    <footer>
+        footer
+    </footer>
+</body>
+
+</html>

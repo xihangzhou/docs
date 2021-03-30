@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .container{
+        overflow: hidden;
+        position: relative;
+        /* 采用绝对定位占满整个屏幕 */
+        /* position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0; */
+
+    }
+
+    .left,.right{
+        word-break: break-all;
+        /* 采用-margin的方式实现两列等高 */
+        margin-bottom: -100000px;
+        padding-bottom: 100000px;
+    }
+    .left{
+        background-color: cadetblue;
+        width: 100px;
+    }
+    .right{
+        position: absolute;
+        left: 100px;
+        right: 0px;
+        top:0;
+        background-color: chartreuse;
+        height: 100px;
+    }
+</style>
+
+<body>
+    <div class="container">
+
+        <div class="left">
+
+            leftwdqwdqwdqwdqwdqwdqsdsqdqwdqwdqwd
+
+        </div>
+
+        <div class="right">
+
+            rightqwdqwdqwd
+
+        </div>
+
+    </div>
+</body>
+
+</html>

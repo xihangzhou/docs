@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #container{
+        display: flex;
+        /* 把header footer content纵向排列 */
+        flex-direction: column;
+    }
+    #content{
+        /* 把content横向排列 */
+        display: flex;
+        /* height: 150px; */
+    }
+
+    #header,
+    #footer{
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: blue;
+        flex:auto;
+    }
+
+    #nav,
+    #aside{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 150px;
+        /* nav和aside要确定主轴宽度，并且不随着页面放大缩小*/
+        flex:0 0 100px;
+        background-color: brown;
+    }
+
+    #main{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* 设置auto自动占满能占的空间实现三栏流动 */
+        flex:auto;
+        background-color: coral;
+    }
+
+</style>
+
+<body>
+    <div id='container'>
+        <div id='header'>header</div>
+        <div id='content'>
+            <div id='nav'>nav</div>
+            <div id='main'>main</div>
+            <div id='aside'>aside</div>
+        </div>
+        <div id='footer'>footer</div>
+    </div>
+</body>
+
+</html>

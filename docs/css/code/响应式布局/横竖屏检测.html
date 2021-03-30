@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* 注意虽然html宽高不是全屏，但是如果设置背景颜色还是全屏 */
+        html{
+            background-color: gold;
+            font-size:50px;
+            text-align: center;
+        }
+        /* 竖屏*/
+        @media screen and (orientation: portrait) {
+            .tip{display: none;}
+        }
+
+        /* 横屏 */
+        @media (orientation: landscape) {
+            .tip{display: block;}
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- 提示 -->
+    <div class="tip">请把手机转到竖屏的状态！</div>
+</body>
+</html>

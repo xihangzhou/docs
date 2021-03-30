@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>横向纵向雪碧图</title>
+    <!-- 雪碧图   400  * 200 -->
+    <style>
+        .people {
+            width: 100px;
+            height: 100px;
+            background: url(sprites/animal.png) no-repeat;
+            /* 5s是指的整个关键帧走完的时间 */
+            /* steps(1,start)意味着每一个关键帧的间隔只分成1步，第一帧的内容即0%不显示 */
+            animation: name 5s steps(1,start) infinite;
+        }
+
+        /* 分8段 0% ....      0%-100%    12.5%   开始  0%  - ......  -  结束 100%*/
+
+        @keyframes name {
+
+            /* 注意要影帝100%回到0 0这个样子的话最后一帧才会回到起点 */
+            0%,100%{
+                background-position: 0 0;
+            }
+
+            12.5% {
+                background-position: -100px 0;
+            }
+
+            25% {
+                background-position: -200px 0;
+            }
+
+            37.5% {
+                background-position: -300px 0;
+            }
+
+            50% {
+                background-position: 0 -100px;
+            }
+
+            62.5% {
+                background-position: -100px -100px;
+            }
+
+            75% {
+                background-position: -200px -100px;
+            } 
+
+            87.5% {
+                background-position: -300px -100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="people"></div>
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* 上半椭圆 */
+    .circle1 {
+        width: 100px;
+        height: 80px;
+        /* 用/分别去设置水平半径和垂直半径
+        这个值等于：50% 50% 50% 50% / 100% 100% 0 0
+        相当于省略了右上，右下，左下的三个水平半径的值
+        因为最后两个的垂直半径为0，所以相当于没有*/
+        border-radius: 50%/100% 100% 0 0;
+        background-color: rosybrown;
+    }
+    /* 下半椭圆 */
+    .circle2 {
+        width: 100px;
+        height: 80px;
+        border-radius: 50%/0 0 100% 100%;
+        background-color: rosybrown;
+    }
+    /* 左半椭圆 */
+    .circle3 {
+        width: 100px;
+        height: 80px;
+        border-radius: 100% 0 0 100%/50%;
+        background-color: rosybrown;
+    }
+    /* 右半椭圆 */
+    .circle4{
+        width: 100px;
+        height: 80px;
+        border-radius: 0 100% 100% 0/50%;
+        background-color: rosybrown;
+    }
+</style>
+
+<body>
+    <div class='circle1'></div>
+    <br>
+    <div class='circle2'></div>
+    <br>
+    <div class='circle3'></div>
+    <br>
+    <div class='circle4'></div>
+</body>
+
+</html>

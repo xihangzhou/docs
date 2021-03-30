@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    header,
+    footer {
+        background-color: darkturquoise;
+        height: 100px;
+        text-align: center;
+        line-height: 100px;
+    }
+
+    /* step2:清除浮动 */
+    footer {
+        clear: both;
+    }
+
+    /*step1:向左浮动  */
+    .column {
+        float: left;
+    }
+
+    /*step3:设置中间的wrapper宽度为100%,即确定中间框的位置和大小*/
+    #wrapper{
+        width: 100%;
+        height: 100px;
+    }
+
+    /*step5:把margin的值设置为0px 100px */
+    #center{
+        height: 100px;
+        background-color:rebeccapurple;
+        margin:0px 100px;
+        text-align: center;
+        line-height: 100px;
+    }
+
+    /* step4:把left和right移动到该去的地方 */
+    #left {
+        height: 100px;
+        width: 100px;
+        background-color: green;
+        text-align: center;
+        line-height: 100px;
+        margin-left: -100%;
+    }
+
+    #right {
+        height: 100px;
+        width: 100px;
+        background-color: yellow;
+        text-align: center;
+        line-height: 100px;
+        margin-left: -100px;
+    }
+</style>
+
+<body>
+    <header>header</header>
+
+    <div id='wrapper' class='column'>
+        <div id='center'>
+            center
+        </div>
+    </div>
+    <div id='left' class="column">left</div>
+    <div id='right' class='column'>right</div>
+    <footer>footer</footer>
+</body>
+
+</html>

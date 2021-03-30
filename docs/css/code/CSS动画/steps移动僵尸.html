@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>steps()</title>
+    <style>
+        .dead{
+            width:200px;
+            height:312px;
+            background: url(./sprites/jiangshi.png) no-repeat  0px 0px;
+            /* 此时steps默认为steps(10,end) 因为最后一帧是-2000px这个时候其实已经看不到僵尸了，所以要用end使最后一帧不显示 */
+            animation: move 0.5s steps(10) infinite;
+        }
+
+        @keyframes move {
+            0%{
+                background-position:0px 0px;
+            }
+            100%{
+                background-position: -2000px 0px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dead"></div>
+</body>
+
+</html>

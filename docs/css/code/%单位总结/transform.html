@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #container {
+        width: 100px;
+        height: 200px;
+        background-color: aqua;
+    }
+
+    #inner{
+        width: 60px;
+        height: 50px;
+        padding: 10px;
+        border: 10px solid;
+        background-color: brown;
+        transform: translate(50%);
+    }
+
+</style>
+
+<body>
+    <div id='container'>
+        <!-- 移动了(60 + 2*10 + 2*10)/2 = 50px -->
+        <div id='inner'></div>
+    </div>
+</body>
+
+</html>

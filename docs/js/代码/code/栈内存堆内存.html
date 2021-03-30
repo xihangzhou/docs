@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //基本类型在栈内存
+        var str = "abc";
+        //对象在堆内存
+        var ob = {name:'zz'};
+        //栈内存中的元素
+        var str1 = str;
+        str1 = 'ab';
+        console.log(str);
+        console.log(str1);
+        //堆内存中元素
+        const ob1 = ob;
+        ob1 = {};
+        console.log(ob);
+        console.log(ob1);
+        //包装类型
+        // const strbao = new String('abc');
+        // strbao = 'a';
+        // console.log(strbao1);
+    </script>
+</body>
+</html>

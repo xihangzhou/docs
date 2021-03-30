@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function Person(name) {//构造函数
+            this.name = name;
+        }
+        Person.prototype.sayname = function () {//给原型链上定义方法
+            alert("Hi" + this.name);
+        }
+        function _new(Obj,...rest){//定义一个_new函数来代替new符号
+            //最重要的就是主要要让这个对象的__proto__指向Obj.prototype
+            const newObj = Object.create(Obj.prototype);//新建一个原型实例,其中有方法
+            const result = Obj.apply(newObj,rest);//构造函数中可能有return的对象
+            return typeof result === 'object' ? result : newObj;//若有return的对象返回该对象
+        }
+        function _new_pro(Obj,...rest){//用空对象的方式来实现
+            const newObj = {};
+            newObj._proto_ = Obj.prototype;
+            const result = Obj.apply(newObj,rest);//构造函数中可能有return的对象
+            return typeof result === 'object' || typeof result === 'function'? result : newObj;//若有return的对象返回该对象
+        }
+        let person = new Person('new');
+        let person2 = _new(Person,'_new');
+        console.log(person);
+        console.log(person2);
+    </script>
+</body>
+
+</html>
