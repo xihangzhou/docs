@@ -1,6 +1,8 @@
 ---
 sidebarDepth: 5
 ---
+
+
 # 面试总结
 
 ## 面试投递
@@ -19,6 +21,231 @@ sidebarDepth: 5
 | 京东         | http://campus.jd.com/web/apply/myjob                         |                 | 已投递   |
 | 滴滴         |                                                              |                 | 没有春招 |
 | 百度         |                                                              |                 | 没有春招 |
+
+## 项目内容和各自亮点
+
+### 德州仪器
+
+1. 项目内容
+
+   对一个报表系统进行优化，优化了报表系统的加载时间和呈现方式
+
+2. 项目亮点
+
+* 浏览器的响应式
+  
+  * 项目需求不要出现横向的scroll,所以识别不同浏览器的宽度动态调节每个单元格的宽度，设置了单元格的最小宽度，如果宽度不够就折行。并且使用了防抖来监听resize事件。
+    * 使用rowspan/colspan来完成单元格的合并
+    * 用防抖来监听resize事件，让宽度不够折行
+* 动画
+  
+  * 使用hover使得hover的行变颜色
+* 前端的性能优化
+  * 最开始是一个单元格一个单元的插入到DOM效率低下。使用文档碎片加载表格，使得每10行数据用文档碎片的形式一次性加入。
+  * 使用了表格懒加载的方式进行表格的加载
+    * 表格数据量有的时候比较大，可以有100多行，采取每次加载10行的方式，如果可视窗口到达最底行以上100px就动态加载新的10行
+    * 使用了单例设计模式，可以动态的设置每次加载插入的行数
+* 不同浏览器的适配 
+  * 由于办公室用chrme，但是工厂用IE7，所以要进行浏览器的适配。
+    * 一些CSS属性不支持IE7，比如hover属性IE不支持改用JS实现，采用CSS.supports语法进行识别
+      
+      * https://www.zhangxinxu.com/wordpress/2019/11/js-css-supports-detect/
+      
+      * ```js
+        result = CSS.supports('filter', 'blur(5px)');
+        ```
+    * 一些DOM属性IE不支持，比如innerWidth,采用IE支持的clientWidth.
+    * 还有一些其他的方法的兼容性问题，尽量在采取一些DOM的操作或者JS自带的原生操作前检验一下该方法是否被支持
+      * IE不支持getElementsByClassName,需要自己写一个函数来获取
+      * js中的splice方法并不在IE中被支持，需要自己写操作字符串的方法
+
+### 学校项目——房屋租赁系统
+
+1. 项目内容
+
+   完成了学校的课程项目，一个房屋的租赁系统，采用了sails框架，服务端渲染的项目。是一个多页面应用。并且完成了移动端的CSS适配。
+
+2. 项目的亮点
+
+* CSS相关
+  * animation+关键帧动画
+    * 菊花图加载
+      * 首先画6条上竖线和6条下竖线，然后一次旋转成为一个菊花形状，然后设置关键帧动画，linear渐变，从opaccitiy:0-1渐变。并且给一个延迟时间让opacity:0感觉像是在移动
+    * 上传图片的时候采取了box-shadow画点的方式来进行加载点的呈现
+      * 使用关键帧+animation的方式进行实现，采用了steps的时间函数。小圆点采用了box-shadow实现。给一个2px,2px的span,这个span的阴影其实就是可以看作这个span小点的复制。
+  * transform(translate, scale)+transition动画
+    * 图片的上移动效果
+    * 图片的放大效果的实现
+
+* JS相关
+  * 返回顶部效果的实现
+    * 返回顶部 window.scrollTo(0,0)
+  * 放大镜效果的实现
+    * 只用一张图片即可，自动生成一张设置比例了的大图
+      * 鼠标跟随，用event.clientX,event.clientY和元素距离视口的位置关系算出放大镜距离父容器图片的left, top,从而实现跟随
+      * 注意要使用一个透明的mark盖住原图和放大镜，对mark捕捉mouseenter时间显示放大镜。这样才不会频繁的触发mouseenter事件。
+  * 图片懒加载
+    * 首先所有的图片都有一个规格，用div的背景进行展示，position-size:cover。先定义好图片的宽高。
+    * 最开始background-url不加，把url存在index属性中
+    * 通过scroll事件的监听遍历所有图片的元素，判断元素到视口的top距离是否大于视口高度判断元素是否进入视口。
+  * 动态添加class名的方式实现下拉框的展示，从而实现了一些CSS的复用
+
+  ```js
+  // div is an object reference to a <div> element with class="foo bar"
+  div.classList.remove("foo");
+  div.classList.add("anotherclass");
+  
+  // if visible is set remove it, otherwise add it
+  div.classList.toggle("visible");
+  
+  // add/remove visible, depending on test conditional, i less than 10
+  div.classList.toggle("visible", i < 10 );
+  
+  alert(div.classList.contains("foo"));
+  
+  // add or remove multiple classes
+  div.classList.add("foo", "bar", "baz");
+  div.classList.remove("foo", "bar", "baz");
+  
+  // add or remove multiple classes using spread syntax
+  let cls = ["foo", "bar"];
+  div.classList.add(...cls); 
+  div.classList.remove(...cls);
+  
+  // replace class "foo" with class "bar"
+  div.classList.replace("foo", "bar");
+  ```
+
+  
+
+* 移动端的适配
+  * 对网站进行了响应式的布局
+    * 使用了flex布局
+    * 尽量不采取px的方式定义宽高，而是采取%或者是rem的方式来呈现内容。对根元素设置vw来获取屏幕宽度设置根元素字体
+    * 采用媒体查询来改变图片的每行呈现个数
+
+3. 项目相关功能的实现
+
+* 登陆的实现？
+
+  * 采用了cookie存储sessionID的方式进行的实现
+
+* tocken和cookie的实现区别？
+
+  * tocken是把用户信息通过JWT方式加密存储在浏览器，通过http头部authorization发送到服务器
+
+  ![image-20210302190703642](项目内容.assets/image-20210302190703642.png)
+
+  * cookie是客户端存session id，用户信息存在服务器，这样进行身份的识别。但是这样不方便后端集群的实现，要实现数据持久层，太麻烦。
+
+  ![image-20210302190550573](项目内容.assets/image-20210302190550573.png)
+
+### 猿辅导项目
+
+1. 项目内容
+
+   * 采用vue2,vuex,vuexrouter,vue-cil和内部的UI库,ts对一个后台管理平台的路由优化功能的添加，完成了后台系统对app管理和app页面管理的动态配置模块。
+
+   * 重新梳理组件的逻辑，优化路由逻辑
+   * 让用户在app管理页面上对接入后台的app进行调整，并将其内容存储在vuex中便于全局管理
+   * 用户可以在app页面管理中对每一个app相关的活动链接进行配置，为了用户友好，url的配置方式采用输入key,value键值对的方式进行并且最后动态生成完整的url。
+
+2. 项目亮点
+
+* 采用了ts进行项目的实现
+
+* 采取了vuex管理用户添加的app信息，可以让其他模块响应式的获取该app信息
+
+* 登陆采用token,并且使用了localStorage进行持久化登录的设计
+
+* 基于组件复用的思想，对输入key,value键值对生成input url的方式进行组件封装
+
+  * 由于想要插入根据输入key,value键值对的方式封装成一个input到表单，就自己写了一个带验证功能的表单
+  * 使用@blur事件监听验证事件，父组件通过传值给input验证规则。
+  * 实现input和父组件的响应式主要采用了model重新定义v-model的方式。父组件穿值给mailVal,子组件通过发送update事件给父亲组件从而实现双向绑定
+
+  ```js
+    model: {
+  
+      prop: "mailVal",
+  
+      event: "update",
+  
+    },
+  ```
+
+  * 实现提交表单验证的按钮使用了this.$emit和this.$on方法。这种方法可以在一个vue实例里面监听事件。所以在子组件的created生命周期中发送事件this.$parent.$emit把它的验证函数发给父组件，即validate-form组件。validate-form组件用一个this.$on方法进行监听，从二收集validate-input方法。最后在提交表单的时候把这些验证方法都运行一次即可。
+  * 再实现url动态验证的组件，这个组件可以动态匹配url，把参数,host提取出来单独输入。首先实现这个组件。把这个组件写在validate-input的组件中，用户通过传递type的值判断是不是要渲染这个组件。这个组件要实现和validate-input组件的双向绑定，再由validate-input和父组件实现双向绑定最后实现。
+  * inheritAttrs:false + v-bind:"$attrs"可以把父组件给子组件组件绑定的属性绑定到子组件的具体元素上。
+
+3. 项目相关功能的实现
+
+1.登陆
+
+* 登陆获取tocken吧tocken绑定在store上
+* 获取tocken后给之后所有的请求都加上tocken字段在http头部的authorization
+* tocken的持久化方案
+  * login之后把tocken存在localStorage中
+  * store的tocken初始值也从localStorage中获取
+  * 第一次如果没有登陆但是login为false，就自动发送登陆请求自动登录
+  * 如果请求成功就是成功，失败了就清空localStorage，显示错误
+  * ![image-20210302195717842](项目内容.assets/image-20210302195717842.png)
+
+
+
+2. 跨域
+
+- vue的devServer.proxy
+- 本身应该是来自于一个叫做 `http-proxy-middleware`的node服务
+
+```javascript
+// vue.config.js
+devServer: {
+  proxy: {
+    '/apis': {
+      target: 'http://sb.dreamcat.ink:2020/',
+        ws: true,
+          changeOrigin: true,//把请求头的host改为目标的host
+            pathRewrite: {
+              '^/apis': ''
+            }
+    }
+  }
+}
+```
+
+## 遇到的项目难点
+
+### CSS相关
+
+* Margin的负值清除border
+
+* Float，absolute的时候宽度不占满整行
+
+* flex布局的时候需要设置是否缩放，否则设定的宽度可能不起效果
+
+* IFC的使用，inline-block的居中，图片在block元素中的下边距清除
+
+* 层叠上下文的使用使得悬浮的弹框可以被看见
+
+* CSS动画steps的使用
+
+* 使用box-shadow结合animation生成加载的小圆点
+
+### JS相关
+
+* 在实现放大镜动画的过程中发现要加一个mark去响应mouseover事件，否则会一直进出触发mouseover事件
+* js的异步原理导致的动画卡顿
+
+### Vue相关
+
+* 对于数组的push操作不能响应式，应该使用。。方法
+
+## webpack相关
+
+webpack5中使用webpack-dev-server会报错
+
+
 
 ## 面试问题总结
 
