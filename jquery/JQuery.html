@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>JQuery | 夕航</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    <link rel="icon" href="/docs/favicon.ico">
+    <meta name="description" content="前端学习笔记">
+    <meta name="author" content="夕航">
+    <meta name="keywords" content="前端">
+    
+    <link rel="preload" href="/docs/assets/css/0.styles.52bb2005.css" as="style"><link rel="preload" href="/docs/assets/js/app.09d10d22.js" as="script"><link rel="preload" href="/docs/assets/js/5.2d095b72.js" as="script"><link rel="preload" href="/docs/assets/js/17.99236714.js" as="script"><link rel="prefetch" href="/docs/assets/js/10.e282c734.js"><link rel="prefetch" href="/docs/assets/js/11.d7e26b9e.js"><link rel="prefetch" href="/docs/assets/js/12.b841f052.js"><link rel="prefetch" href="/docs/assets/js/13.dc5aeac1.js"><link rel="prefetch" href="/docs/assets/js/14.60c39f06.js"><link rel="prefetch" href="/docs/assets/js/15.c4090a9d.js"><link rel="prefetch" href="/docs/assets/js/16.b82bdcb1.js"><link rel="prefetch" href="/docs/assets/js/18.14c2d49c.js"><link rel="prefetch" href="/docs/assets/js/19.d02bbe47.js"><link rel="prefetch" href="/docs/assets/js/2.93ef2c17.js"><link rel="prefetch" href="/docs/assets/js/20.9e98372f.js"><link rel="prefetch" href="/docs/assets/js/21.42e19db8.js"><link rel="prefetch" href="/docs/assets/js/22.fef0060f.js"><link rel="prefetch" href="/docs/assets/js/23.81874084.js"><link rel="prefetch" href="/docs/assets/js/24.90483c50.js"><link rel="prefetch" href="/docs/assets/js/25.4cccfb01.js"><link rel="prefetch" href="/docs/assets/js/26.5c9d1ddf.js"><link rel="prefetch" href="/docs/assets/js/27.a9c08176.js"><link rel="prefetch" href="/docs/assets/js/28.63eab0b6.js"><link rel="prefetch" href="/docs/assets/js/29.beda502f.js"><link rel="prefetch" href="/docs/assets/js/3.c17983c0.js"><link rel="prefetch" href="/docs/assets/js/30.f395372d.js"><link rel="prefetch" href="/docs/assets/js/31.e809f027.js"><link rel="prefetch" href="/docs/assets/js/32.39b2d9fa.js"><link rel="prefetch" href="/docs/assets/js/33.ad475418.js"><link rel="prefetch" href="/docs/assets/js/34.b527ccb6.js"><link rel="prefetch" href="/docs/assets/js/35.4d3075ff.js"><link rel="prefetch" href="/docs/assets/js/36.e906c045.js"><link rel="prefetch" href="/docs/assets/js/37.cb809e5d.js"><link rel="prefetch" href="/docs/assets/js/38.b937dc87.js"><link rel="prefetch" href="/docs/assets/js/39.f9a8c19b.js"><link rel="prefetch" href="/docs/assets/js/4.01881906.js"><link rel="prefetch" href="/docs/assets/js/6.5dbe11a1.js"><link rel="prefetch" href="/docs/assets/js/7.e7b95553.js"><link rel="prefetch" href="/docs/assets/js/8.042a8261.js"><link rel="prefetch" href="/docs/assets/js/9.e326f00f.js">
+    <link rel="stylesheet" href="/docs/assets/css/0.styles.52bb2005.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container no-sidebar"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/docs/" class="home-link router-link-active"><img src="/docs/logo.png" alt="夕航" class="logo"> <span class="site-name can-hide">夕航</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/docs/" class="nav-link">
+  首页
+</a></div><div class="nav-item"><a href="/docs/guide/" class="nav-link">
+  前言
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端" class="dropdown-title"><span class="title">前端</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端" class="mobile-dropdown-title"><span class="title">前端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/docs/js/" class="nav-link">
+  JS
+</a></li><li class="dropdown-item"><!----> <a href="/docs/css/" class="nav-link">
+  CSS
+</a></li><li class="dropdown-item"><!----> <a href="/docs/browser/" class="nav-link">
+  浏览器
+</a></li><li class="dropdown-item"><!----> <a href="/docs/vue/" class="nav-link">
+  Vue
+</a></li><li class="dropdown-item"><!----> <a href="/docs/webpack/" class="nav-link">
+  Webpack
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/docs/network/" class="nav-link">
+  计算机网络
+</a></li><li class="dropdown-item"><!----> <a href="/docs/algorithm/" class="nav-link">
+  数据结构与算法
+</a></li></ul></div></div><div class="nav-item"><a href="/docs/interview/interview.html" class="nav-link">
+  面试总结
+</a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/docs/" class="nav-link">
+  首页
+</a></div><div class="nav-item"><a href="/docs/guide/" class="nav-link">
+  前言
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="前端" class="dropdown-title"><span class="title">前端</span> <span class="arrow down"></span></button> <button type="button" aria-label="前端" class="mobile-dropdown-title"><span class="title">前端</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/docs/js/" class="nav-link">
+  JS
+</a></li><li class="dropdown-item"><!----> <a href="/docs/css/" class="nav-link">
+  CSS
+</a></li><li class="dropdown-item"><!----> <a href="/docs/browser/" class="nav-link">
+  浏览器
+</a></li><li class="dropdown-item"><!----> <a href="/docs/vue/" class="nav-link">
+  Vue
+</a></li><li class="dropdown-item"><!----> <a href="/docs/webpack/" class="nav-link">
+  Webpack
+</a></li></ul></div></div><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="计算机基础" class="dropdown-title"><span class="title">计算机基础</span> <span class="arrow down"></span></button> <button type="button" aria-label="计算机基础" class="mobile-dropdown-title"><span class="title">计算机基础</span> <span class="arrow right"></span></button> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/docs/network/" class="nav-link">
+  计算机网络
+</a></li><li class="dropdown-item"><!----> <a href="/docs/algorithm/" class="nav-link">
+  数据结构与算法
+</a></li></ul></div></div><div class="nav-item"><a href="/docs/interview/interview.html" class="nav-link">
+  面试总结
+</a></div> <!----></nav>  <!----> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="jquery"><a href="#jquery" class="header-anchor">#</a> JQuery</h1> <p>@(前端框架)</p> <h2 id="选择器"><a href="#选择器" class="header-anchor">#</a> 选择器</h2> <h3 id="按id查找"><a href="#按id查找" class="header-anchor">#</a> 按ID查找</h3> <div class="language- extra-class"><pre class="language-text"><code>// 查找&lt;div id=&quot;abc&quot;&gt;:
+var div = $('#abc');
+</code></pre></div><p>注意，#abc以#开头。返回的对象是jQuery对象。</p> <h3 id="jquery对象"><a href="#jquery对象" class="header-anchor">#</a> JQuery对象</h3> <p>什么是jQuery对象？jQuery对象类似数组，它的每个元素都是一个引用了DOM节点的对象。</p> <p>以上面的查找为例，如果id为abc的</p><div>存在，返回的jQuery对象如下：<p></p> <div class="language- extra-class"><pre class="language-text"><code>[&lt;div id=&quot;abc&quot;&gt;...&lt;/div&gt;]
+</code></pre></div><p>如果id为abc的</p><div>不存在，返回的jQuery对象如下：<p></p> <div class="language- extra-class"><pre class="language-text"><code>[]
+</code></pre></div><p>总之jQuery的选择器不会返回undefined或者null，这样的好处是你不必在下一行判断if (div === undefined)。</p> <p>jQuery对象和DOM对象之间可以互相转化：</p> <div class="language- extra-class"><pre class="language-text"><code>var div = $('#abc'); // jQuery对象
+var divDom = div.get(0); // 假设存在div，获取第1个DOM元素
+var another = $(divDom); // 重新把DOM包装为jQuery对象
+</code></pre></div><p>通常情况下你不需要获取DOM对象，直接使用jQuery对象更加方便。如果你拿到了一个DOM对象，那可以简单地调用$(aDomObject)把它变成jQuery对象，这样就可以方便地使用jQuery的API了。</p> <h3 id="按tag查找"><a href="#按tag查找" class="header-anchor">#</a> 按tag查找</h3> <div class="language- extra-class"><pre class="language-text"><code>var ps = $('p'); // 返回所有&lt;p&gt;节点
+ps.length; // 数一数页面有多少个&lt;p&gt;节点
+</code></pre></div><h3 id="按class查找"><a href="#按class查找" class="header-anchor">#</a> 按class查找</h3> <p>按class查找注意在class名称前加一个.：</p> <div class="language- extra-class"><pre class="language-text"><code>var a = $('.red'); // 所有节点包含`class=&quot;red&quot;`都将返回
+// 例如:
+// &lt;div class=&quot;red&quot;&gt;...&lt;/div&gt;
+// &lt;p class=&quot;green red&quot;&gt;...&lt;/p&gt;
+</code></pre></div><p>通常很多节点有多个class，我们可以查找同时包含red和green的节点：</p> <div class="language- extra-class"><pre class="language-text"><code>var a = $('.red.green'); // 注意没有空格！
+// 符合条件的节点：
+// &lt;div class=&quot;red green&quot;&gt;...&lt;/div&gt;
+// &lt;div class=&quot;blue green red&quot;&gt;...&lt;/div&gt;
+</code></pre></div><h3 id="按属性查找"><a href="#按属性查找" class="header-anchor">#</a> 按属性查找</h3> <p>一个DOM节点除了id和class外还可以有很多属性，很多时候按属性查找会非常方便，比如在一个表单中按属性来查找：</p> <div class="language- extra-class"><pre class="language-text"><code>var email = $('[name=email]'); // 找出&lt;??? name=&quot;email&quot;&gt;
+var passwordInput = $('[type=password]'); // 找出&lt;??? type=&quot;password&quot;&gt;
+var a = $('[items=&quot;A B&quot;]'); // 找出&lt;??? items=&quot;A B&quot;&gt;
+</code></pre></div><p>当属性的值包含空格等特殊字符时，需要用双引号括起来。</p> <p>按属性查找还可以使用前缀查找或者后缀查找：</p> <div class="language- extra-class"><pre class="language-text"><code>var icons = $('[name^=icon]'); // 找出所有name属性值以icon开头的DOM
+// 例如: name=&quot;icon-1&quot;, name=&quot;icon-2&quot;
+var names = $('[name$=with]'); // 找出所有name属性值以with结尾的DOM
+// 例如: name=&quot;startswith&quot;, name=&quot;endswith&quot;
+</code></pre></div><p>这个方法尤其适合通过class属性查找，且不受class包含多个名称的影响：</p> <div class="language- extra-class"><pre class="language-text"><code>var icons = $('[class^=&quot;icon-&quot;]'); // 找出所有class包含至少一个以`icon-`开头的DOM
+// 例如: class=&quot;icon-clock&quot;, class=&quot;abc icon-home&quot;
+</code></pre></div><h3 id="组合查找"><a href="#组合查找" class="header-anchor">#</a> 组合查找</h3> <p>组合查找就是把上述简单选择器组合起来使用。如果我们查找$('[name=email]')，很可能把表单外的</p><div name="email">也找出来，但我们只希望查找<input>，就可以这么写：<p></p> <div class="language- extra-class"><pre class="language-text"><code>var emailInput = $('input[name=email]'); // 不会找出&lt;div name=&quot;email&quot;&gt;
+</code></pre></div><p>同样的，根据tag和class来组合查找也很常见：</p> <div class="language- extra-class"><pre class="language-text"><code>var tr = $('tr.red'); // 找出&lt;tr class=&quot;red ...&quot;&gt;...&lt;/tr&gt;
+</code></pre></div><h3 id="多项选择器"><a href="#多项选择器" class="header-anchor">#</a> 多项选择器</h3> <p>多项选择器就是把多个选择器用,组合起来一块选：</p> <div class="language- extra-class"><pre class="language-text"><code>$('p,div'); // 把&lt;p&gt;和&lt;div&gt;都选出来
+$('p.red,p.green'); // 把&lt;p class=&quot;red&quot;&gt;和&lt;p class=&quot;green&quot;&gt;都选出来
+</code></pre></div><p>要注意的是，选出来的元素是按照它们在HTML中出现的顺序排列的，而且不会有重复元素。例如，</p><p class="red green">不会被上面的$('p.red,p.green')选择两次。</p> <h3 id="层级选择器"><a href="#层级选择器" class="header-anchor">#</a> 层级选择器</h3> <p>如果两个DOM元素具有层级关系，就可以用$('ancestor descendant')来选择，层级之间用空格隔开。例如：</p> <div class="language- extra-class"><pre class="language-text"><code>&lt;!-- HTML结构 --&gt;
+&lt;div class=&quot;testing&quot;&gt;
+    &lt;ul class=&quot;lang&quot;&gt;
+        &lt;li class=&quot;lang-javascript&quot;&gt;JavaScript&lt;/li&gt;
+        &lt;li class=&quot;lang-python&quot;&gt;Python&lt;/li&gt;
+        &lt;li class=&quot;lang-lua&quot;&gt;Lua&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;
+</code></pre></div><p>要选出JavaScript，可以用层级选择器：</p> <div class="language- extra-class"><pre class="language-text"><code>$('ul.lang li.lang-javascript'); // [&lt;li class=&quot;lang-javascript&quot;&gt;JavaScript&lt;/li&gt;]
+$('div.testing li.lang-javascript'); // [&lt;li class=&quot;lang-javascript&quot;&gt;JavaScript&lt;/li&gt;]
+</code></pre></div><p>因为</p><div>和<ul>都是<li>的祖先节点，所以上面两种方式都可以选出相应的</li><li>节点。<p></p> <p>要选择所有的</p></li><li>节点，用：<p></p> <div class="language- extra-class"><pre class="language-text"><code>$('ul.lang li');
+</code></pre></div><p>这种层级选择器相比单个的选择器好处在于，它缩小了选择范围，因为首先要定位父节点，才能选择相应的子节点，这样避免了页面其他不相关的元素。</p> <p>例如：</p> <div class="language- extra-class"><pre class="language-text"><code>$('form[name=upload] input');
+</code></pre></div><p>就把选择范围限定在name属性为upload的表单里。如果页面有很多表单，其他表单的<input>不会被选择。</p> <p>多层选择也是允许的：</p> <div class="language- extra-class"><pre class="language-text"><code>$('form.test p input'); // 在form表单选择被&lt;p&gt;包含的&lt;input&gt;
+</code></pre></div><h3 id="子选择器"><a href="#子选择器" class="header-anchor">#</a> 子选择器</h3> <p>子选择器$('parent&gt;child')类似层级选择器，但是限定了层级关系必须是父子关系，就是<child>节点必须是<parent>节点的<strong>直属子节点</strong>。还是以上面的例子：</parent></child></p> <div class="language- extra-class"><pre class="language-text"><code>$('ul.lang&gt;li.lang-javascript'); // 可以选出[&lt;li class=&quot;lang-javascript&quot;&gt;JavaScript&lt;/li&gt;]
+$('div.testing&gt;li.lang-javascript'); // [], 无法选出，因为&lt;div&gt;和&lt;li&gt;不构成父子关系
+</code></pre></div><h3 id="过滤器"><a href="#过滤器" class="header-anchor">#</a> 过滤器</h3> <p>过滤器一般不单独使用，它通常附加在选择器上，帮助我们更精确地定位元素。观察过滤器的效果：</p> <div class="language- extra-class"><pre class="language-text"><code>$('ul.lang li'); // 选出JavaScript、Python和Lua 3个节点
+
+$('ul.lang li:first-child'); // 仅选出JavaScript
+$('ul.lang li:last-child'); // 仅选出Lua
+$('ul.lang li:nth-child(2)'); // 选出第N个元素，N从1开始
+$('ul.lang li:nth-child(even)'); // 选出序号为偶数的元素
+$('ul.lang li:nth-child(odd)'); // 选出序号为奇数的元素
+</code></pre></div><h3 id="表单相关"><a href="#表单相关" class="header-anchor">#</a> 表单相关</h3> <p><img src="/docs/assets/img/1590391572207.660170b0.png" alt="Alt text"></p> <h3 id="查找和过滤"><a href="#查找和过滤" class="header-anchor">#</a> 查找和过滤</h3> <p>通常情况下选择器可以直接定位到我们想要的元素，但是，当我们拿到一个jQuery对象后，还可以以这个对象为基准，进行查找和过滤。</p> <p>最常见的查找是在某个节点的所有子节点中查找，使用find()方法，它本身又接收一个任意的选择器。</p> <div class="language- extra-class"><pre class="language-text"><code>&lt;!-- HTML结构 --&gt;
+&lt;ul class=&quot;lang&quot;&gt;
+    &lt;li class=&quot;js dy&quot;&gt;JavaScript&lt;/li&gt;
+    &lt;li class=&quot;dy&quot;&gt;Python&lt;/li&gt;
+    &lt;li id=&quot;swift&quot;&gt;Swift&lt;/li&gt;
+    &lt;li class=&quot;dy&quot;&gt;Scheme&lt;/li&gt;
+    &lt;li name=&quot;haskell&quot;&gt;Haskell&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre></div><div class="language- extra-class"><pre class="language-text"><code>用find()查找：
+var ul = $('ul.lang'); // 获得&lt;ul&gt;
+var dy = ul.find('.dy'); // 获得JavaScript, Python, Scheme
+var swf = ul.find('#swift'); // 获得Swift
+var hsk = ul.find('[name=haskell]'); // 获得Haskell
+</code></pre></div><p>如果要从当前节点开始向上查找，使用parent()方法：</p> <div class="language- extra-class"><pre class="language-text"><code>var swf = $('#swift'); // 获得Swift
+var parent = swf.parent(); // 获得Swift的上层节点&lt;ul&gt;
+var a = swf.parent('.red'); // 获得Swift的上层节点&lt;ul&gt;，同时传入过滤条件。如果ul不符合条件，返回空jQuery对象
+</code></pre></div><p>对于位于同一层级的节点，可以通过next()和prev()方法，例如：
+当我们已经拿到Swift节点后：</p> <div class="language- extra-class"><pre class="language-text"><code>var swift = $('#swift');
+
+swift.next(); // Scheme
+swift.next('[name=haskell]'); // 空的jQuery对象，因为Swift的下一个元素Scheme不符合条件[name=haskell]
+
+swift.prev(); // Python
+swift.prev('.dy'); // Python，因为Python同时符合过滤器条件.dy
+</code></pre></div><h3 id="过滤"><a href="#过滤" class="header-anchor">#</a> 过滤</h3> <p>filter()方法可以过滤掉不符合选择器条件的节点：</p> <div class="language- extra-class"><pre class="language-text"><code>var langs = $('ul.lang li'); // 拿到JavaScript, Python, Swift, Scheme和Haskell
+var a = langs.filter('.dy'); // 拿到JavaScript, Python, Scheme
+</code></pre></div><p>或者传入一个函数，要特别注意函数内部的this被绑定为DOM对象，不是jQuery对象：</p> <div class="language- extra-class"><pre class="language-text"><code>var langs = $('ul.lang li'); // 拿到JavaScript, Python, Swift, Scheme和Haskell
+langs.filter(function () {
+    return this.innerHTML.indexOf('S') === 0; // 返回S开头的节点
+}); // 拿到Swift, Scheme
+</code></pre></div><p>map()方法把一个jQuery对象包含的若干DOM节点转化为其他对象：</p> <div class="language- extra-class"><pre class="language-text"><code>var langs = $('ul.lang li'); // 拿到JavaScript, Python, Swift, Scheme和Haskell
+var arr = langs.map(function () {
+    return this.innerHTML;
+}).get(); // 用get()拿到包含string的Array：['JavaScript', 'Python', 'Swift', 'Scheme', 'Haskell']
+</code></pre></div><p>此外，一个jQuery对象如果包含了不止一个DOM节点，first()、last()和slice()方法可以返回一个新的jQuery对象，把不需要的DOM节点去掉：</p> <div class="language- extra-class"><pre class="language-text"><code>var langs = $('ul.lang li'); // 拿到JavaScript, Python, Swift, Scheme和Haskell
+var js = langs.first(); // JavaScript，相当于$('ul.lang li:first-child')
+var haskell = langs.last(); // Haskell, 相当于$('ul.lang li:last-child')
+var sub = langs.slice(2, 4); // Swift, Scheme, 参数和数组的slice()方法一致
+</code></pre></div><h2 id="操作dom"><a href="#操作dom" class="header-anchor">#</a> 操作DOM</h2> <p>回顾一下修改DOM的CSS、文本、设置HTML有多么麻烦，而且有的浏览器只有innerHTML，有的浏览器支持innerText，有了jQuery对象，不需要考虑浏览器差异了，全部统一操作！</p> <h3 id="修改text和html"><a href="#修改text和html" class="header-anchor">#</a> 修改Text和HTML</h3> <p>jQuery对象的text()和html()方法分别获取节点的文本和原始HTML文本，例如，如下的HTML结构：</p> <div class="language- extra-class"><pre class="language-text"><code>&lt;!-- HTML结构 --&gt;
+&lt;ul id=&quot;test-ul&quot;&gt;
+    &lt;li class=&quot;js&quot;&gt;JavaScript&lt;/li&gt;
+    &lt;li name=&quot;book&quot;&gt;Java &amp;amp; JavaScript&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre></div><p>分别获取文本和HTML：</p> <div class="language- extra-class"><pre class="language-text"><code>$('#test-ul li[name=book]').text(); // 'Java &amp; JavaScript'
+$('#test-ul li[name=book]').html(); // 'Java &amp;amp; JavaScript'
+</code></pre></div><p>如何设置文本或HTML？jQuery的API设计非常巧妙：无参数调用text()是获取文本，传入参数就变成设置文本，HTML也是类似操作
+<img src="/docs/assets/img/1590392371890.4ad84fa1.png" alt="Alt text">
+一个jQuery对象可以包含0个或任意个DOM对象，它的方法实际上会作用在对应的每个DOM节点上。</p> <div class="language- extra-class"><pre class="language-text"><code>$('#test-ul li').text('JS'); // 是不是两个节点都变成了JS？
+</code></pre></div><p>所以jQuery对象的另一个好处是我们可以执行一个操作，作用在对应的一组DOM节点上。即使选择器没有返回任何DOM节点，调用jQuery对象的方法仍然不会报错：</p> <div class="language- extra-class"><pre class="language-text"><code>// 如果不存在id为not-exist的节点：
+$('#not-exist').text('Hello'); // 代码不报错，没有节点被设置为'Hello'
+</code></pre></div><p>这意味着jQuery帮你免去了许多if语句。</p> <h3 id="修改css"><a href="#修改css" class="header-anchor">#</a> 修改CSS</h3> <p>jQuery对象有“批量操作”的特点，这用于修改CSS实在是太方便了。考虑下面的HTML结构：</p> <div class="language- extra-class"><pre class="language-text"><code>&lt;!-- HTML结构 --&gt;
+&lt;ul id=&quot;test-css&quot;&gt;
+    &lt;li class=&quot;lang dy&quot;&gt;&lt;span&gt;JavaScript&lt;/span&gt;&lt;/li&gt;
+    &lt;li class=&quot;lang&quot;&gt;&lt;span&gt;Java&lt;/span&gt;&lt;/li&gt;
+    &lt;li class=&quot;lang dy&quot;&gt;&lt;span&gt;Python&lt;/span&gt;&lt;/li&gt;
+    &lt;li class=&quot;lang&quot;&gt;&lt;span&gt;Swift&lt;/span&gt;&lt;/li&gt;
+    &lt;li class=&quot;lang dy&quot;&gt;&lt;span&gt;Scheme&lt;/span&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre></div><p>要高亮显示动态语言，调用jQuery对象的css('name', 'value')方法，我们用一行语句实现：</p> <div class="language- extra-class"><pre class="language-text"><code>$('#test-css li.dy&gt;span').css('background-color', '#ffd351').css('color', 'red');
+</code></pre></div><p><strong>注意</strong>，jQuery对象的所有方法都返回一个jQuery对象（可能是新的也可能是自身），这样我们可以进行链式调用，非常方便。
+jQuery对象的css()方法还可以这么用：</p> <div class="language- extra-class"><pre class="language-text"><code>var div = $('#test-div');
+div.css('color'); // '#000033', 获取CSS属性
+div.css('color', '#336699'); // 设置CSS属性
+div.css('color', ''); // 清除CSS属性
+</code></pre></div><p>为了和JavaScript保持一致，CSS属性可以用'background-color'和'backgroundColor'两种格式。</p> <p>css()方法将作用于DOM节点的style属性，具有最高优先级。如果要修改class属性，可以用jQuery提供的下列方法：</p> <div class="language- extra-class"><pre class="language-text"><code>var div = $('#test-div');
+div.hasClass('highlight'); // false， class是否包含highlight
+div.addClass('highlight'); // 添加highlight这个class
+div.removeClass('highlight'); // 删除highlight这个class
+</code></pre></div><h3 id="添加dom"><a href="#添加dom" class="header-anchor">#</a> 添加DOM</h3> <p>要添加新的DOM节点，除了通过jQuery的html()这种暴力方法外，还可以用append()方法，例如：</p> <div class="language- extra-class"><pre class="language-text"><code>&lt;div id=&quot;test-div&quot;&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;span&gt;JavaScript&lt;/span&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;span&gt;Python&lt;/span&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;span&gt;Swift&lt;/span&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;
+</code></pre></div><p>向列表新增一个语言</p> <div class="language- extra-class"><pre class="language-text"><code>var ul = $('#test-div&gt;ul');
+ul.append('&lt;li&gt;&lt;span&gt;Haskell&lt;/span&gt;&lt;/li&gt;');
+</code></pre></div><p>除了接受字符串，append()还可以传入原始的DOM对象，jQuery对象和函数对象：</p> <div class="language- extra-class"><pre class="language-text"><code>// 创建DOM对象:
+var ps = document.createElement('li');
+ps.innerHTML = '&lt;span&gt;Pascal&lt;/span&gt;';
+// 添加DOM对象:
+ul.append(ps);
+
+// 添加jQuery对象:
+ul.append($('#scheme'));
+
+// 添加函数对象:
+ul.append(function (index, html) {
+    return '&lt;li&gt;&lt;span&gt;Language - ' + index + '&lt;/span&gt;&lt;/li&gt;';
+});
+</code></pre></div><p>传入函数时，要求返回一个字符串、DOM对象或者jQuery对象。因为jQuery的append()可能作用于一组DOM节点，只有传入函数才能针对每个DOM生成不同的子节点。
+**append()**把DOM添加到最后，**prepend()**则把DOM添加到最前。
+另外注意，如果要添加的DOM节点已经存在于HTML文档中，它会首先从文档移除，然后再添加，也就是说，用append()，你可以移动一个DOM节点。
+如果要把新节点插入到指定位置，例如，JavaScript和Python之间，那么，可以先定位到JavaScript，然后用after()方法：</p> <div class="language- extra-class"><pre class="language-text"><code>var js = $('#test-div&gt;ul&gt;li:first-child');
+js.after('&lt;li&gt;&lt;span&gt;Lua&lt;/span&gt;&lt;/li&gt;');
+</code></pre></div><p>也就是说，同级节点可以用after()或者before()方法。</p> <h3 id="删除节点"><a href="#删除节点" class="header-anchor">#</a> 删除节点</h3> <p>要删除DOM节点，拿到jQuery对象后直接调用remove()方法就可以了。如果jQuery对象包含若干DOM节点，实际上可以一次删除多个DOM节点：</p> <div class="language- extra-class"><pre class="language-text"><code>var li = $('#test-div&gt;ul&gt;li');
+li.remove(); // 所有&lt;li&gt;全被删除
+</code></pre></div><h2 id="事件"><a href="#事件" class="header-anchor">#</a> 事件</h2> <p>因为JavaScript在浏览器中以单线程模式运行，页面加载后，一旦页面上所有的JavaScript代码被执行完后，就只能依赖触发事件来执行JavaScript代码。
+由于不同的浏览器绑定事件的代码都不太一样，所以用jQuery来写代码，就屏蔽了不同浏览器的差异，我们总是编写相同的代码。</p> <h3 id="绑定事件"><a href="#绑定事件" class="header-anchor">#</a> 绑定事件</h3> <p>举个例子，假设要在用户点击了超链接时弹出提示框，我们用jQuery这样绑定一个click事件：</p> <div class="language- extra-class"><pre class="language-text"><code>/* HTML:
+ *
+ * &lt;a id=&quot;test-link&quot; href=&quot;#0&quot;&gt;点我试试&lt;/a&gt;
+ *
+ */
+
+// 获取超链接的jQuery对象:
+var a = $('#test-link');
+a.on('click', function () {
+    alert('Hello!');
+});
+</code></pre></div><p>on方法用来绑定一个事件，我们需要传入事件名称和对应的处理函数。</p> <p>另一种更简化的写法是直接调用click()方法：</p> <div class="language- extra-class"><pre class="language-text"><code>a.click(function () {
+    alert('Hello!');
+});
+</code></pre></div><h3 id="能绑定的事件分类"><a href="#能绑定的事件分类" class="header-anchor">#</a> 能绑定的事件分类</h3> <h4 id="鼠标事件"><a href="#鼠标事件" class="header-anchor">#</a> 鼠标事件</h4> <p>click: 鼠标单击时触发；
+dblclick：鼠标双击时触发；
+mouseenter：鼠标进入时触发；
+mouseleave：鼠标移出时触发；
+mousemove：鼠标在DOM内部移动时触发；
+hover：鼠标进入和退出时触发两个函数，相当于mouseenter加上mouseleave。</p> <h4 id="键盘事件"><a href="#键盘事件" class="header-anchor">#</a> 键盘事件</h4> <p>键盘事件仅作用在当前焦点的DOM上，通常是<input>和<textarea></textarea></p></li></ul></div></div></div></div></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/docs/assets/js/app.09d10d22.js" defer></script><script src="/docs/assets/js/5.2d095b72.js" defer></script><script src="/docs/assets/js/17.99236714.js" defer></script>
+  </body>
+</html>
