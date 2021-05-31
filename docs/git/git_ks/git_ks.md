@@ -54,7 +54,7 @@ Github是代码托管中心，维护远程库
 
 * 保存机制
 
-![image-20201127114206213](/Users/zhouxihang/Desktop/知识总结/git/Git的基本使用/Git Note.assets/image-20201127114206213.png)
+![image-20201127114206213](./Git Note.assets/image-20201127114206213.png)
 
 * 提交对象
 
@@ -63,11 +63,11 @@ Github是代码托管中心，维护远程库
 
   这个commit对象就是git log的commit的hash值
 
-  ![image-20201127114648109](/Users/zhouxihang/Desktop/知识总结/git/Git的基本使用/Git Note.assets/image-20201127114648109.png)
+  ![image-20201127114648109](./Git Note.assets/image-20201127114648109.png)
 
 * 提交对象及其父对象形成的链条
 
-![image-20201127114726365](/Users/zhouxihang/Desktop/知识总结/git/Git的基本使用/Git Note.assets/image-20201127114726365.png)
+![image-20201127114726365](./Git Note.assets/image-20201127114726365.png)
 Snapshot就是快照，所有的提交对象通过链表的方式表示时间关系
 
 #### Git分支管理机制
@@ -86,13 +86,13 @@ Snapshot就是快照，所有的提交对象通过链表的方式表示时间关
 
 * 在分支上提交使得testing指针移动
 
-![image-20201127115457114](/Users/zhouxihang/Desktop/知识总结/git/Git的基本使用/Git Note.assets/image-20201127115457114.png)
+![image-20201127115457114](./Git Note.assets/image-20201127115457114.png)
 
 在分支上提交只会移动testing指针
 
 * 在master上也提交会造成分支
 
-![image-20201127115727948](/Users/zhouxihang/Desktop/知识总结/git/Git的基本使用/Git Note.assets/image-20201127115727948.png)
+![image-20201127115727948](./Git Note.assets/image-20201127115727948.png)
 
 ## Git命令行
 

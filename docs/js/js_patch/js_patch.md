@@ -1017,3 +1017,34 @@ f();
 ```
 
 for..of与for循环相同
+
+## 24.单问号，双问号
+
+```js
+var street = user.address && user.address.street;
+//等同于下面的代码
+var street = user.address?.street
+```
+
+```js
+var fooInput = myForm.querySelector('input[name=foo]')
+var fooValue = fooInput ? fooInput.value : undefined
+//等于如下
+var fooValue = myForm.querySelector('input[name=foo]')?.value
+```
+
+
+
+对于如下的情况：
+
+```js
+const result = response?.settings?.n || 100
+```
+
+如果本意是存在n就返回n的话那么当n为0的时候仍然会返回100。所以||就会在这个时候出现一个bug。
+
+```js
+const result = response?.settings?.n ?? 100
+```
+
+可以直接写成如上的形式，这样的话只有当左边的值是null或者undefined的时候才会返回右边的值。

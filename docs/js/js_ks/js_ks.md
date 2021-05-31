@@ -1219,8 +1219,8 @@ console.log(sanmao instanceof Dog); //=>true
 - 对象上天生具备一个属性：constructor，指向类本身
 
 - 每一个对象（普通对象、prototype、实例、函数等）都具备：proto，属性值是当前实例所属类的原型
-![Alt text](./1587968325263.png)
-注意：1.每一个函数对象（即构造函数，即类）的\__proto__都是指向的Function.prototype
+  ![Alt text](./1587968325263.png)
+  注意：1.每一个函数对象（即构造函数，即类）的\__proto__都是指向的Function.prototype
               2:Function.prototype指向的是Object.prototype
 ####   11.2.4基于内置类原型扩展方法和借用
 ##### 扩展
@@ -2326,34 +2326,42 @@ console.log(a, b); */
 ### 对象解构赋值
 
 ```js
-	/* let obj = {
+	 let obj = {
 		id: 1,
 		name: '珠峰培训',
 		age: 10
-	}; */
+	}; 
 
-	/* 
+	
 	//=>对象解构赋值，创建的变量名需要和属性名保持一致
 	let {
 		id,
 		name,
 		sex
 	} = obj;
-	console.log(id, name, sex); */
+	console.log(id, name, sex); 
 
-	/*
+	
 	//=>赋值默认值 
 	let {
 		sex = 0
 	} = obj;
-	console.log(id, name, sex); */
+	console.log(id, name, sex); 
 
 	// 设置别名
-	/* let age = 0;
+	let age = 0;
 	let {
 		age: age1
 	} = obj;
-	console.log(age1); */
+	console.log(age1); 
+
+	//设置别名的同时赋予默认值
+	let {
+    sex : gender = 'man',
+    age: old = 11
+  } = obj;
+	console.log(gender);//=>man
+	console.log(age);//=>11
 ```
 
 ##### 真实项目中的应用

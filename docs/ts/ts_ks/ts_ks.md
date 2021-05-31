@@ -471,6 +471,16 @@ tom.run();
 #### 9.4类型断言和类型声明的区别
 * 只要类型A兼容类型B或者类型B兼容类型A，则类型A和类型B可以相互断言
 * 只有类型A兼容类型B，才能将类型B的值赋给A
+### 10.高级类型
+
+#### 10.1 交叉类型
+
+A & B 返回一个新的类型，这个类型是A和B的并集，即返回的这个类型拥有A和B的所有属性。
+
+#### 10.2 联合类型
+
+obj: A | B的意思是obj可以是类型A或者是类型B
+
 ## 二.进阶
 ### 1.类型别名
 用来给一个类型起一个新名字
@@ -569,19 +579,19 @@ let cat = new Animal('tom');
 
       ```ts
       class Animal{
-
+	   
         private name;
-
+	   
         public constructor(name){
-
+	   
       ​    this.name = name;
-
+	   
         }
-
+	   
       }
-
+	   
       let cat = new Animal('tom');
-
+	   
       console.log(cat.name);
       ```
 	   
