@@ -53,6 +53,7 @@
 注意：
 
 * 使用的时候应该按照love(link visited)   hate (hover active)的顺序从上到下依次书写
+* E:hover中间不能加空格
 
 #### 1-4. 目标伪类选择器
 

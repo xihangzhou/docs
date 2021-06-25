@@ -297,7 +297,7 @@ ReactDOM.render(
 class Clock extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {date: new Date()};
+    this.state = {date: new Date()};// 给state一个初值
   }
 
   render() {
