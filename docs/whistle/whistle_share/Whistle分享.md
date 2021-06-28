@@ -1,10 +1,8 @@
 # Whistle分享
 
-在前端的日常开发过程中，
-
 ## Whistle是什么
 
-### 什么是代理？
+### 什么是Whistle
 
 ## Whistle的基本使用
 
