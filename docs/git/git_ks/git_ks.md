@@ -222,10 +222,11 @@ Snapshot就是快照，所有的提交对象通过链表的方式表示时间关
       ![image-20201208172828631](Git Note.assets/image-20201208172828631.png)
       
       * 把文件修改到满意的程度
-      * git add[文件名]
-      * 生成commit
-        * 如果是merge的话直接git commit -m"message" ，会生成一个新的commit
-     * 如果是rebase的话应该使用git rebase --continue
+      * 把修改的文件加入到暂存区
+        * git add[文件名] (在vscode中文件的+号相当于git add)
+      * 继续进行分之合并
+       * 如果是merge的话直接git commit -m"message" ，会生成一个新的commit，这个commit包含了冲突的解决和merge的后果（在Vscode中上面的勾就代表着这个）
+       * 如果是rebase的话应该使用git rebase --continue
       * 注意：在解决冲突的时候应该注意HEAD的指向，有可能HEAD此时指向的是fetch新生成的origin/<>分支
    
 * git rebase [base分支]
