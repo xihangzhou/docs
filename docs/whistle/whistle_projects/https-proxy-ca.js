@@ -26,11 +26,10 @@ function request(clientReq, clientRes) {
 }
 
 var options = {
-    key: fs.readFileSync('./private.pem'),
-    cert: fs.readFileSync('./public.crt')
+    key: fs.readFileSync('./private_key.pem'),
+    cert: fs.readFileSync('./cacert.pem')
 };
 
-console.log(options);
-
 //启动一个服务器开启request监听事件
-https.createServer(options).on('request', request).listen(8899, '0.0.0.0');
+https.createServer(options).on('request', request).listen(8800, '0.0.0.0');
+// https.createServer(options,request).listen(8800, '0.0.0.0');
