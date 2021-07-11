@@ -49,7 +49,7 @@ function request(clientReq, clientRes) {
     var u = new URL(clientReq.url);
     var options = {
         hostname : u.hostname, 
-        port     : u.port || 80,
+        port     : u.port || 80,ao
         path     : u.pathname,       
         method     : clientReq.method,
         headers     : clientReq.headers
@@ -157,7 +157,7 @@ http.createServer().on('request', request).listen(8899, '0.0.0.0');
 
 下面这张图很直观的展示了其实现的过程：
 
-![image-20210703173654810](Whistle分享.assets/image-20210703173654810.png)
+![image-20210702130810642](Whistle分享.assets/image-20210702130810642.png)
 
 通过这张图我们来细说一下隧道代理的实现过程：
 
@@ -179,40 +179,39 @@ http.createServer().on('request', request).listen(8899, '0.0.0.0');
 刚刚我们讲到，什么时候请求建立隧道连接是系统内部实现的，而代理HTTPS流量就是其中的一种情况。所以当设置代理后再发起HTTPS请求时，客户端就会先向代理服务器发送CONNECT请求建立隧道连接。实现的代码如下：
 
 ```js
-const http = require("http");
-const {URL} = require("url");
-const net = require("net");
+const http = require("http");
+const { URL } = require("url");
+const net = require("net");
 
-// 启动端口
-let port = 8899;
-let httpTunnel = new http.Server();
+// 启动端口
+let port = 8899;
+let httpTunnel = new http.Server();
 
-// 启动隧道代理服务
-httpTunnel.listen(port, () => {
-  console.log(`简易HTTPS中间人代理启动成功，端口：${port}`);
+// 启动隧道代理服务
+httpTunnel.listen(port, () => {
+  console.log("Tunnel Server is running on: https://localhost:%s", port);
 });
 
-// 监听connect请求
-httpTunnel.on("connect", (req, cltSocket, head) => {
-    var srvUrl = new URL(`http://${req.url}`);
-  console.log(`CONNECT ${srvUrl.hostname}:${srvUrl.port}`);
-  // 建立到服务端的TCP
-  var srvSocket = net.connect(srvUrl.port, srvUrl.hostname, () => {
-    cltSocket.write(
-      "HTTP/1.1 200 Connection Established\r\n" +
-        "Proxy-agent: MITM-proxy\r\n" +
-        "\r\n"
-    );
-    srvSocket.write(head);
-    // 转发数据
-    srvSocket.pipe(cltSocket);
-    cltSocket.pipe(srvSocket);
-  });
-  srvSocket.on("error", (e) => {
-    console.error(e);
-  });
+// 监听connect请求
+httpTunnel.on("connect", (req, clientSocket, head) => {
+  var serverUrl = new URL(`http://${req.url}`);
+  console.log(`CONNECT ${serverUrl.hostname}:${serverUrl.port}`);
+  // 建立到服务端的TCP连接
+  var serverSocket = net.connect(serverUrl.port, serverUrl.hostname, () => {
+    clientSocket.write(
+      "HTTP/1.1 200 Connection Established\r\n" +
+        "Proxy-agent: MITM-proxy\r\n" +
+        "\r\n"
+    );
+    serverSocket.write(head);
+    // 转发数据
+    serverSocket.pipe(clientSocket);
+    clientSocket.pipe(serverSocket);
+  });
+  serverSocket.on("error", (e) => {
+    console.error(e);
+  });
 });
-
 ```
 
 在本地启动服务后，同普通代理一样需要进行代理的配置。经过配置过后发现可以正常的浏览网页。
@@ -225,7 +224,7 @@ httpTunnel.on("connect", (req, cltSocket, head) => {
 
 理解HTTPS的工作原理是实现中间人攻击的前提。关于HTTPS工作原理的文章已经有很多，这里介绍一篇讲得比较清楚的文章。[HTTPS 详解一：附带最精美详尽的 HTTPS 原理图](https://segmentfault.com/a/1190000021494676)。如果有不清楚的同学可以先移步查看。
 
-
+![image-20210707204606332](Whistle分享.assets/image-20210707204606332.png)
 
 如上图所示，包含公钥的数字证书的正确性是整个传输过程安全的保障。如果包含公钥的数字证书被一个中间人截获，并在客户端上安装了中间人伪造的CA根证书并让客户端信任，那么中间人就可以在客户端和服务器的交流过程中拿到传输的数据并不引起双方的注意。
 
@@ -243,7 +242,7 @@ httpTunnel.on("connect", (req, cltSocket, head) => {
 
 #### 1.3.2 实现HTTPS代理的原理
 
-在理解了中间人攻击后，代理HTTPS的基本思路就可以理清。
+在理解了中间人攻击后，就可以理清代理HTTPS的基本思路。
 
 1. 建立客户端到中间人的隧道连接
 
@@ -307,7 +306,7 @@ const net = require("net");
 var https = require("https");
 var fs = require("fs");
 var path = require('path');
-
+var { portConfig } = require("../port-config.js");
 
 let tunnelPort = 8899; // 启动隧道的端口
 let httpsPort = 8900; // 启动HTTPS代理服务的端口
@@ -323,34 +322,34 @@ var httpsServer = https.createServer(credentials);
 
 // 启动代理服务
 httpTunnel.listen(tunnelPort, () => {
-  console.log(`简易HTTP隧道代理启动成功，端口：${tunnelPort}`);
+  console.log(`http tunnel server is running on ths port of ${tunnelPort}`);
 });
 httpsServer.listen(httpsPort, () => {
-  console.log(`简易HTTPS中间人代理启动成功，端口：${httpsPort}`);
+  console.log(`https server is running on ths port of ${httpsPort}`);
 });
-
+ 
 // 监听connect请求
-httpTunnel.on("connect", (req, cltSocket, head) => {
-  var srvUrl = new URL(`http://${req.url}`);
-  console.log(`CONNECT ${srvUrl.hostname}:${srvUrl.port}`);
+httpTunnel.on("connect", (req, clientSocket, head) => {
+  var serverUrl = new URL(`http://${req.url}`);
+  console.log(`CONNECT ${serverUrl.hostname}:${serverUrl.port}`);
   // 建立到HTTPS代理服务端的TCP
-  var srvSocket = net.connect(httpsPort, "127.0.0.1", () => {
-    cltSocket.write(
+  var serverSocket = net.connect(httpsPort, "127.0.0.1", () => {
+    clientSocket.write(
       "HTTP/1.1 200 Connection Established\r\n" +
         "Proxy-agent: MITM-proxy\r\n" +
         "\r\n"
     );
-    srvSocket.write(head);
+    serverSocket.write(head);
     // 转发数据
-    srvSocket.pipe(cltSocket);
-    cltSocket.pipe(srvSocket);
+    serverSocket.pipe(clientSocket);
+    clientSocket.pipe(serverSocket);
   });
-  srvSocket.on("error", (e) => {
+  serverSocket.on("error", (e) => {
     console.error(e);
   });
 });
 
-// HTTPS代理服务端监听和转发请求
+// HTTPS代理服务端监听转发请求
 httpsServer.on("request", (clientReq, clientRes) => {
   // 解析客户端请求
   var options = {
@@ -363,7 +362,7 @@ httpsServer.on("request", (clientReq, clientRes) => {
   // 再重新发送请求到真实的服务器
   var proxyReq = https
     .request(options, function (proxyRes) {
-     // 重写响应
+      // 转发请求
       clientRes.writeHead(proxyRes.statusCode, proxyRes.headers);
       proxyRes.pipe(clientRes);
     })
@@ -440,7 +439,9 @@ $ w2 start
 
 5. [安装根证书][http://wproxy.org/whistle/webui/https.html]
 
-查看修改HTTPS请求的关键一步。把whistle这个"中间人"代理服务器的根证书安装到本地并信任。这一步等同于”中间人“向客户端注入证书。
+查看修改HTTPS请求的关键一步，把whistle这个"中间人"代理服务器的根证书安装到本地并信任，等同于”中间人“向客户端注入证书。如果没有安装根证书就只能通过隧道代理进行简单的转发，也拿不到请求的内容。在Whistle中隧道代理的请求方法为CONNECT，HOST为Tunnel to。
+
+![img](Whistle分享.assets/6c98051660eeff240e7e0b354c8a8_w1661_h335.png)
 
 6. 在浏览器中进入Whistle配置页面
 
@@ -504,10 +505,10 @@ www.qq.com 127.0.0.1:8899
 例(2)
 
 ```
-www.qq.com cloud.tencent.com
+sports.qq.com cloud.tencent.com
 ```
 
-这条规则的`pattern`是www.qq.com，`operatorURI`是cloud.tencent.com。用于把域名为www.qq.com的请求代理到cloud.tencent.com上。由于cloud.tencent.com是一个url，所以此时不能交换两者的位置。
+这条规则的`pattern`是sports.qq.com，`operatorURI`是cloud.tencent.com。用于把域名为sports.qq.com的请求代理到cloud.tencent.com上。由于cloud.tencent.com是一个url，所以此时不能交换两者的位置。
 
 之所以支持位置的交换是为了向传统的hosts文件对齐，但是为了避免一些不必要的麻烦，推荐大家在使用whistle的时候尽量使用同一套规则。
 
@@ -856,4 +857,16 @@ pattern file://[本地文件地址]
 ## 4. 总结
 
 这篇文章总结了代理的基本两种基本方式，并结合这两种基本方式和中间人攻击实现了对HTTP/HTTPS流量的简单代理。除此之外还分享了Whistle的基本的使用规则和应用场景。在此基础上大家可以继续阅读whistle的源码了解更多的实现细节，或者查阅官方文档获取更多细致的用法，结合自身的实际业务实现发掘更多的应用场景。
+
+## 参考文章
+
+[Whitsle官方指南](https://wproxy.org/whistle/)
+
+[HTTPS 详解一：附带最精美详尽的 HTTPS 原理图](https://segmentfault.com/a/1190000021494676)
+
+[HTTP 代理原理及实现（一）](https://imququ.com/post/web-proxy.html)
+
+[whistle工具全程入门](https://imweb.io/topic/596480af33d7f9a94951744c)
+
+[whistle适用技巧](https://yeee.wang/posts/2c9.html#more)
 
