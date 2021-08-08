@@ -316,7 +316,7 @@ ReactDOM.render(
 );
 ```
 
-要使用state最好是写成class形式的组件比较方便，在state中保存了这个组件内部自己管理的数据。
+要使用只能写成class形式的组件，在state中保存了这个组件内部自己管理的数据。
 
 #### 生命周期
 
@@ -389,6 +389,8 @@ this.setState(function(state, props) {
 
 3.setState的更新是合并更新而不是直接替换
 
+4.state和生命周期函数的使用都需要使用class组件，因为state和生命周期函数都是组件实例上的属性
+
 ### 6.事件处理
 
 #### React中阻止默认行为
@@ -426,7 +428,8 @@ class Toggle extends React.Component {
   }
   render() {
     return (
-      <button onClick={this.handleClick}>        				     			 			{this.state.isToggleOn ? 'ON' : 'OFF'}
+      <button onClick={this.handleClick}>        				     			 			
+        {this.state.isToggleOn ? 'ON' : 'OFF'}
       </button>
     );
   }
@@ -1240,6 +1243,8 @@ class ErrorBoundary extends React.Component {
 
 类似vue中的refs，同样提供给父组件一种方法去直接访问子组件。
 
+如果绑定到HTML原生标签上current就返回DOM，如果是react实例比如自定义组件就返回这个实例
+
 比如为DOM元素添加ref，如下：
 
 ```jsx
@@ -1263,7 +1268,8 @@ class CustomTextInput extends React.Component {
       <div>
         <input
           type="text"
-          ref={this.textInput} />        
+          ref={this.textInput} />  
+        // 点击下面这个input也只会让上面这个input focus
         <input
           type="button"
           value="Focus the text input"
@@ -1275,7 +1281,7 @@ class CustomTextInput extends React.Component {
 }
 ```
 
-官网还有一些具体的说明，比如为class组件添加ref等。注意这种方法一定程度上影响了组件之间的独立性，所以尽量少用。
+官网还有一些具体的说明，比如为class组件添加ref等。注意这种方法一定程度上影响了组件之间的独立性，所以尽量少用。并且函数式组件不能使用Refs
 
 ### Refs转发
 
@@ -1303,7 +1309,7 @@ const ref = React.createRef();
 4. 我们向下转发该 `ref` 参数到 `<button ref={ref}>`，将其指定为 JSX 属性。
 5. 当 ref 挂载完成，`ref.current` 将指向 `<button>` DOM 节点。
 
-官网中有更详细的介绍，对于高阶组件的使用和DevTools显示自定义名称
+官网中有更详细的使用例子。这个方法在使用高阶函数的时候比较有用。因为经常在使用高阶函数把别的函数包起来，但是又不需要访问这个高阶函数，这个时候高阶函数就要用到Refs转发把访问转发到它包起来的组件上。
 
 ### Fragments
 
@@ -1315,12 +1321,12 @@ const ref = React.createRef();
 class Table extends React.Component {
   render() {
     return (
-      <table>
+      <table>				
         <tr>
           <Columns />
         </tr>
       </table>
-    );
+    );  
   }
 }
 
@@ -1603,11 +1609,284 @@ function ExampleApplication() {
 
 ### 非受控组件
 
-之后再看看
+* 受控组件
+  * 这个组件的值交还给使用者自己进行定义，即把这个组件的状态管理交还给使用者
+* 非受控组件
+  * 这个组件的值在组件内部进行处理，使用者不需要关心这个值的更新过程
+
+## React 基本API
+
+### React
+
+React类是最进本的React方法类，如果你通过使用 `<script>` 标签的方式来加载 React，则可以通过 `React` 全局变量对象来获得 React 的顶层 API。当你使用 ES6 与 npm 时，可以通过编写 `import React from 'react'` 来引入它们。当你使用 ES5 与 npm 时，则可以通过编写 `var React = require('react')` 来引入它们。
+
+#### 组件相关
+
+##### React.Component
+
+###### 什么是React.Component
+
+`React.Component` 是使用 [ES6 classes](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Classes) 方式定义 React 组件的基类：
+
+```js
+class Greeting extends React.Component {
+  render() {
+    return <h1>Hello, {this.props.name}</h1>;
+  }
+}
+```
+
+###### 组件内的生命周期
+
+**[生命周期自查表](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/)**
+
+`React.Component` 中定义了每个组件的生命周期方法，然后在组件处于不同的时期时进行调用。以下为不同周期的不同生命周期函数，详情可以参考后面的生命周期函数详解：
+
+**挂载**
+
+当组件实例被创建并插入 DOM 中时，其生命周期调用顺序如下：
+
+- [**`constructor()`**](https://zh-hans.reactjs.org/docs/react-component.html#constructor)
+- [`static getDerivedStateFromProps()`](https://zh-hans.reactjs.org/docs/react-component.html#static-getderivedstatefromprops)
+- [**`render()`**](https://zh-hans.reactjs.org/docs/react-component.html#render)
+- [**`componentDidMount()`**](https://zh-hans.reactjs.org/docs/react-component.html#componentdidmount)
+
+**更新**
+
+当组件的 props 或 state 发生变化时会触发更新。组件更新的生命周期调用顺序如下：
+
+- [`static getDerivedStateFromProps()`](https://zh-hans.reactjs.org/docs/react-component.html#static-getderivedstatefromprops)
+- [`shouldComponentUpdate()`](https://zh-hans.reactjs.org/docs/react-component.html#shouldcomponentupdate)
+- [**`render()`**](https://zh-hans.reactjs.org/docs/react-component.html#render)
+- [`getSnapshotBeforeUpdate()`](https://zh-hans.reactjs.org/docs/react-component.html#getsnapshotbeforeupdate)
+- [**`componentDidUpdate()`**](https://zh-hans.reactjs.org/docs/react-component.html#componentdidupdate)
+
+**卸载**
+
+当组件从 DOM 中移除时会调用如下方法：
+
+- [**`componentWillUnmount()`**](https://zh-hans.reactjs.org/docs/react-component.html#componentwillunmount)
+
+**错误处理**
+
+当渲染过程，生命周期，或子组件的构造函数中抛出错误时，会调用如下方法：
+
+- [`static getDerivedStateFromError()`](https://zh-hans.reactjs.org/docs/react-component.html#static-getderivedstatefromerror)
+- [`componentDidCatch()`](https://zh-hans.reactjs.org/docs/react-component.html#componentdidcatch)
+
+###### 组件其他API
+
+组件还提供了一些额外的 API：
+
+- [`setState()`](https://zh-hans.reactjs.org/docs/react-component.html#setstate)
+- [`forceUpdate()`](https://zh-hans.reactjs.org/docs/react-component.html#forceupdate)
+
+###### class属性
+
+- [`defaultProps`](https://zh-hans.reactjs.org/docs/react-component.html#defaultprops)
+- [`displayName`](https://zh-hans.reactjs.org/docs/react-component.html#displayname)
+
+###### 实例属性
+
+- [`props`](https://zh-hans.reactjs.org/docs/react-component.html#props)
+- [`state`](https://zh-hans.reactjs.org/docs/react-component.html#state)
+
+##### React.PureComponent
+
+和React.Component类似，区别在于PureComponent没有[`shouldComponentUpdate()`](https://reactjs.org/docs/react-component.html#shouldcomponentupdate)生命周期。但是PureComponent会浅层的对比props和state从而决定要不要调用render方法。利用pureCompopnent的这个特性可以提升一些性能。
+
+但是注意pureComponent只能浅层对比，要深层对比的话要遍历或者使用强制更新。
+
+##### React.memo
+
+```js
+function MyComponent(props) {
+  /* render using props */
+}
+function areEqual(prevProps, nextProps) {
+  /*
+  return true if passing nextProps to render would return
+  the same result as passing prevProps to render,
+  otherwise return false
+  */
+}
+export default React.memo(MyComponent, areEqual);
+```
+
+memo是一个高阶组件，接受一个组件返回一个组件。
+
+被memo修饰的组件会记忆上次的props，如果这次更新  的props和上次一样，那么这个组件的render方法就不会被重新调用，而是直接复用上一次的方法。对于一些运算开销大但是却不常更新的组件使用memo是一个很好的性能优化的方法。
+
+但是memo默认只会对props进行浅层的对比，如果要自定义对比可以传入第二个参数。
+
+##### createElement()
+
+```js
+React.createElement(
+  type,// 元素种类
+  [props],
+  [...children]
+)
+```
+
+##### cloneElement()
+
+##### React.Children
+
+##### React.lazy
+
+##### React.Suspense
+
+### ReactDOM
+
+If you use ES6 with npm, you can write `import ReactDOM from 'react-dom'`. If you use ES5 with npm, you can write `var ReactDOM = require('react-dom')`.
+
+ReactDom主要是提供了一系列的方法直接跳出React实例进行对ReactDOM或者是两者之间的联系进行操作。
+
+#### render()
+
+```js
+ReactDOM.render(element, container[, callback])
+```
+
+第一次将react元素挂载到container上，将container的children切换为element中的DOM结构，并不改变container节点本身。如果之后再调用这个方法就使用diff算法只对变化了的节点进行改变。
+
+#### unmountComponentAtNode()
+
+```js
+ReactDOM.unmountComponentAtNode(container)
+```
+
+从DOM上清除组件和它的时间处理器和state。
+
+...其他方法使用时查看即可
+
+## 生命周期方法详解
+
+**[生命周期自查表](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/)**
+
+### render()
+
+```js
+render()
+```
+
+`render()` 方法是 class 组件中唯一必须实现的方法。一定要注意不同与ReactDOM.render方法。
+
+当组件不管是挂载还是通过props,state,forceUpdate()更新都会重新执行render生命周期，它的返回值可能为：
+
+- **React 元素**。通常是通过 JSX 创建的React元素对象，等同于使用React.createElement()创建的元素对象。例如，`<div />` 会被 React 渲染为 DOM 节点，`<MyComponent />` 会被 React 渲染为自定义组件，无论是 `<div />` 还是 `<MyComponent />` 均为 React 元素。
+- **数组或 fragments**。 使得 render 方法可以返回多个React元素,比如使用map方法返回。欲了解更多详细信息，请参阅 [fragments](https://zh-hans.reactjs.org/docs/fragments.html) 文档。
+- **Portals**。可以渲染子节点到不同的 DOM 子树中。欲了解更多详细信息，请参阅有关 [portals](https://zh-hans.reactjs.org/docs/portals.html) 的文档
+- **字符串或数值类型**。它们在 DOM 中会被渲染为文本节点
+- **布尔类型或 `null`**。注意返回bool或者是null就什么都不渲染，这是为了支持返回 `test && <Child />` 的模式，其中 test 为布尔类型。
+
+`render()` 函数应该为纯函数，这意味着在不修改组件 state 的情况下，每次调用时都返回相同的结果，并且它不会直接与浏览器交互。
+
+如需与浏览器进行交互，请在 `componentDidMount()` 或其他生命周期方法中执行你的操作。保持 `render()` 为纯函数，可以使组件更容易思考。
+
+> 注意
+>
+> 如果 `shouldComponentUpdate()` 返回 false，则不会调用 `render()`。
+
+### constructor()
+
+```js
+constructor(props)
+```
+
+constructor方法在组件挂载的时候执行唯一的一次。这个方法也就是class类定义中的construtor构建方法。**如果不初始化 state 或不进行方法绑定，则不需要为 React 组件实现构造函数。**
+
+使用constructor的注意点：
+
+* 应在其他语句之前前调用 `super(props)`。否则，`this.props` 在构造函数中可能会出现未定义的 bug
+* constructor只用来初始化内部state或者为事件处理函数绑定实例
+* 不要在constructor中调用setState方法，直接赋初值即可
+
+```js
+constructor(props) {
+  super(props);
+  // 不要在这里调用 this.setState()
+  this.state = { counter: 0 };
+  this.handleClick = this.handleClick.bind(this);
+}
+```
+
+* 尽量不要使用props来作为state的初始值，因为constructor在整个组件的生命周期中只会执行一次，当组件因为props的变化进行更新的时候只会触发render函数，并不会给state赋初始值
+  * 在这种情况下一半就可以直接使用props.color即可
+  * 如果实在是要用state管理并且让state和props同步，一是可以在使用组件时每次都改变组件的key属性让组件销毁后重置，二是可以使用一个别的生命周期，参考 [blog post on avoiding derived state](https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html) 。
+
+```js
+constructor(props) {
+ super(props);
+ // Don't do this!
+ this.state = { color: props.color };
+}
+```
+
+### componentDidMount()
+
+在组件插入到DOM后立即执行的生命周期方法。所以要 操作DOM节点的操作一定要放在这里。这里也可以用来发送网络请求拉取数据。
+
+主要这里订阅的一些方法要在`componentWillUnmount()`中清除
+
+在这个生命周期中如果调用setState()方法会直接触发一次额外的render()生命周期方法，但是在这个时候实际上浏览器并没有把插入到DOM的内容渲染出来所以用户只能看到一次渲染。虽然只能看到一次渲染但是仍然是不必要的额外开销，应该尽量避免。
+
+### componentDidUpdate()
+
+在更新后立即触发的生命周期函数，第一次渲染不触发。如果 [`shouldComponentUpdate()`](https://reactjs.org/docs/react-component.html#shouldcomponentupdate)最后返回false那么就不触发。
+
+```js
+componentDidUpdate(prevProps) {
+  // 注意如果在这个生命周期中要更新组件的话一定要有条件判断否则就会无限循环，因为变化太快用户看不到渲染结果，但是实际上什么也做不了已经卡死了
+  if (this.props.userID !== prevProps.userID) {
+    this.fetchData(this.props.userID);
+  }
+}
+```
+
+### componentWillUnmount()
+
+```js
+componentWillUnmount()
+```
+
+在React元素unmount DOM之前调用。用来清除各种内存中的缓存，比如timer,netWork requests,subsciptions等。
+
+### shouldComponentUpdate()
+
+```js
+shouldComponentUpdate(nextProps, nextState)
+```
+
+在更新触发render之前触发，返回false的话就不执行[`UNSAFE_componentWillUpdate()`](https://reactjs.org/docs/react-component.html#unsafe_componentwillupdate), [`render()`](https://reactjs.org/docs/react-component.html#render), and [`componentDidUpdate()`](https://reactjs.org/docs/react-component.html#componentdidupdate)。
+
+有两个参数，一个是nexrProps,一个是nextState,可以用this.props,this.state这四个值之间的比较来判断是否要真的执行render方法重新更新。
+
+### getDerivedStateFromProps()
+
+```js
+static getDerivedStateFromProps(props, state)
+```
+
+在挂载的construtor方法后，更新的最开始执行。常用与保持state和props的一致。
+
+还有一些别的生命周期方法但是使用很少需要的时候再看即可。
+
+### 生命周期注意点
+
+* componentDidMount和componentDidUpdate都是发生在render之后，甚至是发生在react已经更新了DOM和refs之后。这保证了在这两个生命周期中能够捕捉到最新的DOM或者是状态
+* 
 
 ## Hook
 
 Hook其实就是一个函数，用来代替声明state和声明周期。或者以此为基础提取出一些公用的逻辑。
+
+这样的好处是：
+
+* 要用state和生命周期只能用class组件，而使用class组件会有this的指向问题，这个处理起来很麻烦
+* 生命周期中做不同的事情使得代码逻辑不好看
+* 难以复用组件之间的相同抽象逻辑
 
 ### Hook规则
 
@@ -1647,6 +1926,13 @@ function Example() {
 </button>
 ```
 
+ 注意：
+
+* state 只在组件首次执行render的时候被创建。在下一次重新渲染时，`useState` 返回给我们当前的 state，即state可以保存上次的状态，即钩子函数每次其实都要执行，但是只是在第一次render之后才创建新的state，之后就直接返回之前的对应的state。
+* 虽然useState()的结果只在第一次render的时候赋初始值，但是useState(initialValue)中如果initialValue是一个函数的话还是会被计算很多次，只是结果在之后的render里忽略不计而已。可以使用`useState(()=>(initialValue()))`的形式把这个函数值用一个匿名函数包起来，这样就只会运算一次。
+
+
+
 ### Effect Hook
 
 Effect hook故名思议就是一个钩子让你可以在这个钩子中去做出一些effect。
@@ -1676,9 +1962,31 @@ function FriendStatus(props) {
 }
 ```
 
-可以把`useEffect` Hook 看做 `componentDidMount`，`componentDidUpdate` 和 `componentWillUnmount` 这三个函数的组合。
+* 可以把`useEffect` Hook 看做 `componentDidMount`，`componentDidUpdate` 和 `componentWillUnmount` 这三个函数的组合。通过这样的方式，可以把一些side Effect放在一个函数中进行解决从而精简代码。
+* 并且通过把useEffect放在内部，可以很好的获取到state,不需要别的api，直接获取即可
+* useEffect在首次渲染以及之后的每次更新都触发，等同于`componentDidMount`，`componentDidUpdate` 。所以这个函数是在DOM更新后才触发。
+* useEffect和`componentDidMount`，`componentDidUpdate`虽然都在更新了DOM后触发，但是useEffect并不会阻碍新的DOM在屏幕上的渲染，所以体验更好一些。
+* 最后返回函数对应的其实是`componentWillUnmount` 生命周期，但是实际上这个返回的函数会在除了第一次render之外的每一次render之后执行，具体执行时机如下。这保证了每次的side effect都可以只作用于最新的props，从而避免了无效的内存使用。
 
-可以定义第二参数控制更新的依赖属性。
+```js
+// Mount with { friend: { id: 100 } } props
+ChatAPI.subscribeToFriendStatus(100, handleStatusChange);     // Run first effect
+
+// Update with { friend: { id: 200 } } props
+ChatAPI.unsubscribeFromFriendStatus(100, handleStatusChange); // Clean up previous effect
+ChatAPI.subscribeToFriendStatus(200, handleStatusChange);     // Run next effect
+
+// Update with { friend: { id: 300 } } props
+ChatAPI.unsubscribeFromFriendStatus(200, handleStatusChange); // Clean up previous effect
+ChatAPI.subscribeToFriendStatus(300, handleStatusChange);     // Run next effect
+
+// Unmount
+ChatAPI.unsubscribeFromFriendStatus(300, handleStatusChange); // Clean up last effect
+```
+
+* 可以定义第二参数控制执行这个effect钩子的依赖参数，这是一个数组，里面添加对应的依赖项
+  * 注意当依赖项里面什么都不填的时候这个effect钩子就相当于`componentDidMount`只执行一次
+  * 当依赖项里面是数组或者其他对象的时候一定要注意是不是要使用深对比而不是直接比较内存地址，否则就会达不到预期的效果
 
 ### 自定义hook
 
@@ -1779,6 +2087,92 @@ function FriendListItem(props) {
 
 注意：**自定义Hook必须以use开头**
 
+### Hooks的规则
+
+#### 使用Hooks的一些注意规则
+
+* 不要在循环，条件，嵌套函数中使用hooks
+* 只在react的函数组件中使用hooks
+
+#### Hooks的有序性调用
+
+Hooks的使用之所以不能使用在循环，条件，嵌套函数中是为了保证Hooks能通过调用顺序保证找到上一次的state状态。
+
+```js
+function Form() {
+  // 1. Use the name state variable
+  const [name, setName] = useState('Mary');
+
+  // 2. Use an effect for persisting the form
+  useEffect(function persistForm() {
+    localStorage.setItem('formData', name);
+  });
+
+  // 3. Use the surname state variable
+  const [surname, setSurname] = useState('Poppins');
+
+  // 4. Use an effect for updating the title
+  useEffect(function updateTitle() {
+    document.title = name + ' ' + surname;
+  });
+
+  // ...
+}
+```
+
+之后每一次执行hooks都会按照顺序执行，并且按照顺序去拿到之前对应的状态。
+
+```js
+// ------------
+// First render
+// ------------
+useState('Mary')           // 1. Initialize the name state variable with 'Mary'
+useEffect(persistForm)     // 2. Add an effect for persisting the form
+useState('Poppins')        // 3. Initialize the surname state variable with 'Poppins'
+useEffect(updateTitle)     // 4. Add an effect for updating the title
+
+// -------------
+// Second render
+// -------------
+useState('Mary')           // 1. Read the name state variable (argument is ignored)
+useEffect(persistForm)     // 2. Replace the effect for persisting the form
+useState('Poppins')        // 3. Read the surname state variable (argument is ignored)
+useEffect(updateTitle)     // 4. Replace the effect for updating the title
+
+// ...
+```
+
+如果把钩子放在了条件判断中：
+
+```js
+  // 🔴 We're breaking the first rule by using a Hook in a condition
+  if (name !== '') {
+    useEffect(function persistForm() {
+      localStorage.setItem('formData', name);
+    });
+  }
+```
+
+就不能保证钩子的按序执行,从而导致state的确认出错：
+
+```js
+useState('Mary')           // 1. Read the name state variable (argument is ignored)
+// useEffect(persistForm)  // 🔴 This Hook was skipped!
+useState('Poppins')        // 🔴 2 (but was 3). Fail to read the surname state variable
+useEffect(updateTitle)     // 🔴 3 (but was 4). Fail to replace the effect
+```
+
+但是可以把这个条件判断放在useEffect中，这样就不会导致出错：
+
+```js
+  useEffect(function persistForm() {
+    // 👍 We're not breaking the first rule anymore
+    if (name !== '') {
+      localStorage.setItem('formData', name);
+    }
+  });
+```
+
 ### UseContext
 
 ```jsx
@@ -1793,9 +2187,7 @@ const value = useContext(MyContext);
 const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
 ```
 
-以a,b为依赖返回第一项参数的返回结果给memoizedValue，在这里第一项的函数的执行返回值是computeExpensiveValue。只有当依赖项a,b发生变化后memoizedValue才会重新去更新从而避免代价很大的运算进行很多次运算
-
-
+以a,b为依赖返回第一项参数的返回结果给memoizedValue，在这里第一项的函数的执行返回值是computeExpensiveValue。只有当依赖项a,b发生变化后memoizedValue才会重新去更新。这个方式可以帮助我们减少一些复杂的运算。相比起useCallback这个方法更加全能因为可以缓存运算的结果。
 
 ### useCallback
 
@@ -1808,9 +2200,96 @@ const memoizedCallback = useCallback(
 );
 ```
 
-useCallback(fn, deps) 相当于 useMemo(() => fn, deps)，即useMemo是把第一个参数的执行结果返回，但是useCallback是把第一个参数直接返回。
+useCallback(fn, deps) 相当于 useMemo(() => fn, deps)，即useMemo是把第一个参数的执行结果返回，但是useCallback是把第一个参数直接返回。对于函数的执行来说并没有什么帮助，反而增加了函数的执行的负担。主要是当组件需要传入函数作为参数的时候结合React.memo()避免组件的重复渲染。
 
-### Memo
+[你不知道的useCallback](https://segmentfault.com/a/1190000020108840)
 
-https://reactjs.org/docs/react-api.html#reactmemo
+### useRef
+
+```js
+const refContainer = useRef(initialValue);
+```
+
+用法一：
+
+用于访问子组件，子组件还可以在定义的时候使用React.forwardRef对ref进行转发。
+
+```js
+function TextInputWithFocusButton() {
+  const inputEl = useRef(null);
+  const onButtonClick = () => {
+    // `current` points to the mounted text input element
+    inputEl.current.focus();
+  };
+  return (
+    <>
+      <input ref={inputEl} type="text" />
+      <button onClick={onButtonClick}>Focus the input</button>
+    </>
+  );
+}
+```
+
+用法二：
+
+由于这个refContainer在一个组件的完整的生命周期的过程中都会被保存，所以每一次render或者是update并不能影响这个值或者说这个refContainer内部的属性，从而可以用来保存值。
+
+比如：
+
+```js
+// 一个timer组件
+function Timer() {
+  const intervalRef = useRef();
+  useEffect(() => {
+    const id = setInterval(() => {
+      // ...
+    });
+    intervalRef.current = id;    
+    return () => {
+      clearInterval(intervalRef.current); //使用intervalRef.current来保存这个timer从而在每次render后执行useEffect之前把旧的timer清除掉
+    };
+  });
+
+  // ...
+}
+```
+
+```js
+// 写一个usePrevious方法去保存一个变量上次render之后的值。
+function Counter() {
+  const [count, setCount] = useState(0);
+  const prevCount = usePrevious(count);  return <h1>Now: {count}, before: {prevCount}</h1>;
+}
+
+function usePrevious(value) {  
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+```
+
+### Hook的一些常见问题
+
+#### Hook和生命周期的对应
+
+- `constructor`: Function components don’t need a constructor. You can initialize the state in the [`useState`](https://reactjs.org/docs/hooks-reference.html#usestate) call. If computing the initial state is expensive, you can pass a function to `useState`.
+- `getDerivedStateFromProps`: Schedule an update [while rendering](https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-getderivedstatefromprops) instead.
+- `shouldComponentUpdate`: See `React.memo` [below](https://reactjs.org/docs/hooks-faq.html#how-do-i-implement-shouldcomponentupdate).
+- `render`: This is the function component body itself.
+- `componentDidMount`, `componentDidUpdate`, `componentWillUnmount`: The [`useEffect` Hook](https://reactjs.org/docs/hooks-reference.html#useeffect) can express all combinations of these (including [less](https://reactjs.org/docs/hooks-faq.html#can-i-skip-an-effect-on-updates) [common](https://reactjs.org/docs/hooks-faq.html#can-i-run-an-effect-only-on-updates) cases).
+- `getSnapshotBeforeUpdate`, `componentDidCatch` and `getDerivedStateFromError`: There are no Hook equivalents for these methods yet, but they will be added soon.
+
+#### 在hook中使用forceUpdate
+
+在react中，只有使用了setState才会触发更新，但是setState的值如果并没有发生变化的话就不会触发更新，在这个情况下可以新建一个state用于强制触发更新。
+
+```js
+  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+
+  function handleClick() {
+    forceUpdate();
+  }
+```
 

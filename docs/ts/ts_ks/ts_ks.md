@@ -73,7 +73,7 @@ let unusable: void = undefined;
 let n:null = null;
 let u:undefined = undefined;
 
-//null和undefined可以赋值给任意的变量类型
+//没有指定--strictNullChecks标记的情况下null和undefined可以赋值给任意的变量类型
 let num:number = n;
 num = u;
 
@@ -81,6 +81,48 @@ num = u;
 let v:void;
 num = v;//报错
 ```
+#### 2.6 Never
+
+`never`类型表示的是那些永不可能存在的值的类型。 例如， `never`类型是那些总是会抛出异常或根本就不会有返回值的函数表达式或箭头函数表达式的返回值类型； 变量也可能是 `never`类型，当它们被永不为真的类型保护所约束时。
+
+`never`类型是任何类型的子类型，也可以赋值给任何类型；然而，*没有*类型是`never`的子类型或可以赋值给`never`类型（除了`never`本身之外）。 即使 `any`也不可以赋值给`never`。
+
+```js
+// 返回never的函数必须存在无法达到的终点
+function error(message: string): never {
+    throw new Error(message);
+}
+
+// 推断的返回值类型为never
+function fail() {
+    return error("Something failed");
+}
+
+// 返回never的函数必须存在无法达到的终点
+function infiniteLoop(): never {
+    while (true) {
+    }
+}
+```
+
+#### Object类型
+
+`object`表示非原始类型，也就是除`number`，`string`，`boolean`，`symbol`，`null`或`undefined`之外的类型。
+
+使用`object`类型，就可以更好的表示像`Object.create`这样的以Object为参数的API。例如：
+
+```ts
+declare function create(o: object | null): void;
+
+create({ prop: 0 }); // OK
+create(null); // OK
+
+create(42); // Error
+create("string"); // Error
+create(false); // Error
+create(undefined); // Error
+```
+
 ### 3.任意类型
 
 * 可以任意给值的类型，相当于js
@@ -127,6 +169,7 @@ myFavoriteNumber = 'seven';
 myFavoriteNumber = 7;
 ```
 ### 5.联合类型
+
 定义一种变量可以是多种类型
 
 #### 5.1创建联合类型
@@ -282,6 +325,27 @@ let sha1: encrypt = function (key, value) {
 console.log(md5('key', 'value'));
 ```
 
+#### 6.6  可索引的类型
+
+```ts
+interface StringArray {
+  [index: number]: string;
+}
+
+let myArray: StringArray;
+myArray = ["Bob", "Fred"];
+
+let myStr: string = myArray[0];
+
+// 定义任意数量的属性
+interface SquareConfig {
+    color?: string;
+    width?: number;
+    [propName: string]: any;
+}
+```
+
+TypeScript支持两种索引签名：字符串和数字。 可以同时使用两种类型的索引，但是数字索引的返回值必须是字符串索引返回值类型的子类型。
 
 ### 7.数组
 
@@ -481,13 +545,237 @@ A & B 返回一个新的类型，这个类型是A和B的并集，即返回的这
 
 obj: A | B的意思是obj可以是类型A或者是类型B
 
+#### 10.3 类型保护与区分类型
+
+如下情况必须要用强制类型定义比较麻烦：
+
+```ts
+let pet = getSmallPet();// pet:Fish | Bird
+
+if ((<Fish>pet).swim) {
+    (<Fish>pet).swim();
+}
+else {
+    (<Bird>pet).fly();
+}
+```
+
+解决方式有三：
+
+1： 
+
+```ts
+// 使用pet is Fish这种类型谓词写一个判断函数
+function isFish(pet: Fish | Bird): pet is Fish {
+    return (<Fish>pet).swim !== undefined;
+}
+
+// 'swim' 和 'fly' 调用都没有问题了
+if (isFish(pet)) {
+    pet.swim();
+}
+else {
+    pet.fly();
+}
+```
+
+2；
+
+```ts
+// 对于原始类型直接使用typeof即可
+function padLeft(value: string, padding: string | number) {
+    if (typeof padding === "number") {
+        return Array(padding + 1).join(" ") + value;
+    }
+    if (typeof padding === "string") {
+        return padding + value;
+    }
+    throw new Error(`Expected string or number, got '${padding}'.`);
+}
+```
+
+3:
+
+```ts
+// 或者是使用instanceof进行判断
+interface Padder {
+    getPaddingString(): string
+}
+
+class SpaceRepeatingPadder implements Padder {
+    constructor(private numSpaces: number) { }
+    getPaddingString() {
+        return Array(this.numSpaces + 1).join(" ");
+    }
+}
+
+class StringPadder implements Padder {
+    constructor(private value: string) { }
+    getPaddingString() {
+        return this.value;
+    }
+}
+
+function getRandomPadder() {
+    return Math.random() < 0.5 ?
+        new SpaceRepeatingPadder(4) :
+        new StringPadder("  ");
+}
+
+// 类型为SpaceRepeatingPadder | StringPadder
+let padder: Padder = getRandomPadder();
+
+if (padder instanceof SpaceRepeatingPadder) {
+    padder; // 类型细化为'SpaceRepeatingPadder'
+}
+if (padder instanceof StringPadder) {
+    padder; // 类型细化为'StringPadder'
+}
+```
+
+#### 10.4 字符串字面量
+
+```ts
+// 只能从以下三个字符串中选一个
+type Easing = "ease-in" | "ease-out" | "ease-in-out";
+```
+
+#### 10.5 数字字面量类型
+
+```ts
+// 只能从一下数字中选一个
+function rollDie(): 1 | 2 | 3 | 4 | 5 | 6 {
+    // ...
+}
+```
+
+#### 10.4 可辨识联合
+
+```ts
+interface Square {
+    kind: "square";
+    size: number;
+}
+interface Rectangle {
+    kind: "rectangle";
+    width: number;
+    height: number;
+}
+interface Circle {
+    kind: "circle";
+    radius: number;
+}
+
+// 这些子接口中必须都要有kind属性
+type Shape = Square | Rectangle | Circle;
+
+function area(s: Shape) {
+  // 通过判断kind来进行不同的操作
+    switch (s.kind) {
+        case "square": return s.size * s.size;
+        case "rectangle": return s.height * s.width;
+        case "circle": return Math.PI * s.radius ** 2;
+    }
+}
+```
+
+#### 10.5 索引类型
+
+```ts
+function pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
+  return names.map(n => o[n]);
+}
+
+interface Person {
+    name: string;
+    age: number;
+}
+let person: Person = {
+    name: 'Jarid',
+    age: 35
+};
+let strings: string[] = pluck(person, ['name']); // ok, string[]
+```
+
+keyof T **索引类型查询操作符**: 
+
+```ts
+// 返回的是键名的联合类型
+let personProps: keyof Person; // 'name' | 'age'
+```
+
+ `T[K]`， **索引访问操作符**：
+
+```ts
+// T[K] 返回的是T这个类的K键的值的类型
+function getProperty<T, K extends keyof T>(o: T, name: K): T[K] {
+    return o[name]; // o[name] is of type T[K]
+}
+```
+
+对于字符串索引签名的类型：
+
+```ts
+interface Map<T> {
+    [key: string]: T;
+}
+let keys: keyof Map<number>; // string
+let value: Map<number>['foo']; // number
+```
+
+#### 10.6 映射类型
+
+```ts
+type Readonly<T> = {
+    readonly [P in keyof T]: T[P];
+}
+type Partial<T> = {
+    [P in keyof T]?: T[P];
+}
+```
+
+[P in keyof T] : P这个键名要在keyof T的联合类型中。
+
 ## 二.进阶
+
 ### 1.类型别名
-用来给一个类型起一个新名字
+用来给一个类型起一个新名字，它有时候和接口比较像，但是更加的灵活。但是别名没有办法继承等，只是单纯的另外取一个名字，应该根据语义决定使用哪一个。
 
 ```ts
 type nickName = string | number;
 let x:nickName = 123;
+```
+
+同接口一样，类型别名也可以是泛型 - 我们可以添加类型参数并且在别名声明的右侧传入：
+
+```ts
+type Container<T> = { value: T };
+```
+
+我们也可以使用类型别名来在属性里引用自己：
+
+```ts
+type Tree<T> = {
+    value: T;
+    left: Tree<T>;
+    right: Tree<T>;
+}
+```
+
+与交叉类型一起使用，我们可以创建出一些十分稀奇古怪的类型。
+
+```ts
+type LinkedList<T> = T & { next: LinkedList<T> };
+
+interface Person {
+    name: string;
+}
+
+var people: LinkedList<Person>;
+var s = people.name;
+var s = people.next.name;
+var s = people.next.next.name;
+var s = people.next.next.next.name;
 ```
 
 ### 2.字符串字面量类型
@@ -502,8 +790,8 @@ let x:nickName = '4';//报错，只能是'1','2','3'中的其中一个
 数组合并了相同类型的对象，而元组（Tuple）合并了不同类型的对象。
 
 ```ts
-let turp:[number,string] = [1,'1'];
-turp.push('2');//添加越界元素只能是number或者string类型
+let turp:[number,string] = [1,'1']; //前两个必须是先number,后string
+turp.push('2');//添加后面超过两个的越界元素只能是number或者string类型
 ```
 ### 4.枚举
 
@@ -517,8 +805,10 @@ enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
 
 #### 4.2 使用方式
 
+1. 在运行时作为对象来使用
+
 ```ts
-enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
+enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat}; // 自动以0为下标开始
 
 //拥有正向映射和反向映射
 console.log(Days["Sun"] === 0); // true
@@ -530,28 +820,69 @@ console.log(Days[0] === "Sun"); // true
 console.log(Days[1] === "Mon"); // true
 console.log(Days[2] === "Tue"); // true
 console.log(Days[6] === "Sat"); // true
+
+enum Days {Sun = 7, Mon = 1, Tue = 2, Wed = 3, Thu = 4, Fri = 5, Sat = 6};// 或者自定义映射关系
 ```
 
-编译结果：
-
-```js
-var Days;
-(function (Days) {
-    Days[Days["Sun"] = 0] = "Sun";
-    Days[Days["Mon"] = 1] = "Mon";
-    Days[Days["Tue"] = 2] = "Tue";//Days["Tus"] = 2的返回值是2
-    Days[Days["Wed"] = 3] = "Wed";
-    Days[Days["Thu"] = 4] = "Thu";
-    Days[Days["Fri"] = 5] = "Fri";
-    Days[Days["Sat"] = 6] = "Sat";
-})(Days || (Days = {}));
+```ts
+// 可以像如下使用反向映射
+enum Enum {
+    A
+}
+let a = Enum.A;
+let nameOfA = Enum[a]; // "A"
 ```
+
+
+
+2. 或者是作为接口来使用
+
+```ts
+// 枚举类型为字符串字面量时
+enum ShapeKind {
+    Circle,
+    Square,
+}
+
+interface Circle {
+    kind: ShapeKind.Circle;
+    radius: number;
+}
+
+interface Square {
+    kind: ShapeKind.Square;
+    sideLength: number;
+}
+
+let c: Circle = {
+    kind: ShapeKind.Square,
+    //    ~~~~~~~~~~~~~~~~ Error!
+    radius: 100,
+}
+
+// 枚举类型本身是枚举成员的联合类型
+enum E {
+    Foo,
+    Bar,
+}
+
+function f(x: E) {
+    if (x !== E.Foo || x !== E.Bar) {
+        //             ~~~~~~~~~~~
+        // Error! Operator '!==' cannot be applied to types 'E.Foo' and 'E.Bar'.
+    }
+}
+```
+
+
 
 #### 4.3 手动赋值和常数项计算项
 
 [手动赋值](https://ts.xcatliu.com/advanced/enum.html)
 
 ### 5.类
+
+在ts中class类的具体使用规则可以直接参照ES6,但是ES6并没有实现私有方法或者是protected修饰符等，需要使用ts的能力让js更加的规范化。如下是ts中有的而es6中暂时还没有的类的方法
 
 #### 5.1 修饰符
 
@@ -716,6 +1047,29 @@ class Cat extends Animal {
 let a = new Animal('Jack');//报错，animal不能被实例化
 ```
 
+4. readonly修饰符
+
+你可以使用 `readonly`关键字将属性设置为只读的。 只读属性必须在声明时或构造函数里被初始化。
+
+```ts
+class Octopus {
+    readonly name: string;
+    readonly numberOfLegs: number = 8;
+    constructor (theName: string) {
+        this.name = theName;
+    }
+}
+let dad = new Octopus("Man with the 8 strong legs");
+dad.name = "Man with the 3-piece suit"; // 错误! name 是只读的.
+
+// 或者采取如下的写法
+class Octopus {
+    readonly numberOfLegs: number = 8;
+    constructor(readonly name: string) {
+    }
+}
+```
+
 #### 5.2 参数属性
 
 1.简写形式
@@ -851,8 +1205,9 @@ let monkey:Monkey = new Monkey('atom');
 ```typescript
 // TypeScript中的静态属性和静态方法
 class Person {
+  // 首先是通过属性实例的简写来进行属性的命名
   public name: string;
-  // 静态属性
+  // 静态属性，再加上对应的修饰符
   static age: number = 22;
   static hobby: string;
 
@@ -910,7 +1265,54 @@ class Dog extends Animal {
 }
 ```
 
+#### 5.7 存取器
 
+同es6 ts也支持通过getters/setters来截取对对象成员的访问。
+
+```js
+let passcode = "secret passcode";
+
+class Employee {
+  // 这是一个实例属性，借鉴了ES6的语法，并且加上一个private把这个实例属性作为了私有属性
+    private _fullName: string;
+
+    get fullName(): string {
+        return this._fullName;
+    }
+
+    set fullName(newName: string) {
+        if (passcode && passcode == "secret passcode") {
+            this._fullName = newName;
+        }
+        else {
+            console.log("Error: Unauthorized update of employee!");
+        }
+    }
+}
+
+let employee = new Employee();
+employee.fullName = "Bob Smith";
+if (employee.fullName) {
+    alert(employee.fullName);
+}
+```
+
+首先，存取器要求你将编译器设置为输出ECMAScript 5或更高。 不支持降级到ECMAScript 3。 其次，只带有 `get`不带有 `set`的存取器自动被推断为 `readonly`。 这在从代码生成 `.d.ts`文件时是有帮助的，因为利用这个属性的用户会看到不允许够改变它的值。
+
+#### 5.8 抽象类
+
+`abstract`关键字是用于定义抽象类和在抽象类内部定义抽象方法
+
+```ts
+abstract class Animal {
+    abstract makeSound(): void;
+    move(): void {
+        console.log('roaming the earch...');
+    }
+}
+```
+
+抽象类中的抽象方法不包含具体实现并且必须在派生类中实现。 抽象方法的语法与接口方法相似。 两者都是定义方法签名但不包含方法体。 然而，抽象方法必须包含 `abstract`关键字并且可以包含访问修饰符。
 
 ### 6.类与接口
 
@@ -974,6 +1376,42 @@ interface Point3d extends Point {
 
 let point3d: Point3d = {x: 1, y: 2, z: 3};//使用Point3d接口来规范了一个对象，这个接口继承了Point类中的x,y属性
 ```
+#### 6.4 类继承类
+
+```ts
+class Animal {
+    name: string;
+    constructor(theName: string) { this.name = theName; }
+    move(distanceInMeters: number = 0) {
+        console.log(`${this.name} moved ${distanceInMeters}m.`);
+    }
+}
+
+class Snake extends Animal {
+    constructor(name: string) { super(name); }
+    move(distanceInMeters = 5) {
+        console.log("Slithering...");
+        super.move(distanceInMeters);
+    }
+}
+
+class Horse extends Animal {
+    constructor(name: string) { super(name); }
+    move(distanceInMeters = 45) {
+        console.log("Galloping...");
+        super.move(distanceInMeters);
+    }
+}
+
+let sam = new Snake("Sammy the Python");
+let tom: Animal = new Horse("Tommy the Palomino");
+
+sam.move();
+tom.move(34);
+```
+
+
+
 ### 7.泛型
 
 #### 7.1 单类型泛型的使用
@@ -1010,45 +1448,31 @@ function swap<T,U>(turple:[T,U]):[U,T]{
 
 ```ts
 interface withLen{
-
   length:number;
-
 }
 
 
 
 function getLen<T extends withLen>(some:T):number{//让T继承withLen接口从而规定其一定含有length属性
-
   return some.length;
-
 }
 ```
 
 #### 7.4 泛型接口
 
 ```ts
+// 规范一个函数的泛形
 interface createArrayIf{
-
   <T>(len:number,val:T):Array<T>;
-
 }
 
-
-
 let createArray:createArrayIf;
-
 createArray = function <T>(len:number,val:T):Array<T>{
-
   let res:T[] = [];
-
   for(let i = 0;i < len;i++){
-
 ​    res[i] = val;
-
   }
-
   return res;
-
 }
 ```
 
@@ -1058,23 +1482,16 @@ createArray = function <T>(len:number,val:T):Array<T>{
 
 ```ts
 class GenericNumber<T>{
-
   num:T;
-
   add:(x:T,y:T)=>void;
-
 }
 
 
 
 let myGenericNumber = new GenericNumber<number>();
-
 myGenericNumber.num = 1;
-
 myGenericNumber.add = function (x:number,y:number){
-
   console.log(x + y);
-
 }
 ```
 
@@ -1082,27 +1499,18 @@ myGenericNumber.add = function (x:number,y:number){
 
 ```ts
 interface createArrayIf{
-
   <T>(len:number,val:T):Array<T>;
-
 }
 
 
 
 let createArray:createArrayIf;
-
 createArray = function <T = number>(len:number,val:T):Array<T>{//给了一个默认的参数类型为number
-
   let res:T[] = [];
-
   for(let i = 0;i < len;i++){
-
 ​    res[i] = val;
-
   }
-
   return res;
-
 }
 ```
 
@@ -1382,6 +1790,34 @@ class HttpClient {
 
 let http = new HttpClient();
 http.getData(2043);
+```
+
+### Symbols
+
+自ECMAScript 2015起，`symbol`成为了一种新的原生类型，就像`number`和`string`一样。
+
+`symbol`类型的值是通过`Symbol`构造函数创建的。
+
+Symbols是不可改变且唯一的。
+
+```ts
+let sym2 = Symbol("key");
+let sym3 = Symbol("key");
+
+sym2 === sym3; // false, symbols是唯一的
+```
+
+像字符串一样，symbols也可以被用做对象属性的键。
+
+```ts
+let sym = Symbol();
+
+let obj = {
+  // 对象里，只要不是字符串作为变量名就要加[]号变成计算属性名
+    [sym]: "value"
+};
+
+console.log(obj[sym]); // "value"
 ```
 
 ## 为什么使用TS

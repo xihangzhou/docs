@@ -1152,22 +1152,28 @@ Linux 系统会检查用户输入的命令是否为“别名命令”。要知�
 
 例如，我们经常使用的 rm 命令，其实就是 rm -i 这个整体的别名：
 
+```shell
 [root@localhost ~]# alias rm
 alias rm='rm -i'
+```
 
 这使得当使用 rm 命令删除指定文件时，Linux 系统会要求我们再次确认是否执行删除操作。例如：
 
+```shell
 [root@localhost ~]# rm a.txt <-- 假定当前目录中已经存在 a.txt 文件
 rm: remove regular file 'a.txt'? y <-- 手动输入 y，即确定删除
 [root@localhost ~]#
+```
 
 这里可以使用 unalias 命令，将 Linux 系统设置的 rm 别名删除掉，执行命令如下：
 
+```shell
 [root@localhost ~]# alias rm
 alias rm='rm -i'
 [root@localhost ~]# unalias rm
 [root@localhost ~]# rm a.txt
 [root@localhost ~]# <--直接删除，不再询问
+```
 
 
 注意，这里仅是为了演示 unalisa 的用法，建议读者删除 rm 别名之后，再手动添加到系统中，执行如下命令即可再次成功添加：
@@ -1182,10 +1188,14 @@ Linux命令行解释器（又称为 Shell）会判断用户输入的命令是内
 
 判断一个命令属于内部命令还是外部命令，可以使用 type 命令实现。例如：
 
+```shell
 [root@localhost ~]# type pwd
 pwd is a shell builtin <-- pwd是内部命令
 [root@localhost ~]# type top
 top is /usr/bin/top <-- top是外部命令
+```
+
+
 
 #### 4) 查找外部命令对应的可执行文件
 
