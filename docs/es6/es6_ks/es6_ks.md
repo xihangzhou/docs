@@ -480,6 +480,411 @@ for (var n of fibonacci) {
 
 上面的例子，会输出斐波纳契数列小于等于 1000 的项。如果当前项大于 1000，就会使用`break`语句跳出`for...of`循环。
 
+## Symbol详解
+
+### 概述
+
+ES5 的对象属性名都是字符串，这容易造成属性名的冲突。比如，你使用了一个他人提供的对象，但又想为这个对象添加新的方法（mixin 模式），新方法的名字就有可能与现有方法产生冲突。如果有一种机制，保证每个属性的名字都是独一无二的就好了，这样就从根本上防止属性名的冲突。这就是 ES6 引入`Symbol`的原因。
+
+```javascript
+let s = Symbol();
+
+typeof s
+// "symbol"
+```
+
+```javascript
+// 给一个字符串参数只是为了好区分
+let s1 = Symbol('foo');
+let s2 = Symbol('bar');
+
+s1 // Symbol(foo)
+s2 // Symbol(bar)
+
+s1.toString() // "Symbol(foo)"
+s2.toString() // "Symbol(bar)"
+```
+
+```javascript
+// 即使有相同的字符串参数也是不想等的
+let s1 = Symbol('foo');
+let s2 = Symbol('foo');
+
+s1 === s2 // false
+```
+
+注意：
+
+* symbol只和自己相等，和别的都不等
+* 不能和其他类型的值进行计算，只能转换成字符串后再计算
+* 可以转换为Boolean但是不能转换为数值
+
+### Symbol.prototype.description
+
+```javascript
+const sym = Symbol('foo');
+
+sym.description // "foo"
+```
+
+### 作为属性名的 Symbol
+
+```javascript
+let mySymbol = Symbol();
+
+// 第一种写法
+let a = {};
+a[mySymbol] = 'Hello!';
+
+// 第二种写法
+let a = {
+  [mySymbol]: 'Hello!'
+};
+
+// 第三种写法
+let a = {};
+Object.defineProperty(a, mySymbol, { value: 'Hello!' });
+
+// 以上写法都得到同样结果
+a[mySymbol] // "Hello!"
+```
+
+```javascript
+const COLOR_RED    = Symbol();
+const COLOR_GREEN  = Symbol();
+
+// 保证每一个常量都不相等
+function getComplement(color) {
+  switch (color) {
+    case COLOR_RED:
+      return COLOR_GREEN;
+    case COLOR_GREEN:
+      return COLOR_RED;
+    default:
+      throw new Error('Undefined color');
+    }
+}
+```
+
+### 属性名的遍历
+
+Symbol 作为属性名，遍历对象的时候，该属性不会出现在`for...in`、`for...of`循环中，也不会被`Object.keys()`、`Object.getOwnPropertyNames()`、`JSON.stringify()`返回。
+
+但是，它也不是私有属性，有一个`Object.getOwnPropertySymbols()`方法，可以获取指定对象的所有 Symbol 属性名。该方法返回一个数组，成员是当前对象的所有用作属性名的 Symbol 值。
+
+```javascript
+const obj = {};
+let a = Symbol('a');
+let b = Symbol('b');
+
+obj[a] = 'Hello';
+obj[b] = 'World';
+
+const objectSymbols = Object.getOwnPropertySymbols(obj);
+
+objectSymbols
+// [Symbol(a), Symbol(b)]
+```
+
+另一个新的 API，`Reflect.ownKeys()`方法可以返回所有类型的键名，包括常规键名和 Symbol 键名。
+
+```javascript
+let obj = {
+  [Symbol('my_key')]: 1,
+  enum: 2,
+  nonEnum: 3
+};
+
+Reflect.ownKeys(obj)
+//  ["enum", "nonEnum", Symbol(my_key)]
+```
+
+## 运算符的扩展
+
+### 指数运算符
+
+ES2016 新增了一个指数运算符（`**`）。
+
+```javascript
+2 ** 2 // 4
+2 ** 3 // 8
+```
+
+这个运算符的一个特点是右结合，而不是常见的左结合。多个指数运算符连用时，是从最右边开始计算的。
+
+```javascript
+// 相当于 2 ** (3 ** 2)
+2 ** 3 ** 2
+// 512
+```
+
+上面代码中，首先计算的是第二个指数运算符，而不是第一个。
+
+指数运算符可以与等号结合，形成一个新的赋值运算符（`**=`）。
+
+```javascript
+let a = 1.5;
+a **= 2;
+// 等同于 a = a * a;
+
+let b = 4;
+b **= 3;
+// 等同于 b = b * b * b;
+```
+
+### 链判断运算符
+
+`?.`运算符，直接在链式调用的时候判断，左侧的对象是否为`null`或`undefined`。如果是的，就不再往下运算，而是返回`undefined`。
+
+链判断运算符`?.`有三种写法。
+
+- `obj?.prop` // 对象属性是否存在
+- `obj?.[expr]` // 同上
+- `func?.(...args)` // 函数或对象方法是否存在
+
+```javascript
+a?.b
+// 等同于
+a == null ? undefined : a.b
+
+a?.[x]
+// 等同于
+a == null ? undefined : a[x]
+
+a?.b()
+// 等同于
+a == null ? undefined : a.b()
+
+a?.()
+// 等同于
+a == null ? undefined : a()
+```
+
+使用这个运算符，有几个注意点。
+
+（1）短路机制
+
+本质上，`?.`运算符相当于一种短路机制，只要不满足条件，就不再往下执行。
+
+```javascript
+a?.[++x]
+// 等同于
+a == null ? undefined : a[++x]
+```
+
+上面代码中，如果`a`是`undefined`或`null`，那么`x`不会进行递增运算。也就是说，链判断运算符一旦为真，右侧的表达式就不再求值。
+
+（2）括号的影响
+
+如果属性链有圆括号，链判断运算符对圆括号外部没有影响，只对圆括号内部有影响。
+
+```javascript
+(a?.b).c
+// 等价于
+(a == null ? undefined : a.b).c
+```
+
+上面代码中，`?.`对圆括号外部没有影响，不管`a`对象是否存在，圆括号后面的`.c`总是会执行。
+
+一般来说，使用`?.`运算符的场合，不应该使用圆括号。
+
+（3）报错场合
+
+以下写法是禁止的，会报错。
+
+```javascript
+// 构造函数
+new a?.()
+new a?.b()
+
+// 链判断运算符的右侧有模板字符串
+a?.`{b}`
+a?.b`{c}`
+
+// 链判断运算符的左侧是 super
+super?.()
+super?.foo
+
+// 链运算符用于赋值运算符左侧
+a?.b = c
+```
+
+（4）右侧不得为十进制数值
+
+为了保证兼容以前的代码，允许`foo?.3:0`被解析成`foo ? .3 : 0`，因此规定如果`?.`后面紧跟一个十进制数字，那么`?.`不再被看成是一个完整的运算符，而会按照三元运算符进行处理，也就是说，那个小数点会归属于后面的十进制数字，形成一个小数。
+
+### Null判断运算符
+
+[ES2020](https://github.com/tc39/proposal-nullish-coalescing) 引入了一个新的 Null 判断运算符`??`。它的行为类似`||`，但是只有运算符左侧的值为`null`或`undefined`时，才会返回右侧的值。
+
+```javascript
+const headerText = response.settings.headerText ?? 'Hello, world!';
+const animationDuration = response.settings.animationDuration ?? 300;
+const showSplashScreen = response.settings.showSplashScreen ?? true;
+```
+
+上面代码中，默认值只有在左侧属性值为`null`或`undefined`时，才会生效。
+
+这个运算符的一个目的，就是跟链判断运算符`?.`配合使用，为`null`或`undefined`的值设置默认值。
+
+```javascript
+const animationDuration = response.settings?.animationDuration ?? 300;
+```
+
+注意：
+
+`??`本质上是逻辑运算，它与其他两个逻辑运算符`&&`和`||`有一个优先级问题，它们之间的优先级到底孰高孰低。优先级的不同，往往会导致逻辑运算的结果不同。
+
+现在的规则是，如果多个逻辑运算符一起使用，必须用括号表明优先级，否则会报错。
+
+```javascript
+// 报错
+lhs && middle ?? rhs
+lhs ?? middle && rhs
+lhs || middle ?? rhs
+lhs ?? middle || rhs
+```
+
+上面四个表达式都会报错，必须加入表明优先级的括号。
+
+```javascript
+(lhs && middle) ?? rhs;
+lhs && (middle ?? rhs);
+
+(lhs ?? middle) && rhs;
+lhs ?? (middle && rhs);
+
+(lhs || middle) ?? rhs;
+lhs || (middle ?? rhs);
+
+(lhs ?? middle) || rhs;
+lhs ?? (middle || rhs);
+```
+
+### 逻辑赋值运算符
+
+```javascript
+// 或赋值运算符
+x ||= y
+// 等同于
+x || (x = y)
+
+// 与赋值运算符
+x &&= y
+// 等同于
+x && (x = y)
+
+// Null 赋值运算符
+x ??= y
+// 等同于
+x ?? (x = y)
+```
+
+这三个运算符`||=`、`&&=`、`??=`相当于先进行逻辑运算，然后根据运算结果，再视情况进行赋值运算。
+
+它们的一个用途是，为变量或属性设置默认值。
+
+```javascript
+function example(opts) {
+  opts.foo ??= 'bar';
+  opts.baz ??= 'qux';
+}
+```
+
+```javascript
+// 老的写法
+user.id = user.id || 1;
+
+// 新的写法
+user.id ||= 1;
+```
+
+## 对象的扩展
+
+### 属性的简洁表示法
+
+```js
+const foo = 'bar';
+const baz = {foo};
+baz // {foo: "bar"}
+
+// 等同于
+const baz = {foo: foo};
+
+function f(x, y) {
+  return {x, y};
+}
+
+// 等同于
+
+function f(x, y) {
+  return {x: x, y: y};
+}
+
+f(1, 2) // Object {x: 1, y: 2}
+```
+
+### 属性名表达式
+
+```javascript
+let propKey = 'foo';
+
+let obj = {
+  [propKey]: true,
+  ['a' + 'bc']: 123
+};
+
+let obj = {
+  ['h' + 'ello']() {
+    return 'hi';
+  }
+};
+
+obj.hello() // hi
+```
+
+注意，属性名表达式如果是一个对象，默认情况下会自动将对象转为字符串`[object Object]`，这一点要特别小心。
+
+```javascript
+const keyA = {a: 1};
+const keyB = {b: 2};
+
+const myObject = {
+  [keyA]: 'valueA',
+  [keyB]: 'valueB'
+};
+
+myObject // Object {[object Object]: "valueB"}
+```
+
+上面代码中，`[keyA]`和`[keyB]`得到的都是`[object Object]`，所以`[keyB]`会把`[keyA]`覆盖掉，而`myObject`最后只有一个`[object Object]`属性。
+
+### 属性的可枚举性和遍历
+
+对象的每个属性都有一个描述对象（Descriptor），用来控制该属性的行为。`Object.getOwnPropertyDescriptor`方法可以获取该属性的描述对象。
+
+```javascript
+let obj = { foo: 123 };
+Object.getOwnPropertyDescriptor(obj, 'foo')
+//  {
+//    value: 123,
+//    writable: true,
+//    enumerable: true,
+//    configurable: true
+//  }
+```
+
+描述对象的`enumerable`属性，称为“可枚举性”，如果该属性为`false`，就表示某些操作会忽略当前属性。
+
+另外，ES6 规定，所有 Class 的原型的方法都是不可枚举的。
+
+目前，有四个操作会忽略`enumerable`为`false`的属性。
+
+- `for...in`循环：只遍历对象自身的和继承的可枚举的属性。
+- `Object.keys()`：返回对象自身的所有可枚举的属性的键名。
+- `JSON.stringify()`：只串行化对象自身的可枚举的属性。
+- `Object.assign()`： 忽略`enumerable`为`false`的属性，只拷贝对象自身的可枚举的属性。
+
 ## Class
 
 ### Class基本语法
