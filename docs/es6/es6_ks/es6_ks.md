@@ -277,6 +277,92 @@ move({}); // [0, 0]
 move(); // [0, 0]
 ```
 
+## Reflect
+
+Reflect对象是一个新的全局对象，承接了一些老方法并对其进行改造，目的是：
+
+（1） 将`Object`对象的一些明显属于语言内部的方法（比如`Object.defineProperty`），放到`Reflect`对象上。现阶段，某些方法同时在`Object`和`Reflect`对象上部署，未来的新方法将只部署在`Reflect`对象上。也就是说，从`Reflect`对象上可以拿到语言内部的方法。
+
+（2） 修改某些`Object`方法的返回结果，让其变得更合理。比如，`Object.defineProperty(obj, name, desc)`在无法定义属性时，会抛出一个错误，而`Reflect.defineProperty(obj, name, desc)`则会返回`false`。
+
+```javascript
+// 老写法
+try {
+  Object.defineProperty(target, property, attributes);
+  // success
+} catch (e) {
+  // failure
+}
+
+// 新写法
+if (Reflect.defineProperty(target, property, attributes)) {
+  // success
+} else {
+  // failure
+}
+```
+
+（3） 让`Object`操作都变成函数行为。某些`Object`操作是命令式，比如`name in obj`和`delete obj[name]`，而`Reflect.has(obj, name)`和`Reflect.deleteProperty(obj, name)`让它们变成了函数行为。
+
+```javascript
+// 老写法
+'assign' in Object // true
+
+// 新写法
+Reflect.has(Object, 'assign') // true
+```
+
+（4）`Reflect`对象的方法与`Proxy`对象的方法一一对应，只要是`Proxy`对象的方法，就能在`Reflect`对象上找到对应的方法。这就让`Proxy`对象可以方便地调用对应的`Reflect`方法，完成默认行为，作为修改行为的基础。也就是说，不管`Proxy`怎么修改默认行为，你总可以在`Reflect`上获取默认行为。
+
+```javascript
+Proxy(target, {
+  set: function(target, name, value, receiver) {
+    var success = Reflect.set(target, name, value, receiver);
+    if (success) {
+      console.log('property ' + name + ' on ' + target + ' set to ' + value);
+    }
+    return success;
+  }
+});
+```
+
+上面代码中，`Proxy`方法拦截`target`对象的属性赋值行为。它采用`Reflect.set`方法将值赋值给对象的属性，确保完成原有的行为，然后再部署额外的功能。
+
+下面是另一个例子。
+
+```javascript
+var loggedObj = new Proxy(obj, {
+  get(target, name) {
+    console.log('get', target, name);
+    return Reflect.get(target, name);
+  },
+  deleteProperty(target, name) {
+    console.log('delete' + name);
+    return Reflect.deleteProperty(target, name);
+  },
+  has(target, name) {
+    console.log('has' + name);
+    return Reflect.has(target, name);
+  }
+});
+```
+
+上面代码中，每一个`Proxy`对象的拦截操作（`get`、`delete`、`has`），内部都调用对应的`Reflect`方法，保证原生行为能够正常执行。添加的工作，就是将每一个操作输出一行日志。
+
+有了`Reflect`对象以后，很多操作会更易读。
+
+```javascript
+// 老写法
+Function.prototype.apply.call(Math.floor, undefined, [1.75]) // 1
+
+// 新写法
+Reflect.apply(Math.floor, undefined, [1.75]) // 1
+```
+
+## Proxy
+
+vue3的实现原理，提供了拦截对象的各种行为的方法。
+
 ## Iterator和for...of循环
 
 ### 什么是Iterator？
@@ -480,6 +566,365 @@ for (var n of fibonacci) {
 
 上面的例子，会输出斐波纳契数列小于等于 1000 的项。如果当前项大于 1000，就会使用`break`语句跳出`for...of`循环。
 
+## Generator函数
+
+### 基本概念
+
+Generator函数是一种新的异步函数执行方案，形式上，Generator 函数是一个普通函数，但是有两个特征。一是，`function`关键字与函数名之间有一个星号；二是，函数体内部使用`yield`表达式，定义不同的内部状态。
+
+```javascript
+function* helloWorldGenerator() {
+  yield 'hello';
+  yield 'world';
+  return 'ending';
+}
+
+// 函数并不执行，而是返回一个遍历器对象
+var hw = helloWorldGenerator();
+
+// 如果iterator,调用next方法返回到下一个yied的地方暂停。值就为yield后的值。
+hw.next()
+// { value: 'hello', done: false }
+
+hw.next()
+// { value: 'world', done: false }
+
+// 最后一次返回的是return的值，done为true
+hw.next()
+// { value: 'ending', done: true }
+
+// 之后再调用vlaue为undefined
+hw.next()
+// { value: undefined, done: true }
+```
+
+ES6 没有规定，`function`关键字与函数名之间的星号，写在哪个位置。这导致下面的写法都能通过。
+
+```javascript
+function * foo(x, y) { ··· }
+function *foo(x, y) { ··· }
+function* foo(x, y) { ··· }
+function*foo(x, y) { ··· }
+```
+
+由于 Generator 函数仍然是普通函数，所以一般的写法是上面的第三种，即星号紧跟在`function`关键字后面。本书也采用这种写法。
+
+#### yield表达式
+
+遍历器对象的`next`方法的运行逻辑如下。
+
+（1）遇到`yield`表达式，就暂停执行后面的操作，并将紧跟在`yield`后面的那个表达式的值，作为返回的对象的`value`属性值。
+
+（2）下一次调用`next`方法时，再继续往下执行，直到遇到下一个`yield`表达式。
+
+（3）如果没有再遇到新的`yield`表达式，就一直运行到函数结束，直到`return`语句为止，并将`return`语句后面的表达式的值，作为返回的对象的`value`属性值。
+
+（4）如果该函数没有`return`语句，则返回的对象的`value`属性值为`undefined`。
+
+注意：
+
+1. 
+
+`yield`表达式后面的表达式，只有当调用`next`方法、内部指针指向该语句时才会执行，因此等于为 JavaScript 提供了手动的“惰性求值”（Lazy Evaluation）的语法功能。
+
+```javascript
+function* gen() {
+  yield  123 + 456;
+}
+```
+
+上面代码中，`yield`后面的表达式`123 + 456`，不会立即求值，只会在`next`方法将指针移到这一句时，才会求值。
+
+2. 
+
+另外需要注意，`yield`表达式只能用在 Generator 函数里面，用在其他地方都会报错。
+
+```javascript
+(function (){
+  yield 1;
+})()
+// SyntaxError: Unexpected number
+```
+
+3. 
+
+`yield`表达式如果用在另一个表达式之中，必须放在圆括号里面。
+
+```javascript
+function* demo() {
+  console.log('Hello' + yield); // SyntaxError
+  console.log('Hello' + yield 123); // SyntaxError
+
+  console.log('Hello' + (yield)); // OK
+  console.log('Hello' + (yield 123)); // OK
+}
+```
+
+`yield`表达式用作函数参数或放在赋值表达式的右边，可以不加括号。
+
+```javascript
+function* demo() {
+  foo(yield 'a', yield 'b'); // OK
+  let input = yield; // OK
+}
+```
+
+#### 与 Iterator 接口的关系
+
+### Next方法的参数
+
+`yield`表达式本身没有返回值，或者说总是返回`undefined`。`next`方法可以带一个参数，该参数就会被当作上一个`yield`表达式的返回值。
+
+```javascript
+function* f() {
+  for(var i = 0; true; i++) {
+    var reset = yield i;
+    if(reset) { i = -1; }
+  }
+}
+
+var g = f();
+
+g.next() // { value: 0, done: false }
+g.next() // { value: 1, done: false }
+g.next(true) // { value: 0, done: false }
+```
+
+使用next方法参数的意义就是通过传入的参数动态的决定函数的运行方式。
+
+### for...of 循环
+
+`for...of`循环可以自动遍历 Generator 函数运行时生成的`Iterator`对象，且此时不再需要调用`next`方法。
+
+```javascript
+function* foo() {
+  yield 1;
+  yield 2;
+  yield 3;
+  yield 4;
+  yield 5;
+  return 6;
+}
+
+for (let v of foo()) {
+  console.log(v);
+}
+// 1 2 3 4 5
+```
+
+上面代码使用`for...of`循环，依次显示 5 个`yield`表达式的值。这里需要注意，一旦`next`方法的返回对象的`done`属性为`true`，`for...of`循环就会中止，且不包含该返回对象，所以上面代码的`return`语句返回的`6`，不包括在`for...of`循环之中。
+
+### 让原生对象可遍历
+
+利用`for...of`循环，可以写出遍历任意对象（object）的方法。原生的 JavaScript 对象没有遍历接口，无法使用`for...of`循环，通过 Generator 函数为它加上这个接口，就可以用了。
+
+```javascript
+function* objectEntries(obj) {
+  let propKeys = Reflect.ownKeys(obj);
+
+  for (let propKey of propKeys) {
+    yield [propKey, obj[propKey]];
+  }
+}
+
+let jane = { first: 'Jane', last: 'Doe' };
+
+for (let [key, value] of objectEntries(jane)) {
+  console.log(`${key}: ${value}`);
+}
+// first: Jane
+// last: Doe
+```
+
+上面代码中，对象`jane`原生不具备 Iterator 接口，无法用`for...of`遍历。这时，我们通过 Generator 函数`objectEntries`为它加上遍历器接口，就可以用`for...of`遍历了。加上遍历器接口的另一种写法是，将 Generator 函数加到对象的`Symbol.iterator`属性上面。
+
+```javascript
+function* objectEntries() {
+  let propKeys = Object.keys(this);
+
+  for (let propKey of propKeys) {
+    yield [propKey, this[propKey]];
+  }
+}
+
+let jane = { first: 'Jane', last: 'Doe' };
+
+jane[Symbol.iterator] = objectEntries;
+
+for (let [key, value] of jane) {
+  console.log(`${key}: ${value}`);
+}
+// first: Jane
+// last: Doe
+```
+
+除了`for...of`循环以外，扩展运算符（`...`）、解构赋值和`Array.from`方法内部调用的，都是遍历器接口。这意味着，它们都可以将 Generator 函数返回的 Iterator 对象，作为参数。
+
+```javascript
+function* numbers () {
+  yield 1
+  yield 2
+  return 3
+  yield 4
+}
+
+// 扩展运算符
+[...numbers()] // [1, 2]
+
+// Array.from 方法
+Array.from(numbers()) // [1, 2]
+
+// 解构赋值
+let [x, y] = numbers();
+x // 1
+y // 2
+
+// for...of 循环
+for (let n of numbers()) {
+  console.log(n)
+}
+// 1
+// 2
+```
+
+### Generator.prototype.throw()
+
+```javascript
+var g = function* () {
+  try {
+    yield;
+  } catch (e) {
+    console.log('内部捕获', e);
+  }
+};
+
+var i = g();
+i.next();
+
+try {
+  i.throw('a');
+  i.throw('b');
+} catch (e) {
+  console.log('外部捕获', e);
+}
+// 内部捕获 a
+// 外部捕获 b
+```
+
+使用.throw方法可以在yield的位置抛出一个错误，相当于把yield换成一个throw方法
+
+### Generator.prototype.return()
+
+```javascript
+function* gen() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+var g = gen();
+
+g.next()        // { value: 1, done: false }
+// 使用return方法终结异步执行，相当于把yield换成return
+g.return('foo') // { value: "foo", done: true }
+g.next()        // { value: undefined, done: true }
+```
+
+### yield*表达式
+
+在一个generator函数中遍历另外一个generator函数返回的迭代器。
+
+```javascript
+function* bar() {
+  yield 'x';
+  yield* foo();
+  yield 'y';
+}
+
+// 等同于
+function* bar() {
+  yield 'x';
+  yield 'a';
+  yield 'b';
+  yield 'y';
+}
+
+// 等同于
+function* bar() {
+  yield 'x';
+  for (let v of foo()) {
+    yield v;
+  }
+  yield 'y';
+}
+
+for (let v of bar()){
+  console.log(v);
+}
+// "x"
+// "a"
+// "b"
+// "y"
+```
+
+如果`yield*`后面跟着一个拥有Iterator 接口的数据结构，就可以被`yield*`遍历，由于数组原生支持遍历器，因此就会遍历数组成员。
+
+```javascript
+function* gen(){
+  yield* ["a", "b", "c"];
+}
+
+gen().next() // { value:"a", done:false }
+```
+
+如果被代理的 Generator 函数有`return`语句，那么就可以向代理它的 Generator 函数返回数据。
+
+```javascript
+function* foo() {
+  yield 2;
+  yield 3;
+  return "foo";
+}
+
+function* bar() {
+  yield 1;
+  var v = yield* foo();
+  console.log("v: " + v);
+  yield 4;
+}
+
+var it = bar();
+
+it.next()
+// {value: 1, done: false}
+it.next()
+// {value: 2, done: false}
+it.next()
+// {value: 3, done: false}
+it.next();
+// "v: foo"
+// {value: 4, done: false}
+it.next()
+// {value: undefined, done: true}
+```
+
+扩展运算符遍历 Generator 函数：
+
+```javascript
+function* iterTree(tree) {
+  if (Array.isArray(tree)) {
+    for(let i=0; i < tree.length; i++) {
+      yield* iterTree(tree[i]);
+    }
+  } else {
+    yield tree;
+  }
+}
+
+const tree = [ 'a', ['b', 'c'], ['d', 'e'] ];
+[...iterTree(tree)] // ["a", "b", "c", "d", "e"]
+```
+
 ## Symbol详解
 
 ### 概述
@@ -493,6 +938,8 @@ typeof s
 // "symbol"
 ```
 
+
+
 ```javascript
 // 给一个字符串参数只是为了好区分
 let s1 = Symbol('foo');
@@ -504,6 +951,8 @@ s2 // Symbol(bar)
 s1.toString() // "Symbol(foo)"
 s2.toString() // "Symbol(bar)"
 ```
+
+
 
 ```javascript
 // 即使有相同的字符串参数也是不想等的
@@ -598,6 +1047,47 @@ let obj = {
 Reflect.ownKeys(obj)
 //  ["enum", "nonEnum", Symbol(my_key)]
 ```
+
+### Symbol.for()的使用
+
+https://es6.ruanyifeng.com/#docs/symbol#Symbol-for%EF%BC%8CSymbol-keyFor
+
+```javascript
+// .for方法根据索引'foo'返回对应的symbol值，有对一个的symbol值就返回，没有就创建并在全局注册
+// 和symbol()方法不同，symbol每次都创建不同的值
+let s1 = Symbol.for('foo');
+let s2 = Symbol.for('foo');
+
+s1 === s2 // true
+```
+
+### 与es5对象的属性区别
+
+1. es5对象属性名：
+
+在sybol值出现之前，一个对象的属性名可以是任何有效的 JavaScript 字符串，或者可以被转换为字符串的任何类型，包括空字符串。然而，一个属性的名称如果不是一个有效的 JavaScript 标识符（例如，一个由空格或连字符，或者以数字开头的属性名），就只能通过方括号标记访问。
+
+所以对象的属性名其实都是字符串，就算最开始不是也会被转换为字符串。
+
+```js
+let obj = {123:123};
+obj['123'] === obj [123]; //=> true;
+```
+
+2. symbol属性
+
+* symbol属性不能被通过字符串的方式拿到
+
+```js
+let obj = {
+  [Symbol('my_key')]: 1,
+};
+
+console.log(obj.Symbol('my_key'));//=> VM660:7 Uncaught TypeError: obj.Symbol is not a function
+console.log(obj['Symbol(my_key)']);// =>undefined
+```
+
+* 不能被Object.keys()方法获取键名，见上面
 
 ## 运算符的扩展
 
@@ -1609,5 +2099,480 @@ commonJs和Es6Module的实现差异：
    2. 编译时加载: ES6 模块不是对象，而是通过 export 命令显式指定输出的代码，import时采用静态命令的形式。即在import时可以指定加载某个输出值，而不是加载整个模块，这种加载称为“编译时加载”。
    3.  CommonJS 加载的是一个对象（即module.exports属性），该对象只有在脚本运行完才会生成。而 ES6 模块不是对象，它的对外接口只是一种静态定义，在代码静态解析阶段就会生成
 
-### 2. 严格模式
+### 2. export命令
+
+```javascript
+// 写法一
+export var m = 1;
+
+// 写法二
+var m = 1;
+export {m};
+
+// 写法三
+var n = 1;
+export {n as m};
+
+// 写法四
+export default n;
+```
+
+注意：
+
+1. `export`语句输出的接口，与其对应的值是动态绑定关系，即通过该接口，可以取到模块内部实时的值。
+
+```javascript
+// index1.js
+export var foo = '1';
+setTimeout(() => foo = '2', 500);
+
+// index2.js
+import {foo} from 'index1.js'
+console.log(foo); // 1 => 500ms => 2
+```
+
+2. `export`命令可以出现在模块的任何位置，只要处于模块顶层就可以。如果处于块级作用域内，就会报错，这是因为处于条件代码块之中，就没法做静态优化了，违背了 ES6 模块的设计初衷。
+
+```javascript
+function foo() {
+  export default 'bar' // SyntaxError
+}
+foo()
+```
+
+### 3. import命令
+
+```javascript
+import { firstName, lastName, year } from './profile.js';
+
+import { lastName as surname } from './profile.js';
+
+import name from './profile.js' // 对应export default导出，name可以随便取名字
+```
+
+注意：
+
+1. `import`命令输入的变量都是只读的，因为它的本质是输入接口，是一个指针指向被导出的值
+
+   ```javascript
+   import {a} from './xxx.js'
+   
+   a = {}; // Syntax Error : 'a' is read-only;
+   ```
+
+   上面代码中，脚本加载了变量`a`，对其重新赋值就会报错，因为`a`是一个只读的接口。但是，如果`a`是一个对象，改写`a`的属性是允许的。但是这样会使得a的值发生改变，其他模块引用的时候也会有改变，不好追踪，不要这样使用。
+
+   ```javascript
+   import {a} from './xxx.js'
+   
+   a.foo = 'hello'; // 合法操作
+   ```
+
+2. `import`后面的`from`指定模块文件的位置，可以是相对路径，也可以是绝对路径。如果不带有路径，只是一个模块名，那么必须有配置文件，告诉 JavaScript 引擎该模块的位置。
+
+   ```javascript
+   import { myMethod } from 'util';// 必须被通过某种方式告诉util在哪个位置
+   ```
+3. `import`命令具有提升效果，会提升到整个模块的头部，首先执行。因为`import`是在编译阶段执行的，是在代码运行之前。
+
+```javascript
+foo();// 变量提升所以foo不报错
+
+import { foo } from 'my_module'; 
+```
+
+4. 多次重复执行同一句`import`语句，那么只会执行一次，而不会执行多次
+
+### 4. 模块的整体加载
+
+```javascript
+import * as circle from './circle';
+
+console.log('圆面积：' + circle.area(4));
+console.log('圆周长：' + circle.circumference(14));
+```
+
+### 5. export default
+
+```javascript
+// 第一组
+export default function crc32() { // 输出
+  // ...
+}
+
+import crc32 from 'crc32'; // 输入
+```
+
+本质上，`export default`命令的本质是将default后面的值赋给`default`变量，然后系统允许你为它取任意名字。所以，下面的写法是有效的。
+
+```javascript
+export {add as default};
+// 等同于
+// export default add;
+
+// app.js
+import { default as foo } from 'modules';
+// 等同于
+// import foo from 'modules';
+```
+
+所以不能在`default`后面跟上声明语句
+
+```javascript
+// 错误
+export default var a = 1;
+```
+
+如果想在一条`import`语句中，同时输入默认方法和其他接口，可以写成下面这样。
+
+```javascript
+import _, { each, forEach } from 'lodash';
+```
+
+### 6.  export和import复合
+
+```javascript
+export { foo, bar } from 'my_module';
+
+// 可以简单理解为
+import { foo, bar } from 'my_module';
+export { foo, bar };
+```
+
+写成一行以后，`foo`和`bar`实际上并没有被导入当前模块，只是相当于对外转发了这两个接口，导致当前模块不能直接使用`foo`和`bar`。
+
+### 7. 模块的继承
+
+```javascript
+// 在circleplus.js中导出circle的所有内容，再加一些自己有的，实现继承
+export * from 'circle'; // 但是这种导出*的方式不能导出default的内容
+export var e = 2.71828182846;
+export default function(x) {
+  return Math.exp(x);
+}
+```
+
+### 8. import()
+
+`import` 命令会被js引擎静态分析，所以是在编译阶段执行，不能放在条件判断中。这样虽然提高了编译器编译的效率，但是也导致不能够实现条件加载，不能想commonJs一样实现如下的动态加载功能：
+
+```javascript
+const path = './' + fileName;
+const myModual = require(path);
+```
+
+[ES2020提案](https://github.com/tc39/proposal-dynamic-import) 引入`import()`函数，支持动态加载模块。
+
+```javascript
+import(specifier)
+```
+
+上面代码中，`import`函数的参数`specifier`，指定所要加载的模块的位置。`import`命令能够接受什么参数，`import()`函数就能接受什么参数，两者区别主要是后者为动态加载。
+
+`import()`返回一个 Promise 对象。下面是一个例子。
+
+```javascript
+const main = document.querySelector('main');
+
+import(`./section-modules/${someVariable}.js`)
+  .then(module => {
+    module.loadPageInto(main);
+  })
+  .catch(err => {
+    main.textContent = err.message;
+  });
+```
+
+`import()`函数可以用在任何地方，不仅仅是模块，非模块的脚本也可以使用。它是运行时执行，也就是说，什么时候运行到这一句，就会加载指定的模块。另外，`import()`函数与所加载的模块没有静态连接关系，这点也是与`import`语句不相同。`import()`类似于 Node 的`require`方法，区别主要是前者是异步加载，后者是同步加载。
+
+注意：
+
+1. 如果模块有`default`输出接口，可以用参数直接获得。
+
+   ```javascript
+   import('./myModule.js')
+   .then(myModule => {
+     console.log(myModule.default);
+   });
+   ```
+
+2. 如果想同时加载多个模块，可以采用下面的写法。
+
+   ```javascript
+   Promise.all([
+     import('./module1.js'),
+     import('./module2.js'),
+     import('./module3.js'),
+   ])
+   .then(([module1, module2, module3]) => {
+      ···
+   });
+   ```
+
+3. `import()`也可以用在 async 函数之中。
+
+   ```javascript
+   async function main() {
+     const myModule = await import('./myModule.js');
+     const {export1, export2} = await import('./myModule.js');
+     const [module1, module2, module3] =
+       await Promise.all([
+         import('./module1.js'),
+         import('./module2.js'),
+         import('./module3.js'),
+       ]);
+   }
+   main();
+   ```
+
+## Module的加载实现
+
+### 浏览器加载
+
+1. 传统方法
+
+```html
+<!-- 页面内嵌的脚本 -->
+<script type="application/javascript">
+  // module code
+</script>
+
+<!-- 外部脚本 -->
+<script type="application/javascript" src="path/to/myModule.js">
+</script>
+```
+
+会导致浏览器堵塞
+
+2. 加载es6模块
+
+浏览器加载 ES6 模块，也使用`<script>`标签，但是要加入`type="module"`属性。采用异步加载，即等到整个页面渲染完，再执行模块脚本，相当于打开了`<script>`标签的`defer`属性。<script>标签的async属性也可以打开，这时只要加载完成，渲染引擎就会中断渲染立即执行。执行完成后，再恢复渲染。
+
+```html
+<script type="module" src="./foo.js"></script>
+```
+
+* ES6 模块也允许内嵌在网页中，语法行为与加载外部脚本完全一致。
+
+```html
+<script type="module">
+  import utils from "./utils.js";
+
+  // other code
+</script>
+```
+
+- 模块之中，可以使用`import`命令加载其他模块（`.js`后缀不可省略，需要提供绝对 URL 或相对 URL），也可以使用`export`命令输出对外接口。
+- 模块之中，顶层的`this`关键字返回`undefined`，而不是指向`window`。也就是说，在模块顶层使用`this`关键字，是无意义的。
+
+### ES6 模块与 CommonJS 模块的差异 
+
+- CommonJS 模块输出的是一个值的拷贝，ES6 模块输出的是值的引用。
+- CommonJS 模块是运行时加载，ES6 模块是编译时输出接口。
+- CommonJS 模块的`require()`是同步加载模块，ES6 模块的`import`命令是异步加载，有一个独立的模块依赖的解析阶段。
+
+```javascript
+// lib.js
+var counter = 3;
+function incCounter() {
+  counter++;
+}
+module.exports = {
+  counter: counter,
+  incCounter: incCounter,
+};
+```
+
+上面代码输出内部变量`counter`和改写这个变量的内部方法`incCounter`。然后，在`main.js`里面加载这个模块。
+
+```javascript
+// main.js
+var mod = require('./lib');
+
+console.log(mod.counter);  // 3
+mod.incCounter();
+console.log(mod.counter); // 3
+```
+
+上面代码说明，`lib.js`模块加载以后，它的内部变化就影响不到输出的`mod.counter`了。这是因为`mod.counter`是一个原始类型的值，会被缓存。除非写成一个函数，才能得到内部变动后的值。
+
+```javascript
+// lib.js
+var counter = 3;
+function incCounter() {
+  counter++;
+}
+module.exports = {
+  get counter() {
+    return counter
+  },
+  incCounter: incCounter,
+};
+```
+
+上面代码中，输出的`counter`属性实际上是一个取值器函数。现在再执行`main.js`，就可以正确读取内部变量`counter`的变动了。
+
+```bash
+$ node main.js
+3
+4
+```
+
+### Node.js的模块加载方法
+
+#### Node对esModule的支持
+
+从 Node.js v13.2 版本开始，Node.js 已经默认打开了 ES6 模块支持。`.mjs`文件总是以 ES6 模块加载，`.cjs`文件总是以 CommonJS 模块加载，`.js`文件的加载取决于`package.json`里面`type`字段的设置，如果`type`为`module`就采用esModule的方式。
+
+ES6 模块与 CommonJS 模块尽量不要混用。
+
+#### package.json 的 main 字段
+
+```javascript
+// ./node_modules/es-module-package/package.json
+{
+  "type": "module",// 加上modul指定该模块为es6模块,使用esModule
+  "main": "./src/index.js"// 加上main指定模块加载的入口文件
+}
+```
+
+#### export字段
+
+1. 子目录别名
+
+```javascript
+// ./node_modules/es-module-package/package.json
+{
+  "exports": {
+    "./submodule": "./src/submodule.js" // father/submodule就相当于father/src/submodule.js
+  }
+}
+```
+
+2. main 的别名
+
+`exports`字段的别名如果是`.`，就代表模块的主入口，优先级高于`main`字段，并且可以直接简写成`exports`字段的值。
+
+```javascript
+{
+  "exports": {
+    ".": "./main.js"
+  }
+}
+
+// 等同于
+{
+  "exports": "./main.js"
+}
+```
+
+#### CommonJs和EsModule模块的相互加载
+
+1. CommonJS 的`require()`命令不能加载 ES6 模块，会报错，只能使用`import()`这个方法加载。
+
+```javascript
+(async () => {
+  await import('./my-app.mjs');
+})();
+```
+
+2. ES6 模块的`import`命令可以加载 CommonJS 模块，但是只能整体加载，不能只加载单一的输出项。
+
+   ```javascript
+   // 正确
+   import packageMain from 'commonjs-package';
+   
+   // 报错
+   import { method } from 'commonjs-package';
+   ```
+
+#### 加载路径
+
+ES6 模块的加载路径必须给出脚本的完整路径，不能省略脚本的后缀名。`import`命令和`package.json`文件的`main`字段如果省略脚本的后缀名，会报错。
+
+```javascript
+// ES6 模块中将报错
+import { something } from './index';
+```
+
+#### 循环加载
+
+“循环加载”（circular dependency）指的是，`a`脚本的执行依赖`b`脚本，而`b`脚本的执行又依赖`a`脚本。大型项目难以避免，以下是两种模块对循环加载的处理方式。
+
+1. CommonJs模块的加载原理
+
+CommonJS 的一个模块，就是一个脚本文件。`require`命令第一次加载该脚本，就会执行整个脚本，然后在内存生成一个对象。
+
+```javascript
+{
+  id: '...',
+  exports: { ... },
+  loaded: true,
+  ...
+}
+```
+
+上面代码就是 Node 内部加载模块后生成的一个对象。该对象的`id`属性是模块名，`exports`属性是模块输出的各个接口，`loaded`属性是一个布尔值，表示该模块的脚本是否执行完毕。其他还有很多属性，这里都省略了。
+
+2. CommonJS 模块的循环加载
+
+CommonJS 模块的重要特性是加载时执行，即脚本代码在`require`的时候，就会全部执行。一旦出现某个模块被"循环加载"，就只输出已经执行的部分，还未执行的部分不会输出。
+
+```javascript
+// a.js
+exports.done = false;
+var b = require('./b.js');
+console.log('在 a.js 之中，b.done = %j', b.done);
+exports.done = true;
+console.log('a.js 执行完毕');
+```
+
+```javascript
+// b.js
+exports.done = false;
+var a = require('./a.js');
+console.log('在 b.js 之中，a.done = %j', a.done);
+exports.done = true;
+console.log('b.js 执行完毕');
+```
+
+```javascript
+// 执行文件 main.js
+var a = require('./a.js');
+var b = require('./b.js');
+console.log('在 main.js 之中, a.done=%j, b.done=%j', a.done, b.done);
+```
+
+```bash
+// 执行结果
+在 b.js 之中，a.done = false // a.js依赖b.js所以先运行a.js的第一句话然后再运行b.js,在运行b.js的console.log的时候a的导出还是false
+b.js 执行完毕
+在 a.js 之中，b.done = true // 等b.js运行完了再回到a.js继续执行
+a.js 执行完毕
+在 main.js 之中, a.done=true, b.done=true // 最后再运行main.js的console.log
+```
+
+3. es6Module的循环加载
+
+ES6 模块是动态引用，如果使用`import`从一个模块加载变量（即`import foo from 'foo'`），那些变量不会被缓存，而是成为一个指向被加载模块的引用，需要开发者自己保证，真正取值的时候能够取到值。
+
+```javascript
+// 1.执行a.js
+import {bar} from './b';// 2. 执行b.js
+console.log('a.mjs');
+console.log(bar);
+export let foo = 'foo';
+
+// b.mjs
+import {foo} from './a';// 3.esmodule发现循环引用不再执行a.js
+console.log('b.mjs');
+console.log(foo); // 4. 此时foo还没定义所以报错
+export let bar = 'bar';
+```
+
+所以esModule和commonjs其实都是发现有引用就会去执行，并且有一套避免循环引用死循环的机制。只是引用的内容不一样。
+
+## 装饰器
+
+目前js的装饰器提案还在stage2, 由于项目中对于装饰器的使用也就是使用ts，所以目前直接看ts的装饰器语法即可。
 
