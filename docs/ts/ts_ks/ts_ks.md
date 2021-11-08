@@ -73,7 +73,7 @@ let unusable: void = undefined;
 let n:null = null;
 let u:undefined = undefined;
 
-//null和undefined可以赋值给任意的变量类型
+//没有指定--strictNullChecks标记的情况下null和undefined可以赋值给任意的变量类型
 let num:number = n;
 num = u;
 
@@ -81,6 +81,48 @@ num = u;
 let v:void;
 num = v;//报错
 ```
+#### 2.6 Never
+
+`never`类型表示的是那些永不可能存在的值的类型。 例如， `never`类型是那些总是会抛出异常或根本就不会有返回值的函数表达式或箭头函数表达式的返回值类型； 变量也可能是 `never`类型，当它们被永不为真的类型保护所约束时。
+
+`never`类型是任何类型的子类型，也可以赋值给任何类型；然而，*没有*类型是`never`的子类型或可以赋值给`never`类型（除了`never`本身之外）。 即使 `any`也不可以赋值给`never`。
+
+```js
+// 返回never的函数必须存在无法达到的终点
+function error(message: string): never {
+    throw new Error(message);
+}
+
+// 推断的返回值类型为never
+function fail() {
+    return error("Something failed");
+}
+
+// 返回never的函数必须存在无法达到的终点
+function infiniteLoop(): never {
+    while (true) {
+    }
+}
+```
+
+#### Object类型
+
+`object`表示非原始类型，也就是除`number`，`string`，`boolean`，`symbol`，`null`或`undefined`之外的类型。
+
+使用`object`类型，就可以更好的表示像`Object.create`这样的以Object为参数的API。例如：
+
+```ts
+declare function create(o: object | null): void;
+
+create({ prop: 0 }); // OK
+create(null); // OK
+
+create(42); // Error
+create("string"); // Error
+create(false); // Error
+create(undefined); // Error
+```
+
 ### 3.任意类型
 
 * 可以任意给值的类型，相当于js
@@ -127,6 +169,7 @@ myFavoriteNumber = 'seven';
 myFavoriteNumber = 7;
 ```
 ### 5.联合类型
+
 定义一种变量可以是多种类型
 
 #### 5.1创建联合类型
@@ -282,6 +325,27 @@ let sha1: encrypt = function (key, value) {
 console.log(md5('key', 'value'));
 ```
 
+#### 6.6  可索引的类型
+
+```ts
+interface StringArray {
+  [index: number]: string;
+}
+
+let myArray: StringArray;
+myArray = ["Bob", "Fred"];
+
+let myStr: string = myArray[0];
+
+// 定义任意数量的属性
+interface SquareConfig {
+    color?: string;
+    width?: number;
+    [propName: string]: any;
+}
+```
+
+TypeScript支持两种索引签名：字符串和数字。 可以同时使用两种类型的索引，但是数字索引的返回值必须是字符串索引返回值类型的子类型。
 
 ### 7.数组
 
@@ -481,13 +545,237 @@ A & B 返回一个新的类型，这个类型是A和B的并集，即返回的这
 
 obj: A | B的意思是obj可以是类型A或者是类型B
 
+#### 10.3 类型保护与区分类型
+
+如下情况必须要用强制类型定义比较麻烦：
+
+```ts
+let pet = getSmallPet();// pet:Fish | Bird
+
+if ((<Fish>pet).swim) {
+    (<Fish>pet).swim();
+}
+else {
+    (<Bird>pet).fly();
+}
+```
+
+解决方式有三：
+
+1： 
+
+```ts
+// 使用pet is Fish这种类型谓词写一个判断函数
+function isFish(pet: Fish | Bird): pet is Fish {
+    return (<Fish>pet).swim !== undefined;
+}
+
+// 'swim' 和 'fly' 调用都没有问题了
+if (isFish(pet)) {
+    pet.swim();
+}
+else {
+    pet.fly();
+}
+```
+
+2；
+
+```ts
+// 对于原始类型直接使用typeof即可
+function padLeft(value: string, padding: string | number) {
+    if (typeof padding === "number") {
+        return Array(padding + 1).join(" ") + value;
+    }
+    if (typeof padding === "string") {
+        return padding + value;
+    }
+    throw new Error(`Expected string or number, got '${padding}'.`);
+}
+```
+
+3:
+
+```ts
+// 或者是使用instanceof进行判断
+interface Padder {
+    getPaddingString(): string
+}
+
+class SpaceRepeatingPadder implements Padder {
+    constructor(private numSpaces: number) { }
+    getPaddingString() {
+        return Array(this.numSpaces + 1).join(" ");
+    }
+}
+
+class StringPadder implements Padder {
+    constructor(private value: string) { }
+    getPaddingString() {
+        return this.value;
+    }
+}
+
+function getRandomPadder() {
+    return Math.random() < 0.5 ?
+        new SpaceRepeatingPadder(4) :
+        new StringPadder("  ");
+}
+
+// 类型为SpaceRepeatingPadder | StringPadder
+let padder: Padder = getRandomPadder();
+
+if (padder instanceof SpaceRepeatingPadder) {
+    padder; // 类型细化为'SpaceRepeatingPadder'
+}
+if (padder instanceof StringPadder) {
+    padder; // 类型细化为'StringPadder'
+}
+```
+
+#### 10.4 字符串字面量
+
+```ts
+// 只能从以下三个字符串中选一个
+type Easing = "ease-in" | "ease-out" | "ease-in-out";
+```
+
+#### 10.5 数字字面量类型
+
+```ts
+// 只能从一下数字中选一个
+function rollDie(): 1 | 2 | 3 | 4 | 5 | 6 {
+    // ...
+}
+```
+
+#### 10.4 可辨识联合
+
+```ts
+interface Square {
+    kind: "square";
+    size: number;
+}
+interface Rectangle {
+    kind: "rectangle";
+    width: number;
+    height: number;
+}
+interface Circle {
+    kind: "circle";
+    radius: number;
+}
+
+// 这些子接口中必须都要有kind属性
+type Shape = Square | Rectangle | Circle;
+
+function area(s: Shape) {
+  // 通过判断kind来进行不同的操作
+    switch (s.kind) {
+        case "square": return s.size * s.size;
+        case "rectangle": return s.height * s.width;
+        case "circle": return Math.PI * s.radius ** 2;
+    }
+}
+```
+
+#### 10.5 索引类型
+
+```ts
+function pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
+  return names.map(n => o[n]);
+}
+
+interface Person {
+    name: string;
+    age: number;
+}
+let person: Person = {
+    name: 'Jarid',
+    age: 35
+};
+let strings: string[] = pluck(person, ['name']); // ok, string[]
+```
+
+keyof T **索引类型查询操作符**: 
+
+```ts
+// 返回的是键名的联合类型
+let personProps: keyof Person; // 'name' | 'age'
+```
+
+ `T[K]`， **索引访问操作符**：
+
+```ts
+// T[K] 返回的是T这个类的K键的值的类型
+function getProperty<T, K extends keyof T>(o: T, name: K): T[K] {
+    return o[name]; // o[name] is of type T[K]
+}
+```
+
+对于字符串索引签名的类型：
+
+```ts
+interface Map<T> {
+    [key: string]: T;
+}
+let keys: keyof Map<number>; // string
+let value: Map<number>['foo']; // number
+```
+
+#### 10.6 映射类型
+
+```ts
+type Readonly<T> = {
+    readonly [P in keyof T]: T[P];
+}
+type Partial<T> = {
+    [P in keyof T]?: T[P];
+}
+```
+
+[P in keyof T] : P这个键名要在keyof T的联合类型中。
+
 ## 二.进阶
+
 ### 1.类型别名
-用来给一个类型起一个新名字
+用来给一个类型起一个新名字，它有时候和接口比较像，但是更加的灵活。但是别名没有办法继承等，只是单纯的另外取一个名字，应该根据语义决定使用哪一个。
 
 ```ts
 type nickName = string | number;
 let x:nickName = 123;
+```
+
+同接口一样，类型别名也可以是泛型 - 我们可以添加类型参数并且在别名声明的右侧传入：
+
+```ts
+type Container<T> = { value: T };
+```
+
+我们也可以使用类型别名来在属性里引用自己：
+
+```ts
+type Tree<T> = {
+    value: T;
+    left: Tree<T>;
+    right: Tree<T>;
+}
+```
+
+与交叉类型一起使用，我们可以创建出一些十分稀奇古怪的类型。
+
+```ts
+type LinkedList<T> = T & { next: LinkedList<T> };
+
+interface Person {
+    name: string;
+}
+
+var people: LinkedList<Person>;
+var s = people.name;
+var s = people.next.name;
+var s = people.next.next.name;
+var s = people.next.next.next.name;
 ```
 
 ### 2.字符串字面量类型
@@ -502,8 +790,8 @@ let x:nickName = '4';//报错，只能是'1','2','3'中的其中一个
 数组合并了相同类型的对象，而元组（Tuple）合并了不同类型的对象。
 
 ```ts
-let turp:[number,string] = [1,'1'];
-turp.push('2');//添加越界元素只能是number或者string类型
+let turp:[number,string] = [1,'1']; //前两个必须是先number,后string
+turp.push('2');//添加后面超过两个的越界元素只能是number或者string类型
 ```
 ### 4.枚举
 
@@ -517,8 +805,10 @@ enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
 
 #### 4.2 使用方式
 
+1. 在运行时作为对象来使用
+
 ```ts
-enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
+enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat}; // 自动以0为下标开始
 
 //拥有正向映射和反向映射
 console.log(Days["Sun"] === 0); // true
@@ -530,28 +820,69 @@ console.log(Days[0] === "Sun"); // true
 console.log(Days[1] === "Mon"); // true
 console.log(Days[2] === "Tue"); // true
 console.log(Days[6] === "Sat"); // true
+
+enum Days {Sun = 7, Mon = 1, Tue = 2, Wed = 3, Thu = 4, Fri = 5, Sat = 6};// 或者自定义映射关系
 ```
 
-编译结果：
-
-```js
-var Days;
-(function (Days) {
-    Days[Days["Sun"] = 0] = "Sun";
-    Days[Days["Mon"] = 1] = "Mon";
-    Days[Days["Tue"] = 2] = "Tue";//Days["Tus"] = 2的返回值是2
-    Days[Days["Wed"] = 3] = "Wed";
-    Days[Days["Thu"] = 4] = "Thu";
-    Days[Days["Fri"] = 5] = "Fri";
-    Days[Days["Sat"] = 6] = "Sat";
-})(Days || (Days = {}));
+```ts
+// 可以像如下使用反向映射
+enum Enum {
+    A
+}
+let a = Enum.A;
+let nameOfA = Enum[a]; // "A"
 ```
+
+
+
+2. 或者是作为接口来使用
+
+```ts
+// 枚举类型为字符串字面量时
+enum ShapeKind {
+    Circle,
+    Square,
+}
+
+interface Circle {
+    kind: ShapeKind.Circle;
+    radius: number;
+}
+
+interface Square {
+    kind: ShapeKind.Square;
+    sideLength: number;
+}
+
+let c: Circle = {
+    kind: ShapeKind.Square,
+    //    ~~~~~~~~~~~~~~~~ Error!
+    radius: 100,
+}
+
+// 枚举类型本身是枚举成员的联合类型
+enum E {
+    Foo,
+    Bar,
+}
+
+function f(x: E) {
+    if (x !== E.Foo || x !== E.Bar) {
+        //             ~~~~~~~~~~~
+        // Error! Operator '!==' cannot be applied to types 'E.Foo' and 'E.Bar'.
+    }
+}
+```
+
+
 
 #### 4.3 手动赋值和常数项计算项
 
 [手动赋值](https://ts.xcatliu.com/advanced/enum.html)
 
 ### 5.类
+
+在ts中class类的具体使用规则可以直接参照ES6,但是ES6并没有实现私有方法或者是protected修饰符等，需要使用ts的能力让js更加的规范化。如下是ts中有的而es6中暂时还没有的类的方法
 
 #### 5.1 修饰符
 
@@ -716,6 +1047,29 @@ class Cat extends Animal {
 let a = new Animal('Jack');//报错，animal不能被实例化
 ```
 
+4. readonly修饰符
+
+你可以使用 `readonly`关键字将属性设置为只读的。 只读属性必须在声明时或构造函数里被初始化。
+
+```ts
+class Octopus {
+    readonly name: string;
+    readonly numberOfLegs: number = 8;
+    constructor (theName: string) {
+        this.name = theName;
+    }
+}
+let dad = new Octopus("Man with the 8 strong legs");
+dad.name = "Man with the 3-piece suit"; // 错误! name 是只读的.
+
+// 或者采取如下的写法
+class Octopus {
+    readonly numberOfLegs: number = 8;
+    constructor(readonly name: string) {
+    }
+}
+```
+
 #### 5.2 参数属性
 
 1.简写形式
@@ -851,8 +1205,9 @@ let monkey:Monkey = new Monkey('atom');
 ```typescript
 // TypeScript中的静态属性和静态方法
 class Person {
+  // 首先是通过属性实例的简写来进行属性的命名
   public name: string;
-  // 静态属性
+  // 静态属性，再加上对应的修饰符
   static age: number = 22;
   static hobby: string;
 
@@ -910,7 +1265,54 @@ class Dog extends Animal {
 }
 ```
 
+#### 5.7 存取器
 
+同es6 ts也支持通过getters/setters来截取对对象成员的访问。
+
+```js
+let passcode = "secret passcode";
+
+class Employee {
+  // 这是一个实例属性，借鉴了ES6的语法，并且加上一个private把这个实例属性作为了私有属性
+    private _fullName: string;
+
+    get fullName(): string {
+        return this._fullName;
+    }
+
+    set fullName(newName: string) {
+        if (passcode && passcode == "secret passcode") {
+            this._fullName = newName;
+        }
+        else {
+            console.log("Error: Unauthorized update of employee!");
+        }
+    }
+}
+
+let employee = new Employee();
+employee.fullName = "Bob Smith";
+if (employee.fullName) {
+    alert(employee.fullName);
+}
+```
+
+首先，存取器要求你将编译器设置为输出ECMAScript 5或更高。 不支持降级到ECMAScript 3。 其次，只带有 `get`不带有 `set`的存取器自动被推断为 `readonly`。 这在从代码生成 `.d.ts`文件时是有帮助的，因为利用这个属性的用户会看到不允许够改变它的值。
+
+#### 5.8 抽象类
+
+`abstract`关键字是用于定义抽象类和在抽象类内部定义抽象方法
+
+```ts
+abstract class Animal {
+    abstract makeSound(): void;
+    move(): void {
+        console.log('roaming the earch...');
+    }
+}
+```
+
+抽象类中的抽象方法不包含具体实现并且必须在派生类中实现。 抽象方法的语法与接口方法相似。 两者都是定义方法签名但不包含方法体。 然而，抽象方法必须包含 `abstract`关键字并且可以包含访问修饰符。
 
 ### 6.类与接口
 
@@ -974,6 +1376,42 @@ interface Point3d extends Point {
 
 let point3d: Point3d = {x: 1, y: 2, z: 3};//使用Point3d接口来规范了一个对象，这个接口继承了Point类中的x,y属性
 ```
+#### 6.4 类继承类
+
+```ts
+class Animal {
+    name: string;
+    constructor(theName: string) { this.name = theName; }
+    move(distanceInMeters: number = 0) {
+        console.log(`${this.name} moved ${distanceInMeters}m.`);
+    }
+}
+
+class Snake extends Animal {
+    constructor(name: string) { super(name); }
+    move(distanceInMeters = 5) {
+        console.log("Slithering...");
+        super.move(distanceInMeters);
+    }
+}
+
+class Horse extends Animal {
+    constructor(name: string) { super(name); }
+    move(distanceInMeters = 45) {
+        console.log("Galloping...");
+        super.move(distanceInMeters);
+    }
+}
+
+let sam = new Snake("Sammy the Python");
+let tom: Animal = new Horse("Tommy the Palomino");
+
+sam.move();
+tom.move(34);
+```
+
+
+
 ### 7.泛型
 
 #### 7.1 单类型泛型的使用
@@ -1010,45 +1448,31 @@ function swap<T,U>(turple:[T,U]):[U,T]{
 
 ```ts
 interface withLen{
-
   length:number;
-
 }
 
 
 
 function getLen<T extends withLen>(some:T):number{//让T继承withLen接口从而规定其一定含有length属性
-
   return some.length;
-
 }
 ```
 
 #### 7.4 泛型接口
 
 ```ts
+// 规范一个函数的泛形
 interface createArrayIf{
-
   <T>(len:number,val:T):Array<T>;
-
 }
 
-
-
 let createArray:createArrayIf;
-
 createArray = function <T>(len:number,val:T):Array<T>{
-
   let res:T[] = [];
-
   for(let i = 0;i < len;i++){
-
 ​    res[i] = val;
-
   }
-
   return res;
-
 }
 ```
 
@@ -1058,23 +1482,16 @@ createArray = function <T>(len:number,val:T):Array<T>{
 
 ```ts
 class GenericNumber<T>{
-
   num:T;
-
   add:(x:T,y:T)=>void;
-
 }
 
 
 
 let myGenericNumber = new GenericNumber<number>();
-
 myGenericNumber.num = 1;
-
 myGenericNumber.add = function (x:number,y:number){
-
   console.log(x + y);
-
 }
 ```
 
@@ -1082,33 +1499,55 @@ myGenericNumber.add = function (x:number,y:number){
 
 ```ts
 interface createArrayIf{
-
   <T>(len:number,val:T):Array<T>;
-
 }
 
 
 
 let createArray:createArrayIf;
-
 createArray = function <T = number>(len:number,val:T):Array<T>{//给了一个默认的参数类型为number
-
   let res:T[] = [];
-
   for(let i = 0;i < len;i++){
-
 ​    res[i] = val;
-
   }
-
   return res;
-
 }
 ```
 
 ### 8.模块
 
 #### 8.1 模块的暴露和引入
+
+ts也是直接支持es6Module的，但是如果想要使用commonjs的require语法，那么就要用到以下的语法。
+
+`export =`语法定义一个模块的导出`对象`。 这里的`对象`一词指的是类，接口，命名空间，函数或枚举。因为require是运行时打包，传出的就是一个对象。
+
+若使用`export =`导出一个模块，则必须使用TypeScript的特定语法`import module = require("module")`来导入此模块。
+
+```js
+// 导出
+let numberRegexp = /^[0-9]+$/;
+class ZipCodeValidator {
+    isAcceptable(s: string) {
+        return s.length === 5 && numberRegexp.test(s);
+    }
+}
+export = ZipCodeValidator;
+
+// 导入
+import zip = require("./ZipCodeValidator");
+
+// Some samples to try
+let strings = ["Hello", "98052", "101"];
+
+// Validators to use
+let validator = new zip();
+
+// Show whether each string passed each validator
+strings.forEach(s => {
+  console.log(`"${ s }" - ${ validator.isAcceptable(s) ? "matches" : "does not match" }`);
+});
+```
 
 ```typescript
 // 暴露
@@ -1170,7 +1609,216 @@ console.log(dogA.eat());
 console.log(dogB.eat());
 ```
 
+### 模块解析
+
+这一节将会讲解当引入模块的时候究竟是怎么找到对应的模块文件的。
+
+#### 相对和非相对模块引入
+
+1. 相对引入
+
+*相对导入*是以`/`，`./`或`../`开头的。 下面是一些例子：
+
+- `import Entry from "./components/Entry";`
+- `import { DefaultHeaders } from "../constants/http";`
+- `import "/mod";`
+
+2. 非相对引入
+
+所有不是相对引入的都是非相对引入：
+
+- `import * as $ from "jQuery";`
+- `import { Component } from "@angular/core";`
+
+这两种引入有不同的寻找解析策略。
+
+#### 模块解析策略
+
+模块解析策略分为两种类型，nodeh饿classic。你可以使用 `--moduleResolution`标记来指定使用哪种模块解析策略。若未指定，那么在使用了 `--module AMD | System | ES2015`时的默认值为[Classic](https://www.tslang.cn/docs/handbook/module-resolution.html#classic)，其它情况时则为[Node](https://www.tslang.cn/docs/handbook/module-resolution.html#node)。
+
+##### classic方式
+
+* 对相对引入
+
+相对导入的模块是相对于导入它的文件进行解析的。 因此 `/root/src/folder/A.ts`文件里的`import { b } from "./moduleB"`会使用下面的查找流程：
+
+1. `/root/src/folder/moduleB.ts`  // 先找.ts文件
+2. `/root/src/folder/moduleB.d.ts` // 再找.d.ts文件
+
+* 对于非相对模块的导入
+
+编译器则会从包含导入文件的目录开始依次向上级目录遍历，尝试定位匹配的声明文件。
+
+比如：
+
+有一个对`moduleB`的非相对导入`import { b } from "moduleB"`，它是在`/root/src/folder/A.ts`文件里，会以如下的方式来定位`"moduleB"`：
+
+1. `/root/src/folder/moduleB.ts`
+2. `/root/src/folder/moduleB.d.ts`
+3. `/root/src/moduleB.ts`
+4. `/root/src/moduleB.d.ts`
+5. `/root/moduleB.ts`
+6. `/root/moduleB.d.ts`
+7. `/moduleB.ts`
+8. `/moduleB.d.ts`
+
+##### Node的引入方式
+
+这里是node的引入策略，ts的引入策略是基于node的引入策略做出一些更改后的结果。
+
+* 相对引入
+
+假设有一个文件路径为 `/root/src/moduleA.js`，包含了一个导入`var x = require("./moduleB");` Node.js以下面的顺序解析这个导入：
+
+a. 检查`/root/src/moduleB.js`文件是否存在。
+
+b. 检查`/root/src/moduleB`目录是否包含一个`package.json`文件，且`package.json`文件指定了一个`"main"`模块。 在我们的例子里，如果Node.js发现文件 `/root/src/moduleB/package.json`包含了`{ "main": "lib/mainModule.js" }`，那么Node.js会引用`/root/src/moduleB/lib/mainModule.js`。
+
+c. 检查`/root/src/moduleB`目录是否包含一个`index.js`文件。 这个文件会被隐式地当作那个文件夹下的"main"模块。
+
+* 非相对引入
+
+ Node会在一个特殊的文件夹 `node_modules`里查找你的模块。假设`/root/src/moduleA.js`里使用的是非相对路径导入`var x = require("moduleB");`。 Node则会以下面的顺序去解析 `moduleB`，直到有一个匹配上。
+
+1. `/root/src/node_modules/moduleB.js`
+
+2. `/root/src/node_modules/moduleB/package.json` (如果指定了`"main"`属性)
+
+3. `/root/src/node_modules/moduleB/index.js`
+
+   
+
+4. `/root/node_modules/moduleB.js`
+
+5. `/root/node_modules/moduleB/package.json` (如果指定了`"main"`属性)
+
+6. `/root/node_modules/moduleB/index.js`
+
+   
+
+7. `/node_modules/moduleB.js`
+
+8. `/node_modules/moduleB/package.json` (如果指定了`"main"`属性)
+
+9. `/node_modules/moduleB/index.js`
+
+##### TS引入方式
+
+* 相对引入
+
+`import { b } from "./moduleB"`在`/root/src/moduleA.ts`里，会以下面的流程来定位`"./moduleB"`：
+
+1. `/root/src/moduleB.ts`
+2. `/root/src/moduleB.tsx`
+3. `/root/src/moduleB.d.ts`
+4. `/root/src/moduleB/package.json` (如果指定了`"types"`属性)
+5. `/root/src/moduleB/index.ts`
+6. `/root/src/moduleB/index.tsx`
+7. `/root/src/moduleB/index.d.ts`
+
+* 非相对引入
+
+类似地，非相对的导入会遵循Node.js的解析逻辑，首先查找文件，然后是合适的文件夹。 因此 `/root/src/moduleA.ts`文件里的`import { b } from "moduleB"`会以下面的查找顺序解析：
+
+1. `/root/src/node_modules/moduleB.ts`
+
+2. `/root/src/node_modules/moduleB.tsx`
+
+3. `/root/src/node_modules/moduleB.d.ts`
+
+4. `/root/src/node_modules/moduleB/package.json` (如果指定了`"types"`属性)
+
+5. `/root/src/node_modules/moduleB/index.ts`
+
+6. `/root/src/node_modules/moduleB/index.tsx`
+
+7. `/root/src/node_modules/moduleB/index.d.ts`
+
+   
+
+8. `/root/node_modules/moduleB.ts`
+
+9. `/root/node_modules/moduleB.tsx`
+
+10. `/root/node_modules/moduleB.d.ts`
+
+11. `/root/node_modules/moduleB/package.json` (如果指定了`"types"`属性)
+
+12. `/root/node_modules/moduleB/index.ts`
+
+13. `/root/node_modules/moduleB/index.tsx`
+
+14. `/root/node_modules/moduleB/index.d.ts`
+
+    
+
+15. `/node_modules/moduleB.ts`
+
+16. `/node_modules/moduleB.tsx`
+
+17. `/node_modules/moduleB.d.ts`
+
+18. `/node_modules/moduleB/package.json` (如果指定了`"types"`属性)
+
+19. `/node_modules/moduleB/index.ts`
+
+20. `/node_modules/moduleB/index.tsx`
+
+21. `/node_modules/moduleB/index.d.ts`
+
+##### 路径映射
+
+1. path映射
+
+工程结构如下：
+
+```js
+projectRoot
+├── folder1
+│   ├── file1.ts (imports 'folder1/file2' and 'folder2/file3')
+│   └── file2.ts
+├── generated
+│   ├── folder1
+│   └── folder2
+│       └── file3.ts
+└── tsconfig.json
+```
+
+相应的`tsconfig.json`文件如下：
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": [ // 这个*表示匹配所有的值
+        "*", // 表示名字不变，映射为<baseUrl>/<moduleName>
+        "generated/*" // 表示模块名添加了“generated“前缀，映射为<baseUrl>/generated/<moduleName>
+      ]
+    }
+  }
+}
+```
+
+编译器将会如下尝试解析这两个导入：
+
+- 导入'folder1/file2'
+  1. 匹配'*'模式且通配符捕获到整个名字。
+  2. 尝试列表里的第一个替换：'*' -> `folder1/file2`。
+  3. 替换结果为非相对名 - 与*baseUrl*合并 -> `projectRoot/folder1/file2.ts`。
+  4. 文件存在。完成。
+- 导入'folder2/file3'
+  1. 匹配'*'模式且通配符捕获到整个名字。
+  2. 尝试列表里的第一个替换：'*' -> `folder2/file3`。
+  3. 替换结果为非相对名 - 与*baseUrl*合并 -> `projectRoot/folder2/file3.ts`。
+  4. 文件不存在，跳到第二个替换。
+  5. 第二个替换：'generated/*' -> `generated/folder2/file3`。
+  6. 替换结果为非相对名 - 与*baseUrl*合并 -> `projectRoot/generated/folder2/file3.ts`。
+  7. 文件存在。完成。
+
 ### 9. 装饰器
+
+装饰器现在在es6中已经处于第二阶段，但在ts中已经实现的比较好。
 
 #### 9.1 装饰器概念
 
@@ -1186,6 +1834,8 @@ console.log(dogB.eat());
   - 某一个函数被很多人用，当我们想要对这个函数执行耗时统计的时候，为了不影响其他人使用，我们自己加上一个耗时统计的装饰器，当不需要计时的时候，删除装饰器即可。
 
 #### 9.2 类装饰器
+
+*类装饰器*在类声明之前被声明（紧靠着类声明）。 类装饰器应用于类构造函数，可以用来监视，修改或替换类定义。 类装饰器不能用在声明文件中( `.d.ts`)，也不能用在任何外部上下文中（比如`declare`的类）。
 
 ##### 9.2.1 普通装饰器（传入当前类）
 
@@ -1216,13 +1866,13 @@ http.run();
 
  
 
-##### 9.2.2 装饰器工厂（传入参数）
+##### 9.2.2 装饰器工厂（能传入参数的装饰器）
 
 ```typescript
 // 类装饰器：装饰器工厂（可传参）
-function logClass(params: string) {
+function logClass(params: string) { // 这是一个装饰器工厂
   // 注意这里的params不再是被装饰的类，而是传给装饰器的参数
-  return function (target: any) {
+  return function (target: any) { // 返回一个装饰器
     // 这里面的target才是被装饰的类，在例中即HttpClient
     console.log(target);
     console.log(params);
@@ -1273,9 +1923,55 @@ console.log(http.apiUrl)//apiURL in decorator.
 http.getData();//Decorator: apiURL in decorator
 ```
 
-#### 9.3 属性装饰器
+##### 装饰器组合
+
+多个装饰器可以同时应用到一个声明上，可以写在多行也可以写在一行。
+
+当多个装饰器应用于一个声明上，它们求值方式与[复合函数](http://en.wikipedia.org/wiki/Function_composition)相似。在这个模型下，当复合*f*和*g*时，复合的结果(*f* ∘ *g*)(*x*)等同于*f*(*g*(*x*))。
 
 ```ts
+function f() {
+    console.log("f(): evaluated");
+    return function (target, propertyKey: string, descriptor: PropertyDescriptor) {
+        console.log("f(): called");
+    }
+}
+
+function g() {
+    console.log("g(): evaluated");
+    return function (target, propertyKey: string, descriptor: PropertyDescriptor) {
+        console.log("g(): called");
+    }
+}
+
+class C {
+    @f()
+    @g()
+    method() {}
+}
+```
+
+在控制台里会打印出如下结果：
+
+```shell
+f(): evaluated
+g(): evaluated
+g(): called
+f(): called
+```
+
+
+
+#### 9.3 属性装饰器
+
+属性装饰器表达式会在运行时当作函数被调用，传入下列2个参数：
+
+1. 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。
+2. 成员的名字。
+
+```ts
+
+
 function logProperty(params: any): any {//params为参数
   return function (target: any, attr: any): void {
     console.log(target);//target为目标类
@@ -1303,12 +1999,14 @@ console.log(http.getData());
 
 #### 9.4 方法装饰器
 
+方法装饰器不能用在声明文件( `.d.ts`)，重载或者任何外部上下文（比如`declare`的类）中。
+
 ```typescript
 // 方法装饰器
 
 // 它会被应用到方法的属性描述符上，可以用于监视、修改、替换方法定义
 // 方法装饰器会在运行时传入下列3个参数：
-// 1.类的构造函数
+// 1.对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。
 // 2.成员的名字
 // 3.成员的属性描述符: writable, enumerable, configurable ...
 
@@ -1383,6 +2081,615 @@ class HttpClient {
 let http = new HttpClient();
 http.getData(2043);
 ```
+
+### Symbols
+
+自ECMAScript 2015起，`symbol`成为了一种新的原生类型，就像`number`和`string`一样。
+
+`symbol`类型的值是通过`Symbol`构造函数创建的。
+
+Symbols是不可改变且唯一的。
+
+```ts
+let sym2 = Symbol("key");
+let sym3 = Symbol("key");
+
+sym2 === sym3; // false, symbols是唯一的
+```
+
+像字符串一样，symbols也可以被用做对象属性的键。
+
+```ts
+let sym = Symbol();
+
+let obj = {
+  // 对象里，只要不是字符串作为变量名就要加[]号变成计算属性名
+    [sym]: "value"
+};
+
+console.log(obj[sym]); // "value"
+```
+
+### 迭代器生成器
+
+与es6的迭代器概念一致，参照es6即可
+
+### 声明合并
+
+“声明合并”是指编译器将针对同一个名字的两个独立声明合并为单一声明。 合并后的声明同时拥有原先两个声明的特性。 任何数量的声明都可被合并；不局限于两个声明。
+
+https://www.tslang.cn/docs/handbook/declaration-merging.html
+
+详细讲解了不同类型合并的时候的具体细节
+
+### JSX
+
+介绍了ts对于jsx语法的支持配置，还有react中使用ts的一些实践
+
+### 和JSDoc一起对js文件使用ts校验
+
+JSDoc本来是用来在代码注释中通过加入@标签的方式更好的使代码更易读，并自动生成api文档的一种注释语法。
+
+现在在ts中支持这种语法的部分标签来对js进行一些类型的指定。
+
+https://www.tslang.cn/docs/handbook/type-checking-javascript-files.html
+
+### 声明文件
+
+#### 基本概念
+
+* 声明语句
+
+使用`declare`关键字声明一个全局类型，仅仅会用于编译时的检查，在编译结果中会被删除。
+
+```ts
+declare var jQuery: (selector: string) => any;
+
+jQuery('#foo');
+```
+
+* 声明文件
+
+会把声明语句放到一个单独的文件（`jQuery.d.ts`）中，这就是声明文件。
+
+声明文件必需以 `.d.ts` 为后缀。
+
+* 第三方声明文件
+
+使用 `@types` 统一管理第三方库的声明文件。
+
+`@types` 的使用方式很简单，直接用 npm 安装对应的声明模块即可，以 jQuery 举例：
+
+```bash
+npm install @types/jquery --save-dev
+```
+
+可以在[这个页面](https://microsoft.github.io/TypeSearch/)搜索你需要的声明文件。
+
+#### 书写声明文件
+
+在不同的场景下，声明文件的内容和使用方式会有所区别。
+
+1. ##### 全局变量
+
+全局变量最好是放在一个统一的`src`目录下，如果tsconfig.json中配置了解析这个目录，就可以在全局获取使用到对应的变量定义。
+
+全局变量的声明文件主要有以下几种语法：
+
+- [`declare var`](https://ts.xcatliu.com/basics/declaration-files.html#declare-var) 声明全局变量
+
+  ```ts
+  declare let jQuery: (selector: string) => any; // let var差不多
+  declare const jQuery: (selector: string) => any; // 使用const表示不可改
+  ```
+
+- [`declare function`](https://ts.xcatliu.com/basics/declaration-files.html#declare-function) 声明全局方法
+
+```ts
+// src/jQuery.d.ts
+declare function jQuery(selector: string): any;
+
+// 也支持函数重载
+declare function jQuery(selector: string): any;
+declare function jQuery(domReadyCallback: () => any): any;
+```
+
+- [`declare class`](https://ts.xcatliu.com/basics/declaration-files.html#declare-class) 声明全局类
+
+```ts
+// src/Animal.d.ts
+
+declare class Animal {// 只能用来定义类型，不能用来定义具体实现
+    name: string;
+    constructor(name: string);
+    sayHi(): string;
+}
+```
+
+- [`declare enum`](https://ts.xcatliu.com/basics/declaration-files.html#declare-enum) 声明全局枚举类型
+
+```ts
+// src/Directions.d.ts
+
+declare enum Directions {
+    Up,
+    Down,
+    Left,
+    Right
+}
+```
+
+- [`declare namespace`](https://ts.xcatliu.com/basics/declaration-files.html#declare-namespace) 声明（含有子属性的）全局对象
+
+`namespace` 是 ts 早期时为了解决模块化而创造的关键字，中文称为命名空间。
+
+由于历史遗留原因，在早期还没有 ES6 的时候，ts 提供了一种模块化方案，使用 `module` 关键字表示内部模块。但由于后来 ES6 也使用了 `module` 关键字，ts 为了兼容 ES6，使用 `namespace` 替代了自己的 `module`，更名为命名空间。
+
+随着 ES6 的广泛应用，现在已经不建议再使用 ts 中的 `namespace`，而推荐使用 ES6 的模块化方案了，故我们不再需要学习 `namespace` 的使用了。
+
+`namespace` 被淘汰了，但是在声明文件中，`declare namespace` 还是比较常用的，它用来表示全局变量是一个对象，包含很多子属性。
+
+```ts
+// src/jQuery.d.ts
+
+declare namespace jQuery {
+    function ajax(url: string, settings?: any): void;
+    namespace fn {
+        function extend(object: any): void;
+    }
+}
+// src/index.ts
+
+jQuery.ajax('/api/get_something');
+jQuery.fn.extend({
+    check: function() {
+        return this.each(function() {
+            this.checked = true;
+        });
+    }
+});
+```
+
+- [`interface` 和 `type`](https://ts.xcatliu.com/basics/declaration-files.html#interface-he-type) 声明全局类型
+
+在类型声明文件中，我们可以直接使用 `interface` 或 `type` 来声明一个全局的接口或类型[12](https://github.com/xcatliu/typescript-tutorial/tree/master/examples/declaration-files/12-interface)：
+
+```ts
+// src/jQuery.d.ts
+
+interface AjaxSettings {
+    method?: 'GET' | 'POST'
+    data?: any;
+}
+declare namespace jQuery {
+    function ajax(url: string, settings?: AjaxSettings): void;
+}
+```
+
+这样的话，在其他文件中也可以使用这个接口或类型了：
+
+```ts
+// src/index.ts
+
+let settings: AjaxSettings = {
+    method: 'POST',
+    data: {
+        name: 'foo'
+    }
+};
+jQuery.ajax('/api/post_something', settings);
+```
+
+2. ##### npm包
+
+在我们尝试给一个 npm 包创建声明文件之前，需要先看看它的声明文件是否已经存在。一般来说，npm 包的声明文件可能存在于两个地方：
+
+* 与该 npm 包绑定在一起。判断依据是 `package.json` 中有 `types` 字段，或者有一个 `index.d.ts` 声明文件。这种模式不需要额外安装其他包，是最为推荐的，所以以后我们自己创建 npm 包的时候，最好也将声明文件与 npm 包绑定在一起。
+
+* 发布到 `@types` 里。我们只需要尝试安装一下对应的 `@types` 包就知道是否存在该声明文件，安装命令是 `npm install @types/foo --save-dev`。这种模式一般是由于 npm 包的维护者没有提供声明文件，所以只能由其他人将声明文件发布到 `@types` 里了。
+
+假如以上两种方式都没有找到对应的声明文件，那么我们就需要自己为它写声明文件了。由于是通过 `import` 语句导入的模块，所以声明文件存放的位置也有所约束，一般有两种方案：
+
+* 创建一个 `node_modules/@types/foo/index.d.ts` 文件，存放 `foo` 模块的声明文件。这种方式不需要额外的配置，但是 `node_modules` 目录不稳定，代码也没有被保存到仓库中，无法回溯版本，有不小心被删除的风险，故不太建议用这种方案，一般只用作临时测试。
+
+* 创建一个 `types` 目录，专门用来管理自己写的声明文件，将 `foo` 的声明文件放到 `types/foo/index.d.ts` 中。这种方式需要配置下 `tsconfig.json` 中的 `paths` 和 `baseUrl` 字段。
+
+npm 包的声明文件主要有以下几种语法：
+
+- [`export`](https://ts.xcatliu.com/basics/declaration-files.html#export) 导出变量
+
+在 npm 包的声明文件中，使用 `declare` 不再会声明一个全局变量，而只会在当前文件中声明一个局部变量。只有在声明文件中使用 `export` 导出，然后在使用方 `import` 导入后，才会应用到这些类型声明。
+
+`export` 的语法与普通的 ts 中的语法类似，区别仅在于声明文件中禁止定义具体的实现[15](https://github.com/xcatliu/typescript-tutorial/tree/master/examples/declaration-files/15-export)：
+
+```ts
+// types/foo/index.d.ts
+
+export const name: string;
+export function getName(): string;
+export class Animal {
+    constructor(name: string);
+    sayHi(): string;
+}
+export enum Directions {
+    Up,
+    Down,
+    Left,
+    Right
+}
+export interface Options {
+    data: any;
+}
+```
+
+对应的导入和使用模块应该是这样：
+
+```ts
+// src/index.ts
+
+import { name, getName, Animal, Directions, Options } from 'foo';
+
+console.log(name);
+let myName = getName();
+let cat = new Animal('Tom');
+let directions = [Directions.Up, Directions.Down, Directions.Left, Directions.Right];
+let options: Options = {
+    data: {
+        name: 'foo'
+    }
+};
+```
+
+- 混用 `declare` 和 `export`
+
+我们也可以使用 `declare` 先声明多个变量，最后再用 `export` 一次性导出。上例的声明文件可以等价的改写为[16](https://github.com/xcatliu/typescript-tutorial/tree/master/examples/declaration-files/16-declare-and-export)：
+
+```ts
+// types/foo/index.d.ts
+
+declare const name: string;
+declare function getName(): string;
+declare class Animal {
+    constructor(name: string);
+    sayHi(): string;
+}
+declare enum Directions {
+    Up,
+    Down,
+    Left,
+    Right
+}
+interface Options {
+    data: any;
+}
+
+export { name, getName, Animal, Directions, Options };
+```
+
+注意，与全局变量的声明文件类似，`interface` 前是不需要 `declare` 的。
+
+- [`export namespace`](https://ts.xcatliu.com/basics/declaration-files.html#export-namespace) 导出（含有子属性的）对象
+
+与 `declare namespace` 类似，`export namespace` 用来导出一个拥有子属性的对象[17](https://github.com/xcatliu/typescript-tutorial/tree/master/examples/declaration-files/17-export-namespace)：
+
+```ts
+// types/foo/index.d.ts
+
+export namespace foo {
+    const name: string;
+    namespace bar {
+        function baz(): string;
+    }
+}
+// src/index.ts
+
+import { foo } from 'foo';
+
+console.log(foo.name);
+foo.bar.baz();
+```
+
+- [`export default`](https://ts.xcatliu.com/basics/declaration-files.html#export-default) ES6 默认导出
+
+在 ES6 模块系统中，使用 `export default` 可以导出一个默认值，使用方可以用 `import foo from 'foo'` 而不是 `import { foo } from 'foo'` 来导入这个默认值。
+
+在类型声明文件中，`export default` 用来导出默认值的类型[18](https://github.com/xcatliu/typescript-tutorial/tree/master/examples/declaration-files/18-export-default)：
+
+```ts
+// types/foo/index.d.ts
+
+export default function foo(): string;
+// src/index.ts
+
+import foo from 'foo';
+
+foo();
+```
+
+- [`export =`](https://ts.xcatliu.com/basics/declaration-files.html#export-1) commonjs 导出模块
+
+最好不用，都统一使用esmodule进行。
+
+##### 3. 在npm包中扩展全局变量
+
+#### `declare global`
+
+使用 `declare global` 可以在 npm 包或者 UMD 库的声明文件中扩展全局变量的类型[25](https://github.com/xcatliu/typescript-tutorial/tree/master/examples/declaration-files/25-declare-global)：
+
+```ts
+// types/foo/index.d.ts
+
+declare global {
+    interface String {
+        prependHello(): string;
+    }
+}
+
+export {};
+// src/index.ts
+
+'bar'.prependHello();
+```
+
+**注意即使此声明文件不需要导出任何东西，仍然需要导出一个空对象，用来告诉编译器这是一个模块的声明文件，而不是一个全局变量的声明文件。**
+
+##### 4. 声明文件中的依赖和三斜线指令
+
+可以通过`import` , `export` 的方式来阐述两个声明文件之间的依赖关系，但是对于全局变量的声明文件来说，是不允许出现`import`,`export`关键字的，一旦出现就会被视为一个npm包或者UMD库。故当我们在书写一个全局变量的声明文件时，如果需要引用另一个库的类型，那么就必须用三斜线指令了[28](https://github.com/xcatliu/typescript-tutorial/tree/master/examples/declaration-files/28-triple-slash-directives)：
+
+```ts
+// types/jquery-plugin/index.d.ts
+
+/// <reference types="jquery" />
+
+declare function foo(options: JQuery.AjaxSettings): string;
+```
+
+```ts
+// src/index.ts
+
+foo({});
+```
+
+注意，三斜线指令必须放在文件的最顶端，三斜线指令的前面只允许出现单行或多行注释。 
+
+##### 5. 自动生成声明文件
+
+如果库的源码本身就是由 ts 写的，那么在使用 `tsc` 脚本将 ts 编译为 js 的时候，添加 `declaration` 选项，就可以同时也生成 `.d.ts` 声明文件了。
+
+我们可以在命令行中添加 `--declaration`（简写 `-d`），或者在 `tsconfig.json` 中添加 `declaration` 选项。这里以 `tsconfig.json` 为例：
+
+```json
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "outDir": "lib",
+        "declaration": true,
+    }
+}
+```
+
+上例中我们添加了 `outDir` 选项，将 ts 文件的编译结果输出到 `lib` 目录下，然后添加了 `declaration` 选项，设置为 `true`，表示将会由 ts 文件自动生成 `.d.ts` 声明文件，也会输出到 `lib` 目录下。
+
+运行 `tsc` 之后，目录结构如下[30](https://github.com/xcatliu/typescript-tutorial/tree/master/examples/declaration-files/30-auto-d-ts)：
+
+```autoit
+/path/to/project
+├── lib
+|  ├── bar
+|  |  ├── index.d.ts
+|  |  └── index.js
+|  ├── index.d.ts
+|  └── index.js
+├── src
+|  ├── bar
+|  |  └── index.ts
+|  └── index.ts
+├── package.json
+└── tsconfig.json
+```
+
+## TS高级/新特性
+
+之前为TS的基本特性，有一些TS的新/高级特性回在新的文档版本当中更新，需要的时候要知道在哪里可以找到。
+
+[一些高级类型的使用总结](https://segmentfault.com/a/1190000023800536)
+
+比如：keyof,类型约束（extends）,in和一些封装类型
+
+### keyof
+
+```typescript
+interface Button {
+    type: string
+    text: string
+}
+
+type ButtonKeys = keyof Button
+// 等效于
+type ButtonKeys = "type" | "text"
+
+interface ButtonStyle {
+    color: string
+    background: string
+}
+interface ButtonTypes {
+    default: ButtonStyle
+    primary: ButtonStyle
+    danger: ButtonStyle
+}
+interface Button {
+    type: 'default' | 'primary' | 'danger'
+    text: string
+}
+
+// 使用 keyof 后，ButtonTypes修改后，type 类型会自动修改 
+interface Button {
+    type: keyof ButtonTypes
+    text: string
+}
+```
+
+### 类型约束（extends）
+
+这里的 `extends` 关键词不同于在 class 后使用 `extends` 的继承作用，泛型内使用的主要作用是对泛型加以约束。我们用我们前面写过的 copy 方法再举个例子：
+
+```typescript
+type BaseType = string | number | boolean
+
+// 这里表示 copy 的参数
+// 只能是字符串、数字、布尔这几种基础类型
+function copy<T extends BaseType>(arg: T): T {
+  return arg
+}
+```
+
+`extends` 经常与 `keyof` 一起使用，例如我们有一个方法专门用来获取对象的值，但是这个对象并不确定，我们就可以使用 `extends` 和 `keyof` 进行约束。
+
+```typescript
+function getValue<T, K extends keyof T>(obj: T, key: K) {
+  return obj[key]
+}
+
+const obj = { a: 1 }
+const a = getValue(obj, 'a')
+```
+
+### 类型映射（in）
+
+`in` 关键词的作用主要是做类型的映射，遍历已有接口的 key 或者是遍历联合类型。下面使用内置的泛型接口 `Readonly` 来举例。
+
+```typescript
+type Readonly<T> = {
+    readonly [P in keyof T]: T[P];
+};
+
+interface Obj {
+  a: string
+  b: string
+}
+
+type ReadOnlyObj = Readonly<Obj>
+```
+
+我们可以解构下这个逻辑，首先 `keyof Obj` 得到一个联合类型 `'a' | 'b'`。
+
+```typescript
+interface Obj {
+    a: string
+    b: string
+}
+
+type ObjKeys = 'a' | 'b'
+
+type ReadOnlyObj = {
+    readonly [P in ObjKeys]: Obj[P];
+}
+```
+
+然后 `P in ObjKeys` 相当于执行了一次 forEach 的逻辑，遍历 `'a' | 'b'`
+
+```typescript
+type ReadOnlyObj = {
+    readonly a: Obj['a'];
+    readonly b: Obj['b'];
+}
+```
+
+最后就可以得到一个新的接口。
+
+```typescript
+interface ReadOnlyObj {
+    readonly a: string;
+    readonly b: string;
+}
+```
+
+注意不能通过以下的方式动态约束一个类型的属性：
+
+```ts
+interface ReadOnlyObj {
+  [key: keyof {a:string}]:string;
+}
+```
+
+### 有条件类型和infer
+
+### 有条件类型
+
+1. 基本使用
+
+```ts
+T extends U ? X : Y
+```
+
+上面的类型意思是，若`T`能够赋值给`U`，那么类型是`X`，否则为`Y`。像三元表达式一样这个还可以多重使用：
+
+```ts
+type TypeName<T> =
+    T extends string ? "string" :
+    T extends number ? "number" :
+    T extends boolean ? "boolean" :
+    T extends undefined ? "undefined" :
+    T extends Function ? "function" :
+    "object";
+
+type T0 = TypeName<string>;  // "string"
+type T1 = TypeName<"a">;  // "string"
+type T2 = TypeName<true>;  // "boolean"
+type T3 = TypeName<() => void>;  // "function"
+type T4 = TypeName<string[]>;  // "object"
+```
+
+2. 分布式有条件类型
+
+```ts
+type T10 = TypeName<string | (() => void)>;  // "string" | "function"
+type T12 = TypeName<string | string[] | undefined>;  // "string" | "object" | "undefined"
+type T11 = TypeName<string[] | number[]>;  // "object"
+```
+
+```ts
+// T[k]是否是Function,是的话返回K，不是返回never。然后通过[keyof T]拿到对应的属性类型
+// keyof 返回的是a|b|c|...这种类型，对一个{}使用[a | b | c | ..]最后还是返回对应属性的联合类型
+type FunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? K : never }[keyof T];
+type FunctionProperties<T> = Pick<T, FunctionPropertyNames<T>>;
+
+type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
+type NonFunctionProperties<T> = Pick<T, NonFunctionPropertyNames<T>>;
+
+interface Part {
+    id: number;
+    name: string;
+    subparts: Part[];
+    updatePart(newName: string): void;
+    a():void;
+}
+
+type T40 = FunctionPropertyNames<Part>;  // "updatePart" | "a"
+type T41 = NonFunctionPropertyNames<Part>;  // "id" | "name" | "subparts"
+type T42 = FunctionProperties<Part>;  // { updatePart(newName: string): void }
+type T43 = NonFunctionProperties<Part>;  // { id: number, name: string, subparts: Part[] }
+```
+
+### infer
+
+现在在有条件类型的`extends`子语句中，允许出现`infer`声明，它会引入一个待推断的类型变量。 这个推断的类型变量可以在有条件类型的true分支中被引用。 允许出现多个同类型变量的`infer`。
+
+例如，下面代码会提取函数类型的返回值类型：
+
+```ts
+// 其中的R并不像T一样是一个泛型参数，如果不加infer的话就会报错CANNot FIND NAEM R
+type ReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
+```
+
+### 预定义的有条件类型
+
+- `Exclude<T, U>` -- 从`T`中剔除可以赋值给`U`的类型。
+- `Extract<T, U>` -- 提取`T`中可以赋值给`U`的类型。
+- `NonNullable<T>` -- 从`T`中剔除`null`和`undefined`。
+- `ReturnType<T>` -- 获取函数返回值类型。
+- `InstanceType<T>` -- 获取构造函数类型的实例类型。
 
 ## 为什么使用TS
 

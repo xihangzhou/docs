@@ -192,7 +192,7 @@
 
 * Raster and composite off of the main thread
 
-  * **当layer tree被创建，paint的顺序也被确定**，这两个东西就会被交给合成器线程，合成器线程会把每一层的页面分成很多个小块(tiles)并把每个小块交给对应的多个栅格化线程，然后杉格化线程把杉格化好的结果存储在GPU内存中。
+  * **当layer tree被创建，paint的顺序被确定**，这两个东西就会被交给合成器线程，合成器线程会把每一层的页面分成很多个小块(tiles)并把每个小块交给对应的多个栅格化线程，然后杉格化线程把杉格化好的结果存储在GPU内存中。
     * ![raster](浏览器相关知识点.assets/raster.png)
   * 合成器线程还会给不同的杉格化线程不同的优先级，让视口中的部分优先工作。
   * 就算是一层的也有多个分tile的方式，有多个杉格化的结果，这些结果对应不同的分辨率
@@ -213,7 +213,6 @@
   * async是并行请求请求到了就马上执行，不管请求的顺序
   * defer会延迟到最后执行且按照请求的先后顺序执行
     ![Alt text](浏览器.assets/1590571871712.png)
-  
 
 
 
@@ -257,14 +256,16 @@ console.log('script1',document.getElementById('wrapper').childNodes);
 
 当网页生成的时候，至少会渲染一次。在用户访问的过程中，还会不断重新渲染。
 
-* 回流:当style中的关于元素的位置，大小等有关定位的属性发生改变后就会**马上**重新触发样式计算，layout tree的生成,paint的过程以及layer tree的生成。**这个时候渲染线程会排除js的执行重新抢占主线程。js只有等待回流重绘完成才会继续**
-* 重绘:当元素的改变不会影响布局的时候，比如background-color等属性，就只会触发样式计算和paint的过程。这个过程同样也是**渲染线程渲染线程会排除js的执行重新抢占主线程。js只有等待回流重绘完成才会继续**
+* 回流:当style中的关于元素的位置，大小等有关定位的属性发生改变后就会**马上**重新触发样式计算，layout tree的生成,paint的过程以及layer tree的生成。**在之前的浏览器中，这个时候渲染线程会排除js的执行重新抢占主线程。js只有等待回流重绘完成才会继续**
+* 重绘:当元素的改变不会影响布局的时候，比如background-color等属性，就只会触发样式计算和paint的过程。这个过程在老版浏览器中同样也是**渲染线程渲染线程会排除js的执行重新抢占主线程。js只有等待回流重绘完成才会继续**
 
 * 由于回流重绘的cost非常expensive，在chrome等现代浏览器中对回流重绘的执行顺序做了优化，当js执行了引起回流重绘的方法，**并不会马上让渲染线程运行进行样式计算，layout,paint,layer的过程,而是会把这些变化加入渲染队列**，**等js执行完**再进行样式计算layout,paint,layer的过程。
 
 * 如果想要让渲染队列强行出队提前进行渲染，可以在js中操作特定的属性或者执行特定的方法（详情见下表，通常和元素的位置有关），因为浏览器为了让开发者精确的获取这些属性，就会在获取这些属性之前强制渲染队列出队并清空队列，**渲染队列中的回流操作进行样式计算和layout计算**，**重绘操作只进行样式计算**，使得这些属性的值是精确的。直到js执行完毕过后再进行layer tree的更新和paint以及重新composite。由于js和渲染线程冲突，所以强制回流重绘会让js的执行暂停，直到样式计算和layout完了再继续js的执行，这会使得js的执行变慢。如下图所示。
 
 ![img](浏览器相关知识点.assets/MHuNMY_VDaxfmPYJdFeMy1CXpQxnqt-7W2uPxtqgzwgp1c98IoT9YFWJqiwe0D8iM-CEiPSMyAHtDTbDhqnU9HEZCTW6Qm63X-k3gVhIdcaJ0LaD6tIBOvv5GhQb0sXAeLvcvDvN.png)
+
+这张图先运行js,在遇到了强制渲染队列出队并清空队列的操作后进行style和layout属性，然后再运行剩余的js,然后再进行最后的style和layout + paint composite重新渲染。
 
 **回流必定会发生重绘，重绘不一定会引发回流。**回流会经过四个阶段，重绘只会经过两个，所以重绘的消耗要小一些。
 
@@ -392,7 +393,7 @@ div.style.height = 20+'px';
   div.style.width = 1px;
   div.style.height = 1px;
   ```
-![image-20210314214746454](浏览器相关知识点.assets/image-20210314214746454.png)
+  ![image-20210314214746454](浏览器相关知识点.assets/image-20210314214746454.png)
   
   可以看到在js(黄色部分)的执行过程中发生了一次样式计算和layout（紫色部分），并且在js执行完成后又发生了一次样式计算和layout
   
@@ -407,7 +408,7 @@ div.style.height = 20+'px';
   div.style.height = 1px;
   console.log(div.offsetLeft);//=>4次
   ```
-![image-20210314215125651](浏览器相关知识点.assets/image-20210314215125651.png)
+  ![image-20210314215125651](浏览器相关知识点.assets/image-20210314215125651.png)
   
   可以看到在js执行过程中触发了四次由读取div.offsetLeft触发的回流重绘，四次中第一个小紫块是样式重新计算，第二个小紫块是layout。注意最后一个紫色方块只是update layer tree，绿色是paint。
   
