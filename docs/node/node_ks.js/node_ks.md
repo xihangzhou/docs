@@ -16,7 +16,19 @@
 ![Alt text](./1592964512798.png)
 
 ### 2.3 commonjs
+
+commonjs是node实现模块化的方式，具体见es6
+
 ### 2.4 debugger
+
+1.直接使用vscode打断点即可
+
+![image-20211121165328532](node_ks.assets/image-20211121165328532.png)
+
+2. debuger之inspect协议
+
+之后遇到了再看看吧
+
 ### 2.5 server端和前端开发的区别
 ![Alt text](./1592967391161.png)
 ![Alt text](./1592967424298.png)
@@ -71,6 +83,23 @@ TCP三次握手连接：
 ![Alt text](./1592978095169.png)
 ### 3.4搭建开发环境
 ![Alt text](./1592979224828.png)
+
+1. Cross-env
+
+由于不同的操作系统进行环境变量配置的方式是不同的，使用cross-env 设置环境变量可以兼容这些差异。
+
+比如：cross-env NODE_ENV=dev nodemon ./bin/www.js
+
+使用cross-env设置环境变量 NODE_ENV 为 dev
+
+当然也可以设置别的环境变量比如 cross-env FIRST_ENV=one SECOND_ENV=two node ./my-program
+
+2. nodemon
+
+本来应该用node 运行文件运行
+
+现在用nodemon 运行文件 运行就可以监听运行文件的变化重启服务
+
 ### 3.5开发接口
 ![Alt text](./1592985247699.png)
 ![Alt text](./1592985298902.png)
@@ -165,3 +194,4 @@ mysql是关系型数据库，是key value的，成本高没必要
 ![Alt text](./1593480689875.png)
 ![Alt text](./1593481667600.png)
 ![Alt text](./1593482127488.png)
+
