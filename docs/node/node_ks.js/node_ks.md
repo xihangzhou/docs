@@ -8,6 +8,7 @@
 ![Alt text](./1592964645661.png)
 ![Alt text](./1592964717248.png)
 ![Alt text](./1592964833983.png)
+
 ### 1.2nodejs和js的区别
 ![Alt text](./1592964399450.png)
 ![Alt text](./1592964420532.png)
@@ -126,6 +127,7 @@ document.cookie = 'key:val;'
 ![Alt text](./1593141936642.png)
 ![Alt text](./1593153241350.png)
 注意
+
 ## Session
 ![Alt text](./1593153537074.png)
 session解决用户隐私安全和cookie的容量问题
@@ -163,12 +165,16 @@ mysql是关系型数据库，是key value的，成本高没必要
 解决网络IO，解放CPU内存
 ![Alt text](./1593396075467.png)
 ![Alt text](./1593396452153.png)
+
+读文件和写文件 readStream通过pipe管道把值传给writeStream
+
 ![Alt text](./1593396534899.png)
 ![Alt text](./1593397786125.png)
 ![Alt text](./1593398000029.png)
 操作系统脚本来做
 ![Alt text](./1593398364163.png)
 ![Alt text](./1593398860140.png)
+
 ## 安全
 ![Alt text](./1593398985064.png)
 ![Alt text](./1593399037016.png)
@@ -185,9 +191,14 @@ mysql是关系型数据库，是key value的，成本高没必要
 优化：stream来优化有限的带宽和内存
 扩展：redis
 ![Alt text](./1593409866889.png)
+
 ## Express
 ![Alt text](./1593428044828.png)
+
 ![Alt text](./1593428262876.png)
+
+![image-20211124130140032](node_ks.assets/image-20211124130140032.png)
+
 ![Alt text](./1593433707245.png)
 ![Alt text](./1593435915596.png)
 ![Alt text](./1593435945646.png)
