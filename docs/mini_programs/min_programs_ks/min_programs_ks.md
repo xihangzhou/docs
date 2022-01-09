@@ -2381,3 +2381,11 @@ compareVersion('1.11.0', '1.99.0') // => -1 // -1表示1.11.0比 1.99.0要老
 1. try, catch方案。你可以针对某个代码块使用try,catch包装，这个代码块运行时出错时能在catch块里边捕捉到。
 2. window.onerror方案。也可以通过window.addEventListener("error", function(evt){})，这个方法能捕捉到语法错误跟运行时错误，同时还能知道出错的信息，以及出错的文件，行号，列号。
 
+### 分包
+
+https://developers.weixin.qq.com/miniprogram/dev/framework/subpackages.html
+
+### 开发模式
+
+https://developers.weixin.qq.com/miniprogram/dev/devtools/ext.html
+

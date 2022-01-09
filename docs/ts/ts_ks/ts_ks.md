@@ -2489,6 +2489,54 @@ foo({});
 └── tsconfig.json
 ```
 
+## 项目配置
+
+### tsconfig.json
+
+#### 1. 什么是tsconfig.json
+
+TypeScript 使用 tsconfig.json 文件作为其配置文件，当一个目录中存在 tsconfig.json 文件，则认为该目录为 TypeScript 项目的根目录。
+
+#### 2. 为什么使用tsconfig.json
+
+通常我们可以使用 `tsc` 命令来编译少量 TypeScript 文件：
+
+```bash
+/*
+  参数介绍：
+  --outFile // 编译后生成的文件名称
+  --target  // 指定ECMAScript目标版本
+  --module  // 指定生成哪个模块系统代码
+  index.ts  // 源文件
+*/
+$ tsc --outFile leo.js --target es3 --module amd index.ts
+```
+
+比如可以通过 `tsc index.ts` 命令让tsc编译器把当前目录下的index.ts文件在同目录下转为 index.js文件。但是这样做有两个缺点：
+
+* 一次只能编译一个文件
+* 到底要编译成什么js，有一些具体的编译选项在这种方式中可定义的部分太少
+
+而这对工程化来说是不可接受的。这个时候tsconfig就派上用场了，我们可以将需要使用到的配置都写进 tsconfig.json 文件，这样每次运行tsc的时候不用指定具体文件：
+
+- 不带任何输入文件的情况下调用`tsc`，编译器会从当前目录开始去查找`tsconfig.json`文件，逐级向上搜索父目录。
+- 不带任何输入文件的情况下调用`tsc`，且使用命令行参数`--project`（或`-p`）指定一个包含`tsconfig.json`文件的目录。
+
+#### 3.具体的tsconfig配置
+
+https://segmentfault.com/a/1190000021421461
+
+上面链接中的文章比较全面，引用文章的总结：
+
+tsconfig的配置主要分两块，**编译入口**和**编译选项**。
+
+编译入口主要通过files、includes、excludes进行控制，files只能配置具体的文件，不能使用通配符，includes和excludes可以使用通配符，并且excludes只能排除includes中的文件。
+编译选项这一块，主要需要理清**引入非相对模块**时的查找方式和顺序，通过`moduleResolution`确定模块的解析规则，引入相对先按是classic还是node解析规则进行查找，如果查找不到，那么编译器提供了两种方式来拓宽查找范围，一种是**typeRoots和types**，另一种是**baseUrl和paths**，首先到typeRoot和types包含的目录中查找(**只能查找类型声明文件**)，**typeRoot和types的配置和模块的解析规则无关**，**只有node_modules目录下查找才和模块的解析规则有关**，如果还是找不到，再到baseUrl和paths包含的目录中查找。
+
+#### 4. 扩展的思考
+
+tsconfig只是帮我们自定义了ts解析的具体细节，但是对于解析过后的操作，比如解析完过后的js文件的位置的自定义，不同js文件的合并等等都不能被tsc解析器完成。这个时候就需要我们有打包设备来进行更多的自定义的操作。
+
 ## TS高级/新特性
 
 之前为TS的基本特性，有一些TS的新/高级特性回在新的文档版本当中更新，需要的时候要知道在哪里可以找到。

@@ -206,3 +206,129 @@ mysql是关系型数据库，是key value的，成本高没必要
 ![Alt text](./1593481667600.png)
 ![Alt text](./1593482127488.png)
 
+### Express的实现
+
+```js
+const http = require('http')
+const slice = Array.prototype.slice
+
+class LikeExpress {
+    constructor() {
+        // 存放中间件的列表
+        this.routes = {
+            all: [],   // app.use(...)
+            get: [],   // app.get(...)
+            post: []   // app.post(...)
+        }
+    }
+
+  // 根据传入的参数不同生成不同存储执行函数的对象
+    register(path) {
+        const info = {}
+        // 如果第一个参数是string,则第一个参数是路径
+        if (typeof path === 'string') {
+            info.path = path
+            // 从第二个参数开始，转换为数组，存入 stack
+            info.stack = slice.call(arguments, 1)
+          // 否则第一个参数就是要执行的函数
+        } else {
+            info.path = '/'
+            // 从第一个参数开始，转换为数组，存入 stack
+            info.stack = slice.call(arguments, 0)
+        }
+        return info
+    }
+
+  // use方法是把生成的函数对象push进入all数组中
+    use() {
+        const info = this.register.apply(this, arguments)
+        this.routes.all.push(info)
+    }
+  // get方法是把生成的函数对象push进入get数组中
+    get() {
+        const info = this.register.apply(this, arguments)
+        this.routes.get.push(info)
+    }
+  
+  // 同理
+    post() {
+        const info = this.register.apply(this, arguments)
+        this.routes.post.push(info)
+    }
+  
+	// 从this.routes中匹配到对应的能匹配路由的执行函数
+    match(method, url) {
+        let stack = []
+        if (url === '/favicon.ico') {
+            return stack
+        }
+
+        // 获取 routes
+        let curRoutes = []
+        curRoutes = curRoutes.concat(this.routes.all)
+        curRoutes = curRoutes.concat(this.routes[method])
+
+      // 遍历routes, 把能匹配上路由的对象中的方法取出
+        curRoutes.forEach(routeInfo => {
+            if (url.indexOf(routeInfo.path) === 0) {
+                // url === '/api/get-cookie' 且 routeInfo.path === '/'
+                // url === '/api/get-cookie' 且 routeInfo.path === '/api'
+                // url === '/api/get-cookie' 且 routeInfo.path === '/api/get-cookie'
+                stack = stack.concat(routeInfo.stack)
+            }
+        })
+        return stack
+    }
+
+    // 递归执行的中间件方法
+    handle(req, res, stack) {
+        const next = () => {
+            // 拿到第一个匹配的中间件
+            const middleware = stack.shift()
+            if (middleware) {
+                // 执行中间件函数，并且这个中间件函数传入了next方法可以在这个中间件方法执行的过程选择随时中去执行下一个中间件方法，当下一个执行完了再接着执行自己的
+                middleware(req, res, next)
+            }
+        }
+        next()
+    }
+
+  // 监听到请求过后的回调函数
+    callback() {
+        return (req, res) => {
+            res.json = (data) => {
+                res.setHeader('Content-type', 'application/json')
+                res.end(
+                    JSON.stringify(data)
+                )
+            }
+            const url = req.url
+            const method = req.method.toLowerCase()
+
+            // 根据路由取到能执行的中间件方法合集resultList
+            const resultList = this.match(method, url)
+            this.handle(req, res, resultList)
+        }
+    }
+
+  // 监听端口号执行示例的callback方法
+    listen(...args) {
+        const server = http.createServer(this.callback())
+        server.listen(...args)
+    }
+}
+
+// 工厂函数:工厂函数是一个最后返回值是对象的函数，但它既不是类，也不是构造函数。 在JavaScript中，任何函数都可以返回一个对象。 但当函数没有使用new关键字时，那它便是一个工厂函数。
+module.exports = () => {
+    return new LikeExpress()
+}
+```
+
+
+
+## Koa
+
+http://www.ruanyifeng.com/blog/2017/08/koa.html
+
+直接看阮一峰老师的教程就好，实现原理和exporess类似
+

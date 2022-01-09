@@ -1381,7 +1381,7 @@ Object.getOwnPropertyDescriptor(obj, 'foo')
 
 #### 基本使用
 
-就是function的语法糖
+就是function的语法糖c
 
 ```javascript
 class Point {
@@ -2368,7 +2368,7 @@ import(`./section-modules/${someVariable}.js`)
 ### ES6 模块与 CommonJS 模块的差异 
 
 - CommonJS 模块输出的是一个值的拷贝，ES6 模块输出的是值的引用。
-- CommonJS 模块是运行时加载，ES6 模块是编译时输出接口。
+- CommonJS 模块是运行时加载，ES6 模块是编译时输出接口。因为是这样，所以ES6模块不能放在判断语句中只能放在文件首部，也不支持条件导出。CommonJs模块可以放在判断语句中，甚至传入带变量的动态路径，也可以动态的条件导出。
 - CommonJS 模块的`require()`是同步加载模块，ES6 模块的`import`命令是异步加载，有一个独立的模块依赖的解析阶段。
 
 ```javascript
