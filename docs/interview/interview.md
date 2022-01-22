@@ -2,51 +2,55 @@
 sidebarDepth: 5
 ---
 
-
 # 面试总结
 
 ## 面试投递
 
-| 投递公司     | 查询链接                                                     | 面试时间        | 状态     |
-| ------------ | ------------------------------------------------------------ | --------------- | -------- |
-| 字节         |                                                              |                 |          |
-| 腾讯         | https://join.qq.com/center.html                              | 12号晚上7点1面  |          |
-| 阿里         |                                                              |                 | 已投递   |
-| 虾皮         | https://app.mokahr.com/m/candidate/applications/deliver-query/shopee | 10号下午4点笔试 |          |
-| 美团         | https://campus.meituan.com/apply-record                      |                 |          |
-| 搜狐         |                                                              |                 | 无前端   |
-| 快手         |                                                              |                 | 没开始   |
-| thoughtWorks | https://join.thoughtworks.cn/account/profile                 |                 | 做完测评 |
-| 网易         | https://campus.163.com/app/personal/apply                    |                 | 已投递   |
-| 京东         | http://campus.jd.com/web/apply/myjob                         |                 | 已投递   |
-| 滴滴         |                                                              |                 | 没有春招 |
-| 百度         |                                                              |                 | 没有春招 |
+| 投递公司         | 查询链接                                                                 | 面试时间      | 状态   |
+| ------------ | -------------------------------------------------------------------- | --------- | ---- |
+| 字节           |                                                                      |           |      |
+| 腾讯           | https://join.qq.com/center.html                                      | 12号晚上7点1面 |      |
+| 阿里           |                                                                      |           | 已投递  |
+| 虾皮           | https://app.mokahr.com/m/candidate/applications/deliver-query/shopee | 10号下午4点笔试 |      |
+| 美团           | https://campus.meituan.com/apply-record                              |           |      |
+| 搜狐           |                                                                      |           | 无前端  |
+| 快手           |                                                                      |           | 没开始  |
+| thoughtWorks | https://join.thoughtworks.cn/account/profile                         |           | 做完测评 |
+| 网易           | https://campus.163.com/app/personal/apply                            |           | 已投递  |
+| 京东           | http://campus.jd.com/web/apply/myjob                                 |           | 已投递  |
+| 滴滴           |                                                                      |           | 没有春招 |
+| 百度           |                                                                      |           | 没有春招 |
 
 ## 项目内容和各自亮点
 
 ### 德州仪器
 
 1. 项目内容
-
+   
    对一个报表系统进行优化，优化了报表系统的加载时间和呈现方式
 
 2. 项目亮点
-
 * 浏览器的响应式
   
   * 项目需求不要出现横向的scroll,所以识别不同浏览器的宽度动态调节每个单元格的宽度，设置了单元格的最小宽度，如果宽度不够就折行。并且使用了防抖来监听resize事件。
     * 使用rowspan/colspan来完成单元格的合并
     * 用防抖来监听resize事件，让宽度不够折行
+
 * 动画
   
   * 使用hover使得hover的行变颜色
+
 * 前端的性能优化
+  
   * 最开始是一个单元格一个单元的插入到DOM效率低下。使用文档碎片加载表格，使得每10行数据用文档碎片的形式一次性加入。
   * 使用了表格懒加载的方式进行表格的加载
     * 表格数据量有的时候比较大，可以有100多行，采取每次加载10行的方式，如果可视窗口到达最底行以上100px就动态加载新的10行
     * 使用了单例设计模式，可以动态的设置每次加载插入的行数
+
 * 不同浏览器的适配 
+  
   * 由于办公室用chrme，但是工厂用IE7，所以要进行浏览器的适配。
+    
     * 一些CSS属性不支持IE7，比如hover属性IE不支持改用JS实现，采用CSS.supports语法进行识别
       
       * https://www.zhangxinxu.com/wordpress/2019/11/js-css-supports-detect/
@@ -54,20 +58,23 @@ sidebarDepth: 5
       * ```js
         result = CSS.supports('filter', 'blur(5px)');
         ```
+    
     * 一些DOM属性IE不支持，比如innerWidth,采用IE支持的clientWidth.
+    
     * 还有一些其他的方法的兼容性问题，尽量在采取一些DOM的操作或者JS自带的原生操作前检验一下该方法是否被支持
+      
       * IE不支持getElementsByClassName,需要自己写一个函数来获取
       * js中的splice方法并不在IE中被支持，需要自己写操作字符串的方法
 
 ### 学校项目——房屋租赁系统
 
 1. 项目内容
-
+   
    完成了学校的课程项目，一个房屋的租赁系统，采用了sails框架，服务端渲染的项目。是一个多页面应用。并且完成了移动端的CSS适配。
 
 2. 项目的亮点
-
 * CSS相关
+  
   * animation+关键帧动画
     * 菊花图加载
       * 首先画6条上竖线和6条下竖线，然后一次旋转成为一个菊花形状，然后设置关键帧动画，linear渐变，从opaccitiy:0-1渐变。并且给一个延迟时间让opacity:0感觉像是在移动
@@ -78,6 +85,7 @@ sidebarDepth: 5
     * 图片的放大效果的实现
 
 * JS相关
+  
   * 返回顶部效果的实现
     * 返回顶部 window.scrollTo(0,0)
   * 放大镜效果的实现
@@ -89,7 +97,7 @@ sidebarDepth: 5
     * 最开始background-url不加，把url存在index属性中
     * 通过scroll事件的监听遍历所有图片的元素，判断元素到视口的top距离是否大于视口高度判断元素是否进入视口。
   * 动态添加class名的方式实现下拉框的展示，从而实现了一些CSS的复用
-
+  
   ```js
   // div is an object reference to a <div> element with class="foo bar"
   div.classList.remove("foo");
@@ -116,42 +124,40 @@ sidebarDepth: 5
   div.classList.replace("foo", "bar");
   ```
 
-  
-
 * 移动端的适配
+  
   * 对网站进行了响应式的布局
     * 使用了flex布局
     * 尽量不采取px的方式定义宽高，而是采取%或者是rem的方式来呈现内容。对根元素设置vw来获取屏幕宽度设置根元素字体
     * 采用媒体查询来改变图片的每行呈现个数
-
 3. 项目相关功能的实现
-
 * 登陆的实现？
-
+  
   * 采用了cookie存储sessionID的方式进行的实现
 
 * tocken和cookie的实现区别？
-
+  
   * tocken是把用户信息通过JWT方式加密存储在浏览器，通过http头部authorization发送到服务器
-
+  
   ![image-20210302190703642](项目内容.assets/image-20210302190703642.png)
-
+  
   * cookie是客户端存session id，用户信息存在服务器，这样进行身份的识别。但是这样不方便后端集群的实现，要实现数据持久层，太麻烦。
-
+  
   ![image-20210302190550573](项目内容.assets/image-20210302190550573.png)
 
 ### 猿辅导项目
 
 1. 项目内容
-
+   
    * 采用vue2,vuex,vuexrouter,vue-cil和内部的UI库,ts对一个后台管理平台的路由优化功能的添加，完成了后台系统对app管理和app页面管理的动态配置模块。
-
+   
    * 重新梳理组件的逻辑，优化路由逻辑
+   
    * 让用户在app管理页面上对接入后台的app进行调整，并将其内容存储在vuex中便于全局管理
+   
    * 用户可以在app页面管理中对每一个app相关的活动链接进行配置，为了用户友好，url的配置方式采用输入key,value键值对的方式进行并且最后动态生成完整的url。
 
 2. 项目亮点
-
 * 采用了ts进行项目的实现
 
 * 采取了vuex管理用户添加的app信息，可以让其他模块响应式的获取该app信息
@@ -159,11 +165,11 @@ sidebarDepth: 5
 * 登陆采用token,并且使用了localStorage进行持久化登录的设计
 
 * 基于组件复用的思想，对输入key,value键值对生成input url的方式进行组件封装
-
+  
   * 由于想要插入根据输入key,value键值对的方式封装成一个input到表单，就自己写了一个带验证功能的表单
   * 使用@blur事件监听验证事件，父组件通过传值给input验证规则。
   * 实现input和父组件的响应式主要采用了model重新定义v-model的方式。父组件穿值给mailVal,子组件通过发送update事件给父亲组件从而实现双向绑定
-
+  
   ```js
     model: {
   
@@ -173,11 +179,10 @@ sidebarDepth: 5
   
     },
   ```
-
+  
   * 实现提交表单验证的按钮使用了this.$emit和this.$on方法。这种方法可以在一个vue实例里面监听事件。所以在子组件的created生命周期中发送事件this.$parent.$emit把它的验证函数发给父组件，即validate-form组件。validate-form组件用一个this.$on方法进行监听，从二收集validate-input方法。最后在提交表单的时候把这些验证方法都运行一次即可。
   * 再实现url动态验证的组件，这个组件可以动态匹配url，把参数,host提取出来单独输入。首先实现这个组件。把这个组件写在validate-input的组件中，用户通过传递type的值判断是不是要渲染这个组件。这个组件要实现和validate-input组件的双向绑定，再由validate-input和父组件实现双向绑定最后实现。
   * inheritAttrs:false + v-bind:"$attrs"可以把父组件给子组件组件绑定的属性绑定到子组件的具体元素上。
-
 3. 项目相关功能的实现
 
 1.登陆
@@ -190,11 +195,7 @@ sidebarDepth: 5
   * 第一次如果没有登陆但是login为false，就自动发送登陆请求自动登录
   * 如果请求成功就是成功，失败了就清空localStorage，显示错误
   * ![image-20210302195717842](项目内容.assets/image-20210302195717842.png)
-
-
-
 2. 跨域
-
 - vue的devServer.proxy
 - 本身应该是来自于一个叫做 `http-proxy-middleware`的node服务
 
@@ -245,63 +246,60 @@ devServer: {
 
 webpack5中使用webpack-dev-server会报错
 
-
-
 ## 面试问题总结
 
-### 腾讯一面 
+### 腾讯一面
 
 1. TS和JS的区别，你觉得哪一个更好一点？
-
 * 主要区别：
-
+  
   * JS动态类型语言，ts静态类型语言
   * JS弱类型语言，ts强类型语言
   * ts是js的超集，向下兼容所有的js操作，并且执行的时候其实也是把ts转换为js执行
 
 * ts相对js的优势
-
+  
   * 主要是对于开发人员，语言在解释执行阶段就可以发现类型不匹配的错误，结合IDE可以提供大量的便捷纠错能力。
   * 方便代码阅读，方便大型项目的合作开发
   * IDE提供的大量便捷支持和TS本身的语法检查和代码提示自动补全让开发者提高效率，方便重构
 
 * ts相对js的劣势
-
+  
   * 前期需要自己定义类型，在项目前期增加了开发成本，对于小型项目来说其实可以不用ts
 
 * 一些拓展
-
-  * 什么是解释型语言和编译型语言？
-
-  解释型语言使用解释器把代码逐行翻译为源代码，编译型语言把代码通过编译器编译为最终可执行文件。
-
   
+  * 什么是解释型语言和编译型语言？
+  
+  解释型语言使用解释器把代码逐行翻译为源代码，编译型语言把代码通过编译器编译为最终可执行文件。
 
   ![编译型语言和解释型语言的执行流程](未命名.assets/1-1912311J415L7.gif)
 
-  | **类型**   | **原理**                                                     | **优点**                                                     | **缺点**                     |
-  | ---------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------------------------- |
-  | 编译型语言 | 通过专门的编译器，将所有源代码一次性转换成特定平台（Windows、Linux 等）执行的机器码（以可执行文件的形式存在）。 | 编译一次后，脱离了编译器也可以运行，并且运行效率高。         | 可移植性差，不够灵活。       |
-  | 解释型语言 | 由专门的解释器，根据需要将部分源代码临时转换成特定平台的机器码。 | 跨平台性好，通过不同的解释器，将相同的源代码解释成不同平台下的机器码。 | 一边执行一边转换，效率很低。 |
+| **类型** | **原理**                                                         | **优点**                              | **缺点**         |
+| ------ | -------------------------------------------------------------- | ----------------------------------- | -------------- |
+| 编译型语言  | 通过专门的编译器，将所有源代码一次性转换成特定平台（Windows、Linux 等）执行的机器码（以可执行文件的形式存在）。 | 编译一次后，脱离了编译器也可以运行，并且运行效率高。          | 可移植性差，不够灵活。    |
+| 解释型语言  | 由专门的解释器，根据需要将部分源代码临时转换成特定平台的机器码。                               | 跨平台性好，通过不同的解释器，将相同的源代码解释成不同平台下的机器码。 | 一边执行一边转换，效率很低。 |
 
+* 强类型语言，弱类型语言，静态，动态类型语言是什么区别是什么？
   
-  * 强类型语言，弱类型语言，静态，动态类型语言是什么区别是什么？
-
   ![img](未命名.assets/2aa7b669e45a2fb111a4c736afe3083c_720w.jpg)
-
 - *trapped errors*。导致程序终止执行，如除0，Java中数组越界访问
+
 - *untrapped errors*。 出错后继续执行，但可能出现任意行为。如C里的缓冲区溢出、Jump到错误地址
+
 - Forbidden error:语言设计时，可以定义一组*forbidden behaviors*. 它必须包括所有untrapped errors, 但可能包含trapped errors.
-
 * *well behaved*: 如果程序执行不可能出现forbidden behaviors, 则为*well behaved*。
+
 * *ill behaved: 否则为ill behaved...*
+
 * *强类型strongly typed*: 如果一种语言的所有程序都是well behaved——即不可能出现forbidden behaviors，则该语言为strongly typed。
+
 * *弱类型weakly typed*: 否则为weakly typed。比如C语言的缓冲区溢出，属于trapped errors，即属于forbidden behaviors..故C是弱类型
+
 * *静态类型 statically*: 如果在编译时拒绝ill behaved程序，则是statically typed;
+
 * *动态类型dynamiclly*: 如果在运行时拒绝ill behaviors, 则是dynamiclly typed。
-
 2. js中的数据类型
-
 - 基本数据类型
   - undefined
   - number
@@ -318,9 +316,7 @@ webpack5中使用webpack-dev-server会报错
   - Math
   - 实例
   - function
-
 3. 基本数据类型和引用数据类型的区别
-
 * 基本数据类型存储在栈内存中
 * 引用数据类型存储在堆内存中
 * 基本数据类型是传值
@@ -341,31 +337,30 @@ console.log(objA.a);// =>2
 ```
 
 4. js检测数据类型
-
 * typeof a
-
+  
   * 字符串中包含了对应的数据类型  "number"/"string"/"boolean"/"undefined"/"symbol"/"object"/"**function**"
   * 缺点：
     * 是typeof null => "object"
     * 不能精准的检测引用数据类型，都会返回"object"
 
 * a instanceOf Number
-
+  
   * 检测某个实例是否属于这个类，沿着原型链向上查找,所有出现在其原型链上的类，检测结果都是TRUE
   * 缺点：
     * 由于可以基于__proto__或者prototype改动原型链的动向，所以基于instanceof检测出来的结果并不一定是准确的
     * 基本数据类型的值，连对象都不是，更没有__proto__，虽说也是所属类的实例，在JS中也可以调取所属类原型上的方法，但是instanceof是不认的
 
 * Object.prototype.toString.call([value]) / ({}).toString.call([value])
-
+  
   * 返回当前实例所属类的信息，格式："[object 所属类信息]"
-
-  *  "[object Object/Array/RegExp/Date/Function/Null/Undefined/Number/String/Boolean/Symbol...]"
-
+  
+  * "[object Object/Array/RegExp/Date/Function/Null/Undefined/Number/String/Boolean/Symbol...]"
+  
   * 缺点：
-
-    * 没有缺点，最准确的方式
     
+    * 没有缺点，最准确的方式
+
 ```js
     function getType(a){
         let temp = Object.prototype.toString.call(a);
@@ -376,7 +371,6 @@ console.log(objA.a);// =>2
 ```
 
 5. ==和===的区别
-
 * ===
   * 检查两侧必须类型和值都相等才返回true
 * ==
@@ -394,27 +388,26 @@ P：先用Object.prototype.valueOf()方法，如果类型不等就使用toString
 N：使用Number()转换为number比较
 
 6. let 和 var的区别？
-
 * let没有变量提升，var会提前声明但是不定义
 * 全局变量对象VO(G)中声明的变量（用var声明的），也会给全局对象GO中增加一个对应的属性；但是用let声明的变量不存在这个特点；如果是在浏览器中这个全局变量对象就是window
 
 ```js
 function fn() {
-	//此时的x不是AO（FN）中的私有变量，则向全局找，此处相当于给全局VO（G）变量对象中设置了一个x的全局变量，也相当于给全局对象GO设置了一个x的属性
-	x = 100;
+    //此时的x不是AO（FN）中的私有变量，则向全局找，此处相当于给全局VO（G）变量对象中设置了一个x的全局变量，也相当于给全局对象GO设置了一个x的属性
+    x = 100;
 }
 fn();
 console.log(window.x); 
 ```
-* var的重复声明是可以通过词法解析的，但是let是不可以的。
-* var没有块级作用域，let有块级作用域
 
+* var的重复声明是可以通过词法解析的，但是let是不可以的。
+
+* var没有块级作用域，let有块级作用域
 7. var声明函数和直接声明函数的区别？
 
 var声明只会变量提升但不定义，直接声明函数变量提升且定义
 
 8. let和const的区别
-
 * 实际上所有的变量声明都是声明了一个指针指向对应的内存地址，基本数据类型的传值是通过传值的方式进行，而引用数据类型的传值是通过传地址的方式。
 
 * 用let声明的指针的指向是可以被改变的，但是用const定义的指针的指向是不能被改变的。
@@ -435,25 +428,26 @@ console.log(arrA,arrConst)
 ```
 
 9. 作用域和作用域链？
-
 * 首先明确几个概念：
+  
   * ECStack：Execution [ˌeksɪˈkjuːʃn] Context Stack 执行环境栈：JS执行的主栈内存
   * EC：Execution Context 执行环境（执行上下文）：为一个函数运行时分配的主栈内存
   * VO/VO(G)/GO/window(浏览器端)：Varibale Object 变量对象（全局的变量对象）是存储全局下的定义的变量
   * AO：Activation Object 活动对象 （存储函数内部执行上下文的对象）
   * Scope:作用域，函数对象的一个属性，是一个指针，指向函数创建时所在EC的变量对象或者是活动对象
   * Scope Chain ：作用域链，一个指针，在函数执行时初始化，指向该函数的作用域指向的变量对象或者是活动对象
+
 * ![image-20210314132652820](未命名.assets/image-20210314132652820.png)
 
 * ![image-20210314132720060](未命名.assets/image-20210314132720060.png)
-
+  
   * 首先在EC(G)中定义一个x的基本值，加入到VO(G)中
   * 再定义A函数，初始化A的作用域scope为当前EC(G)中的VO(G)
   * 执行A，初始化this为window, 初始化作用域链为该A中的作用域，即VO(G)
   * 定义B，初始化B的作用域scope为当前上下文的AO(A)
   * 返回B的内存地址给C，**注意C的scope属性其实就是B的scope，因为指向同一个内存地址**
   * 执行C，初始化this,初始化scopeChain为scope,指向AO(A)
-
+  
   **注意this的初始化是在执行的时候进行的**
 
 10.什么是闭包？
@@ -473,13 +467,11 @@ console.log(arrA,arrConst)
                 return 0;
 } };
 }
-
 ```
 
 返回的匿名函数可以访问createComparisonFunction作用域中的propertyName属性，这个createComparisonFunction的ECstack得到保存，对应的propertyName属性也得到了保存。
 
 11. 词法作用域和动态作用域
-
 * 词法作用域=静态作用域：函数的作用域在函数定义的时候就决定
 * 动态作用域：函数的作用域在函数执行的时候决定
 * 一个例子：
@@ -504,9 +496,10 @@ bar();
 如果js采用动态作用域，那么foo函数定义的时候就不会初始化scope，执行的时候再初始化scope为bar函数中的AO,那么输出的value为2
 
 12. 箭头函数和普通函数的区别？
-
 * 箭头函数中没有自身的THIS，所用到的THIS都是其上下文中的THIS,即向上级作用域去借用this，也可以说是函数被定义时所处的上下文中的this。
+
 * 箭头函数没有的东西很多：
+  
   * 他没有prototype（也就是没有构造器），所以不能被new执行
   * 他没有arguments实参集合（**可以基于...args剩余运算符获取**）
 
@@ -514,28 +507,28 @@ bar();
 
 ```js
 let obj = {
-	name: 'OBJ',
-	fn: function () {
-		// console.log(this); //=>obj
-		let _this = this;
-		return function () {
-			// console.log(this); //=>window
-			_this.name = "珠峰";
-		};
-	}
+    name: 'OBJ',
+    fn: function () {
+        // console.log(this); //=>obj
+        let _this = this;
+        return function () {
+            // console.log(this); //=>window
+            _this.name = "珠峰";
+        };
+    }
 };
 //执行fn,这个fn的this在执行时初始化为obj,但是返回的函数有自己的this指向window,需要保存下来fn作用域中的this给返回的匿名函数ff
 let ff = obj.fn();
 ff(); 
 
 let obj = {
-	name: 'OBJ',
-	fn: function () {
-		// console.log(this); //=>obj
-		return () => {
-			console.log(this); //=>obj
-		};
-	}
+    name: 'OBJ',
+    fn: function () {
+        // console.log(this); //=>obj
+        return () => {
+            console.log(this); //=>obj
+        };
+    }
 };
 //在定义这个匿名函数的时候初始化了它的scope作用域为fn的AO，其中有fn的this
 //由于箭头函数没有自己的this,所以会沿着作用域链向上找到fn的AO，其中有fn的this,fn的this指向的是obj,所以ff的this同样指向obj
@@ -543,12 +536,12 @@ let ff = obj.fn();
 ff(); 
 
 let obj = {
-	name: 'OBJ',
-	fn: function () {
-		setTimeout(_ => {
-			this.name = "珠峰";
-		}, 1000);
-	}
+    name: 'OBJ',
+    fn: function () {
+        setTimeout(_ => {
+            this.name = "珠峰";
+        }, 1000);
+    }
 };
 //由于箭头函数没有this,当箭头函数被定义的时候其中的this指向的是fn运行的时候初始化的this,所以指向obj
 obj.fn(); 
@@ -565,14 +558,17 @@ obj.fn();//window
 ```
 
 13. 改变this的指向的方法
-
 * CALL/APPLY
+  
   * 第一个参数就是改变的THIS指向，写谁就是谁（特殊：非严格模式下，传递null/undefined指向的也是window）
   * 唯一区别：执行函数，传递的参数方式有区别，call是一个个的传递，apply是把需要传递的参数放到数组中整体传递
+
 * BIND
+  
   * call/apply都是改变this的同时直接把函数执行了，而bind不是立即执行函数，属于预先改变this和传递一些内容  =>"柯理化"
 
 * 手写
+  
   * 手写bind
 
 ```js
@@ -615,7 +611,9 @@ let obj = {
 let fn = obj.fn().bind(obj);
 ```
 
-​	手写call
+​    手写call
+
+
 
 ```js
 ~function anonymous(proto) {//立即执行函数重新写function原型中的bind函数
@@ -657,12 +655,12 @@ console.log(obj.fn().call(obj), obj);
 手写apply()
 
 ```js
-	function apply(context = window, args) {//相比call只是传入的参数变成了数组而已
-		context.$fn = this;
-		let result = context.$fn(...args);//仍然要展开传值
-		delete context.$fn;
-		return result;
-	}
+    function apply(context = window, args) {//相比call只是传入的参数变成了数组而已
+        context.$fn = this;
+        let result = context.$fn(...args);//仍然要展开传值
+        delete context.$fn;
+        return result;
+    }
 ```
 
 14.你用到的异步处理方法和原理？
@@ -676,7 +674,7 @@ class MyPromise {
                 this.value = undefined;
                 this.resolveArr = [];//用来装.then中成功的回调函数，不止一个所以用数组
                 this.rejectArr = [];//用来装.then中失败的回调函数，不止一个所以用数组
-        
+
                 let change = (status, value) => {//作为改变实例状态的一个函数
                     if (this.status !== 'pending') return;//只能改变一次所以若不为pending就不能继续
                     this.value = value;
@@ -707,14 +705,14 @@ class MyPromise {
                         clearTimeout(delayTimer);
                     }, 0);
                 };
-        
+
                 try {//若executor本身执行不出错才会看executor中是执行的resolve还是reject
                     executor(resolve, reject);
                 } catch (err) {//若本身执行出错了就会直接执行reject并传入出错的信息
                     reject(err.message);
                 }
             }
-        
+
             then(resolveFn, rejectFn) {
                 // 如果传递的参数不是函数（NULL/不传递），我们让成功或者失败顺延
                 if (typeof resolveFn !== 'function') {
@@ -758,12 +756,12 @@ class MyPromise {
                     });
                 });
             }
-        
+
             // MyPromise.prototype.catch(fn) === MyPromise.prototype.then(null,fn)
             catch(rejectFn) {
                 return this.then(null, rejectFn);
             }
-        
+
             /* 静态方法 */
             static resolve(result) {//用来实现MyPromise.resolve(100)返回一个状态为成功的MyPromise实例
                 return new MyPromise(resolve => {
@@ -775,7 +773,7 @@ class MyPromise {
                     reject(reason);
                 });
             }
-        
+
             static all(arr) {
                 return new MyPromise((resolve, reject) => {
                     let index = 0,
@@ -862,18 +860,22 @@ div.style.height = 1px;
 相对第一个position不为static的父元素定位，没有的话就相对视口进行定位
 
 19. 水平垂直居中
-
 * Inline:
+  
   * 水平居中：
     * Text-align:center
   * 垂直居中：
     * Line-height：父元素高度
+
 * Inline-block:
+  
   * 水平居中：
-    *  Text-align:center
+    * Text-align:center
   * 垂直居中：
     * 一个line-height元素的高度撑开父元素，再vertical-align:middle,并且font-size:0
+
 * block元素
+  
   * 水平居中(需要定宽)：
     * margin:auto
     * Left:50%,margin-left:-宽度的50%
@@ -887,12 +889,11 @@ div.style.height = 1px;
   * 垂直居中(不定高)
     * Top:50%,transform:translate(0,-50%)
     * flex
-
 20. CSS中所有属性的%单位相对谁的总结
 
 详见知识总结
 
-### 字节一面 
+### 字节一面
 
 1.flex布局
 
@@ -1075,23 +1076,23 @@ this.someObject = Object.assign({}, this.someObject, { a: 1, b: 2 })//给一个�
 ```
 
 6. 怎么检查平时遇到的错误？
-
 * 首先看console的报错，一般就可以根据报错解决
-* 解决不了就上官网查，或者stackoverflow
-* 再不行一般就是代码逻辑有问题，打断电调试
 
+* 解决不了就上官网查，或者stackoverflow
+
+* 再不行一般就是代码逻辑有问题，打断电调试
 7. Vue.set方法的原理？
 
 主要是调用了defineReactive方法对新增的属性进行了一个响应式的处理，new了一个dep来监听管理这个属性的变化，通过Object.defineProperty方法来劫持这个指的更新通知dep实例，dep实例通知依赖这个值的watchers进行update的操作。
 
 ```js
 Object.defineProperty(obj,'property',{
-	get:function(){
-		return 
-	},
-	set:function(){
-		return 
-	}
+    get:function(){
+        return 
+    },
+    set:function(){
+        return 
+    }
 })
 ```
 
@@ -1123,7 +1124,6 @@ function isPalindrom(x) {
 ### 腾讯二面
 
 1. localStorage的持久登录
-
 * login之后把tocken存在localStorage中
 * store的tocken初始值也从localStorage中获取
 * 第一次如果没有登陆但是login为false，就自动发送登陆请求自动登录
@@ -1142,13 +1142,10 @@ function isPalindrom(x) {
 沟通，团队协作开发，应该在项目之前讨论命名规范，梳理项目逻辑。
 
 3. Eslint和prettier区别？
-
 * Eslint不仅可以可以对代码的语法进行判断然后通过eslint --fix进行自动修改，还可以自定义代码风格
 
 * Prettier只能对做到代码风格的统一，并且不支持灵活的自定义代码风格
-
 4. 虚拟DOM你了解吗？
-
 * 虚拟DOM是什么？
 
 virtual dom实际上是对真实的DOM的映射，是使用JS对象来重构一个DOM从而表达DOM的节点关系和信息
@@ -1174,57 +1171,55 @@ virtual DOM实际上是规范了对DOM的操作。由于对DOM的操作过程实
 ![img](未命名.assets/1460000023649594.png)
 
 5. Vue3和2的区别？
-
 * vue3使用proxy，可以监听对象的所有行为而不是属性，vue2只是使用了object.defineProperty，只能对已经有的数据进行拦截放入dep,所以vue3可以响应式的监听object的新属性和数组长度变化
 
 * **基于 proxy 的响应侦测**
-
+  
   - **Proxy 的优势如下:**
-
+    
     - Proxy 可以直接监听对象而非属性；
     - Proxy 可以直接监听数组的变化；
     - Proxy 有多达 13 种拦截方法,不限于 apply、ownKeys、deleteProperty、has 等等是 Object.defineProperty 不具备的；
     - Proxy 返回的是一个新对象,我们可以只操作新的对象达到目的,而 Object.defineProperty 只能遍历对象属性直接修改；
     - Proxy 作为新标准将受到浏览器厂商重点持续的性能优化，也就是传说中的新标准的性能红利；
-
+    
     **Object.defineProperty 的优势如下:**
-
+    
     - 兼容性好，支持 IE9，而 Proxy 的存在浏览器兼容性问题,而且无法用 polyfill 磨平，因此 Vue 的作者才声明需要等到下个大版本( 3.0 )才能用 Proxy 重写。
 
 * 生命周期的区别
-
+  
   Vue2--------------vue3 
-
+  
   beforeCreate  -> setup() 
-
+  
   created       -> setup() 
-
+  
   beforeMount   -> onBeforeMount 
-
+  
   mounted       -> onMounted 
-
+  
   beforeUpdate  -> onBeforeUpdate 
-
+  
   updated       -> onUpdated 
-
+  
   beforeDestroy -> onBeforeUnmount 
-
+  
   destroyed     -> onUnmounted 
-
+  
   activated     -> onActivated 
-
+  
   deactivated   -> onDeactivated 
-
+  
   errorCaptured -> onErrorCaptured
 
 * 全局API的区别
-
+  
   * 全局对象上的方法单独export便于tree shaking
 
 * v-model实现不同
 
 * 新增一些API,比如teleport
-
 6. 写一个秒针，用CSS动画实现
 
 ```js
@@ -1265,17 +1260,17 @@ virtual DOM实际上是规范了对DOM的操作。由于对DOM的操作过程实
 ```
 
 7. 假设有一排陷阱，每个陷阱里面有一定数量的米，如果老鼠同时偷吃了连续两个相邻陷阱里面的米，就会导致陷阱触发，写一个函数计算老鼠能吃到的最多的米：
-
+   
    eg:
-
+   
    input: [2,33,5,12,56,7,4,90] 33+56+90
-
+   
    output: 179
 
 ```js
 //可以只用两个变量从而进行空间优化
 function eatMost(arr){
-  	if(arr.length === 0) return 0;	
+      if(arr.length === 0) return 0;    
     let dp = new Array(arr.length).fill(0);
     for(let i = 0;i < arr.length;i++){
         if(i === 0){
@@ -1292,19 +1287,13 @@ function eatMost(arr){
 console.log(eatMost([2,33,5,12,56,7,4,90]));
 ```
 
-
-
 ### 虾皮笔试
 
-1. 
-
-![屏幕快照 2021-03-17 下午3.08.22](未命名.assets/屏幕快照 2021-03-17 下午3.08.22.png)
+1. ![屏幕快照 2021-03-17 下午3.08.22](未命名.assets/屏幕快照 2021-03-17 下午3.08.22.png)
 
 输出foo,因为new Boolean生成一个对象，但是Boolean()只是把一个值布尔化，而0对应false,别的数字对应true
 
-2. 
-
-![image-20210320160042126](未命名.assets/image-20210320160042126.png)
+2. ![image-20210320160042126](未命名.assets/image-20210320160042126.png)
 
 NaN === NaN => false NaN和谁都不想等
 
@@ -1314,9 +1303,7 @@ NaN === NaN => false NaN和谁都不想等
 
 42 / +0 => +Infinity 42/-0 => -Infinity 因为+Infinity不等于-Infinity所以返回false
 
-3. 
-
-![image-20210321204717152](未命名.assets/image-20210321204717152.png)
+3. ![image-20210321204717152](未命名.assets/image-20210321204717152.png)
 
 Title
 
@@ -1329,9 +1316,7 @@ alt
 
 但是在旧版本的IE浏览器中，鼠标经过图像时显示的提示文字是alt的内容，而忽略了title属性。
 
-4. 
-
-![image-20210321210549207](未命名.assets/image-20210321210549207.png)
+4. ![image-20210321210549207](未命名.assets/image-20210321210549207.png)
 
 返回-1,因为NaN和自己也不相等，所以找不到
 
@@ -1352,10 +1337,11 @@ alt
 7. 长连接短连接？
 
 8. 满二叉树
-
+   
    节点要不然就有两个子节点，要不然就是叶子节点
 
 9. 快排
+
 10. 单行文本出现省略号
 
 ```css
@@ -1450,12 +1436,12 @@ alt
 ```js
 function getRandoms(count,from,to){
     let arr = [];
-    
+
     for(let i = 0;i < count;i++){
         arr.push(Math.floor(Math.random() * (to - from)) + from);
     }
     return arr;
-    
+
 }
 
 console.log(getRandoms(3,0,10));
@@ -1538,16 +1524,16 @@ b.fn();//=>指向b
 
 let c = {
   fn(){
-  	console.log(this);
+      console.log(this);
   }
 }
 setTimeout(c.fn,0);//=>window
 c.fn();//=>c
 
 let d = {
-	fn:()=>{
-		console.log(this);
-	}
+    fn:()=>{
+        console.log(this);
+    }
 }
 setTimeout(d.fn,0);//=>window
 d.fn();//=>window
@@ -1563,9 +1549,6 @@ d.fn();//=>window
 箭头函数中的this由自己的作用域决定：
 
 * 由于箭头函数没有this,所以在执行的时候自然不能创建this,只能通过作用域链向上查找父级别作用域的this。所以如果父级作用域是全局就指向window
-
-
-
 5. 什么是闭包？
 6. $nextTick的应用
 7. 算法题：二分查找最后一个小于等于target的数组下标

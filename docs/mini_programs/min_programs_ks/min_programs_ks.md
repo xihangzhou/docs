@@ -194,7 +194,7 @@ Page({
     ],
     numberArray: [1, 2, 3, 4]
   },
-  
+
   // 交换objectArray中任意两个item的位置
   switch: function(e) {
     const length = this.data.objectArray.length
@@ -209,7 +209,7 @@ Page({
       objectArray: this.data.objectArray
     })
   },
-  
+
   addToFront: function(e) {
     const length = this.data.objectArray.length
     this.data.objectArray = [{id: length, unique: 'unique_' + length}].concat(this.data.objectArray)
@@ -329,14 +329,14 @@ include 可以将目标文件中除了 `<template/> <wxs/>` 外的整个代码�
 
 表2-1 共同属性
 
-| **属性名**   | **类型**     | **描述**       | **注解**                                 |
-| :----------- | :----------- | :------------- | :--------------------------------------- |
-| id           | String       | 组件的唯一标识 | 整个页面唯一                             |
-| class        | String       | 组件的样式类   | 在对应的 WXSS 中定义的样式类             |
-| style        | String       | 组件的内联样式 | 可以动态设置的内联样式                   |
-| hidden       | Boolean      | 组件是否显示   | 所有组件默认显示                         |
-| data-*       | Any          | 自定义属性     | 组件上触发的事件时，会发送给事件处理函数 |
-| bind*/catch* | EventHandler | 组件的事件     |                                          |
+| **属性名**      | **类型**       | **描述**  | **注解**               |
+|:------------ |:------------ |:------- |:-------------------- |
+| id           | String       | 组件的唯一标识 | 整个页面唯一               |
+| class        | String       | 组件的样式类  | 在对应的 WXSS 中定义的样式类    |
+| style        | String       | 组件的内联样式 | 可以动态设置的内联样式          |
+| hidden       | Boolean      | 组件是否显示  | 所有组件默认显示             |
+| data-*       | Any          | 自定义属性   | 组件上触发的事件时，会发送给事件处理函数 |
+| bind*/catch* | EventHandler | 组件的事件   |                      |
 
 #### WXSS 样式
 
@@ -391,13 +391,13 @@ include 可以将目标文件中除了 `<template/> <wxs/>` 外的整个代码�
 
 目前支持的选择器：
 
-| **类型**     | **选择器** | **样例**      | **样例描述**                                   |
-| :----------- | :--------- | :------------ | :--------------------------------------------- |
-| 类选择器     | .class     | .intro        | 选择所有拥有 class="intro" 的组件              |
-| id选择器     | #id        | #firstname    | 选择拥有 id="firstname" 的组件                 |
-| 元素选择器   | element    | view checkbox | 选择所有文档的 view 组件和所有的 checkbox 组件 |
-| 伪元素选择器 | ::after    | view::after   | 在 view 组件后边插入内容                       |
-| 伪元素选择器 | ::before   | view::before  | 在 view 组件前边插入内容                       |
+| **类型** | **选择器**  | **样例**        | **样例描述**                        |
+|:------ |:-------- |:------------- |:------------------------------- |
+| 类选择器   | .class   | .intro        | 选择所有拥有 class="intro" 的组件        |
+| id选择器  | #id      | #firstname    | 选择拥有 id="firstname" 的组件         |
+| 元素选择器  | element  | view checkbox | 选择所有文档的 view 组件和所有的 checkbox 组件 |
+| 伪元素选择器 | ::after  | view::after   | 在 view 组件后边插入内容                 |
+| 伪元素选择器 | ::before | view::before  | 在 view 组件前边插入内容                 |
 
 权重（与CSS类似）：
 
@@ -670,13 +670,13 @@ App({
 
 2. 程序的生命周期和打开场景
 
-| 参数属性 | 类型     | 描述                                                         |
-| :------- | :------- | :----------------------------------------------------------- |
-| onLaunch | Function | 当小程序初始化完成时，会触发 onLaunch（全局只触发一次）      |
-| onShow   | Function | 当小程序启动，或从后台进入前台显示，会触发 onShow            |
-| onHide   | Function | 当小程序从前台进入后台，会触发 onHide                        |
-| onError  | Function | 当小程序发生脚本错误，或者 API 调用失败时，会触发 onError 并带上错误信息 |
-| 其他字段 | 任意     | 可以添加任意的函数或数据到 Object 参数中，在App实例回调用 this 可以访问 |
+| 参数属性     | 类型       | 描述                                           |
+|:-------- |:-------- |:-------------------------------------------- |
+| onLaunch | Function | 当小程序初始化完成时，会触发 onLaunch（全局只触发一次）             |
+| onShow   | Function | 当小程序启动，或从后台进入前台显示，会触发 onShow                 |
+| onHide   | Function | 当小程序从前台进入后台，会触发 onHide                       |
+| onError  | Function | 当小程序发生脚本错误，或者 API 调用失败时，会触发 onError 并带上错误信息  |
+| 其他字段     | 任意       | 可以添加任意的函数或数据到 Object 参数中，在App实例回调用 this 可以访问 |
 
 其中的生命周期函数可以带参数：
 
@@ -687,24 +687,24 @@ App({
 })
 ```
 
-| 字段                   | 类型   | 描述                                                    |
-| :--------------------- | :----- | :------------------------------------------------------ |
-| path                   | String | 打开小程序的页面路径                                    |
-| query                  | Object | 打开小程序的页面参数query                               |
+| 字段                     | 类型     | 描述                             |
+|:---------------------- |:------ |:------------------------------ |
+| path                   | String | 打开小程序的页面路径                     |
+| query                  | Object | 打开小程序的页面参数query                |
 | scene                  | Number | 打开小程序的场景值，详细场景值请参考小程序官方文档      |
-| shareTicket            | String | shareTicket，详见小程序官方文档                         |
-| referrerInfo           | Object | 当场景为由从另一个小程序或公众号或App打开时，返回此字段 |
-| referrerInfo.appId     | String | 来源小程序或公众号或App的 appId，详见下方说明           |
-| referrerInfo.extraData | Object | 来源小程序传过来的数据，scene=1037或1038时支持          |
+| shareTicket            | String | shareTicket，详见小程序官方文档          |
+| referrerInfo           | Object | 当场景为由从另一个小程序或公众号或App打开时，返回此字段  |
+| referrerInfo.appId     | String | 来源小程序或公众号或App的 appId，详见下方说明    |
+| referrerInfo.extraData | Object | 来源小程序传过来的数据，scene=1037或1038时支持 |
 
-| 场景值 | 场景               | appId信息含义                         |
-| :----- | :----------------- | :------------------------------------ |
-| 1020   | 公众号 profile     | 页相关小程序列表 返回来源公众号 appId |
-| 1035   | 公众号自定义菜单   | 返回来源公众号 appId                  |
-| 1036   | App 分享消息卡片   | 返回来源应用 appId                    |
-| 1037   | 小程序打开小程序   | 返回来源小程序 appId                  |
-| 1038   | 从另一个小程序返回 | 返回来源小程序 appId                  |
-| 1043   | 公众号模板消息     | 返回来源公众号 appId                  |
+| 场景值  | 场景          | appId信息含义              |
+|:---- |:----------- |:---------------------- |
+| 1020 | 公众号 profile | 页相关小程序列表 返回来源公众号 appId |
+| 1035 | 公众号自定义菜单    | 返回来源公众号 appId          |
+| 1036 | App 分享消息卡片  | 返回来源应用 appId           |
+| 1037 | 小程序打开小程序    | 返回来源小程序 appId          |
+| 1038 | 从另一个小程序返回   | 返回来源小程序 appId          |
+| 1043 | 公众号模板消息     | 返回来源公众号 appId          |
 
 3. 小程序全局数据
 
@@ -762,19 +762,19 @@ Page({
 
 3. 生命周期
 
-| 参数属性          | 类型     | 描述                                                         |
-| :---------------- | :------- | :----------------------------------------------------------- |
-| data              | Object   | 页面的初始数据                                               |
+| 参数属性              | 类型       | 描述                                           |
+|:----------------- |:-------- |:-------------------------------------------- |
+| data              | Object   | 页面的初始数据                                      |
 | onLoad            | Function | 生命周期函数--监听页面加载，触发时机早于onShow和onReady，只最开始触发一次 |
-| onReady           | Function | 生命周期函数--监听页面初次渲染完成，只触发一次               |
-| onShow            | Function | 生命周期函数--监听页面显示，触发事件早于onReady              |
-| onHide            | Function | 生命周期函数--监听页面隐藏                                   |
-| onUnload          | Function | 生命周期函数--监听页面卸载                                   |
-| onPullDownRefresh | Function | 页面相关事件处理函数--监听用户下拉动作                       |
-| onReachBottom     | Function | 页面上拉触底事件的处理函数                                   |
-| onShareAppMessage | Function | 用户点击右上角转发                                           |
-| onPageScroll      | Function | 页面滚动触发事件的处理函数                                   |
-| 其他              | Any      | 可以添加任意的函数或数据，在Page实例的其他函数中用 this 可以访问 |
+| onReady           | Function | 生命周期函数--监听页面初次渲染完成，只触发一次                     |
+| onShow            | Function | 生命周期函数--监听页面显示，触发事件早于onReady                 |
+| onHide            | Function | 生命周期函数--监听页面隐藏                               |
+| onUnload          | Function | 生命周期函数--监听页面卸载                               |
+| onPullDownRefresh | Function | 页面相关事件处理函数--监听用户下拉动作                         |
+| onReachBottom     | Function | 页面上拉触底事件的处理函数                                |
+| onShareAppMessage | Function | 用户点击右上角转发                                    |
+| onPageScroll      | Function | 页面滚动触发事件的处理函数                                |
+| 其他                | Any      | 可以添加任意的函数或数据，在Page实例的其他函数中用 this 可以访问        |
 
 ```javascript
 // 一个实例，其中onLoad生命周期的参数中自动解析了url中的参数被放在了option中
@@ -847,7 +847,6 @@ Page({
 * 由于setData是需要两个线程的一些通信消耗，为了提高性能，每次设置的数据不应超过1024kB。
 
 * 不要把data中的任意一项的value设为undefined，否则可能会有引起一些不可预料的bug。
-
 5. 页面的用户行为
 
 小程序宿主环境提供了四个和页面相关的用户行为回调：
@@ -879,7 +878,6 @@ onShareAppMessage: function () {
 ```
 
 6. 页面跳转和路由
-
 * 普通页面跳转
 
 wx.navigateTo推入新页面，新的页面是进入页面栈栈顶，这个栈最多只能有10个元素，多了就不能继续推了。
@@ -912,27 +910,27 @@ wx.switchTab({ url: 'pageF' })，如果页面栈里面只有普通页面，就�
 
 表3-5 页面路由触发方式及页面生命周期函数的对应关系
 
-| 路由方式        | 触发时机                   | 路由前页面生命周期 | 路由后页面生命周期 |
-| :-------------- | :------------------------- | :----------------- | :----------------- |
-| 初始化          | 小程序打开的第一个页面     |                    | onLoad, onShow     |
-| 打开新页面 调用 | API wx.navigateTo          | onHide             | onLoad, onShow     |
-| 页面重定向 调用 | API wx.redirectTo          | onUnload           | onLoad, onShow     |
-| 页面返回 调用   | API wx.navigateBack        | onUnload           | onShow             |
-| Tab             | 切换 调用 API wx.switchTab | 请参考下表         | 请参考下表         |
-| 重启动          | 调用 API wx.reLaunch       | onUnload           | onLoad, onShow     |
+| 路由方式     | 触发时机                   | 路由前页面生命周期 | 路由后页面生命周期      |
+|:-------- |:---------------------- |:--------- |:-------------- |
+| 初始化      | 小程序打开的第一个页面            |           | onLoad, onShow |
+| 打开新页面 调用 | API wx.navigateTo      | onHide    | onLoad, onShow |
+| 页面重定向 调用 | API wx.redirectTo      | onUnload  | onLoad, onShow |
+| 页面返回 调用  | API wx.navigateBack    | onUnload  | onShow         |
+| Tab      | 切换 调用 API wx.switchTab | 请参考下表     | 请参考下表          |
+| 重启动      | 调用 API wx.reLaunch     | onUnload  | onLoad, onShow |
 
 Tab 切换对应的生命周期（以 A、B 页面为 Tabbar 页面，C 是从 A 页面打开的页面，D 页面是从 C 页面打开的页面为例）如下表所示，注意Tabbar页面初始化之后不会被销毁。
 
-| 当前页面      | 路由后页面  | 触发的生命周期（按顺序）                           |
-| :------------ | :---------- | :------------------------------------------------- |
-| A             | A           | 无                                                 |
-| A             | B           | A.onHide(), B.onLoad(), B.onShow()                 |
-| A             | B(再次打开) | A.onHide(), B.onShow()                             |
-| C             | A           | C.onUnload(), A.onShow()                           |
-| C             | B           | C.onUnload(), B.onLoad(), B.onShow()               |
-| D             | B           | D.onUnload(), C.onUnload(), B.onLoad(), B.onShow() |
-| D(从转发进入) | A           | D.onUnload(), A.onLoad(), A.onShow()               |
-| D(从转发进入) | B           | D.onUnload(), B.onLoad(), B.onShow()               |
+| 当前页面     | 路由后页面   | 触发的生命周期（按顺序）                                       |
+|:-------- |:------- |:-------------------------------------------------- |
+| A        | A       | 无                                                  |
+| A        | B       | A.onHide(), B.onLoad(), B.onShow()                 |
+| A        | B(再次打开) | A.onHide(), B.onShow()                             |
+| C        | A       | C.onUnload(), A.onShow()                           |
+| C        | B       | C.onUnload(), B.onLoad(), B.onShow()               |
+| D        | B       | D.onUnload(), C.onUnload(), B.onLoad(), B.onShow() |
+| D(从转发进入) | A       | D.onUnload(), A.onLoad(), A.onShow()               |
+| D(从转发进入) | B       | D.onUnload(), B.onLoad(), B.onShow()               |
 
 #### 组件
 
@@ -941,14 +939,14 @@ Tab 切换对应的生命周期（以 A、B 页面为 Tabbar 页面，C 是从 A
 
 所有组件都拥有下表列举的属性内容。
 
-| 属性名         | 类型         | 描述           | 其他说明                                 |
-| :------------- | :----------- | :------------- | :--------------------------------------- |
-| id             | String       | 组件的唯一标示 | 保持整个页面唯一                         |
-| class          | String       | 组件的样式类   | 在对应的WXSS中定义的样式类               |
-| style          | String       | 组件的内联样式 | 可以通过数据绑定进行动态设置的内联样式   |
-| hidden         | Boolean      | 组件是否显示   | 所有组件默认显示                         |
-| data-*         | Any          | 自定义属性     | 组件上触发的事件时，会发送给事件处理函数 |
-| bind */ catch* | EventHandler | 事件           | 详情见3.5节                              |
+| 属性名            | 类型           | 描述      | 其他说明                 |
+|:-------------- |:------------ |:------- |:-------------------- |
+| id             | String       | 组件的唯一标示 | 保持整个页面唯一             |
+| class          | String       | 组件的样式类  | 在对应的WXSS中定义的样式类      |
+| style          | String       | 组件的内联样式 | 可以通过数据绑定进行动态设置的内联样式  |
+| hidden         | Boolean      | 组件是否显示  | 所有组件默认显示             |
+| data-*         | Any          | 自定义属性   | 组件上触发的事件时，会发送给事件处理函数 |
+| bind */ catch* | EventHandler | 事件      | 详情见3.5节              |
 
 #### API
 
@@ -962,10 +960,10 @@ Tab 切换对应的生命周期（以 A、B 页面为 Tabbar 页面，C 是从 A
 
 API接口回调说明
 
-| 参数名字 | 类型     | 必填 | 描述                                             |
-| :------- | :------- | :--- | :----------------------------------------------- |
-| success  | Function | 否   | 接口调用成功的回调函数                           |
-| fail     | Function | 否   | 接口调用失败的回调函数                           |
+| 参数名字     | 类型       | 必填  | 描述                       |
+|:-------- |:-------- |:--- |:------------------------ |
+| success  | Function | 否   | 接口调用成功的回调函数              |
+| fail     | Function | 否   | 接口调用失败的回调函数              |
 | complete | Function | 否   | 接口调用结束的回调函数（调用成功、失败都会执行） |
 
 #### 事件
@@ -992,46 +990,46 @@ API接口回调说明
 
 常见事件类型：
 
-| 类型               | 触发条件                                                     |
-| :----------------- | :----------------------------------------------------------- |
-| touchstart         | 手指触摸动作开始                                             |
-| touchmove          | 手指触摸后移动                                               |
-| touchcancel        | 手指触摸动作被打断，如来电提醒，弹窗                         |
-| touchend           | 手指触摸动作结束                                             |
-| tap                | 手指触摸后马上离开                                           |
+| 类型                 | 触发条件                                            |
+|:------------------ |:----------------------------------------------- |
+| touchstart         | 手指触摸动作开始                                        |
+| touchmove          | 手指触摸后移动                                         |
+| touchcancel        | 手指触摸动作被打断，如来电提醒，弹窗                              |
+| touchend           | 手指触摸动作结束                                        |
+| tap                | 手指触摸后马上离开                                       |
 | longpress          | 手指触摸后，超过350ms再离开，如果指定了事件回调函数并触发了这个事件，tap事件将不被触发 |
-| longtap            | 手指触摸后，超过350ms再离开（推荐使用longpress事件代替）     |
-| transitionend      | 会在 WXSS transition 或 wx.createAnimation 动画结束后触发    |
-| animationstart     | 会在一个 WXSS animation 动画开始时触发                       |
+| longtap            | 手指触摸后，超过350ms再离开（推荐使用longpress事件代替）             |
+| transitionend      | 会在 WXSS transition 或 wx.createAnimation 动画结束后触发 |
+| animationstart     | 会在一个 WXSS animation 动画开始时触发                     |
 | animationiteration | 会在一个 WXSS animation 一次迭代结束时触发                   |
-| animationend       | 会在一个 WXSS animation 动画完成时触发                       |
+| animationend       | 会在一个 WXSS animation 动画完成时触发                     |
 
 事件对象属性
 
-| 属性           | 类型    | 说明                                         |
-| :------------- | :------ | :------------------------------------------- |
-| type           | String  | 事件类型                                     |
-| timeStamp      | Integer | 页面打开到触发事件所经过的毫秒数             |
-| target         | Object  | 触发该事件的源头组件的一些属性值集合         |
-| currentTarget  | Object  | 当前组件的一些属性值集合                     |
-| detail         | Object  | 额外的信息                                   |
+| 属性             | 类型      | 说明                     |
+|:-------------- |:------- |:---------------------- |
+| type           | String  | 事件类型                   |
+| timeStamp      | Integer | 页面打开到触发事件所经过的毫秒数       |
+| target         | Object  | 触发该事件的源头组件的一些属性值集合     |
+| currentTarget  | Object  | 当前组件的一些属性值集合           |
+| detail         | Object  | 额外的信息                  |
 | touches        | Array   | 触摸事件，当前停留在屏幕中的触摸点信息的数组 |
-| changedTouches | Array   | 触摸事件，当前变化的触摸点信息的数组         |
+| changedTouches | Array   | 触摸事件，当前变化的触摸点信息的数组     |
 
 关于target和currentTarget对象的详细参数
 
-| 属性    | 类型   | 说明                                        |
-| :------ | :----- | :------------------------------------------ |
-| id      | String | 当前组件的id                                |
-| tagName | String | 当前组件的类型                              |
+| 属性      | 类型     | 说明                       |
+|:------- |:------ |:------------------------ |
+| id      | String | 当前组件的id                  |
+| tagName | String | 当前组件的类型                  |
 | dataset | Object | 当前组件上由data-开头的自定义属性组成的集合 |
 
 关于touch和changedTouches对象的详细参数
 
-| 属性             | 类型   | 说明                                                         |
-| :--------------- | :----- | :----------------------------------------------------------- |
-| identifier       | Number | 触摸点的标识符                                               |
-| pageX, pageY     | Number | 距离文档左上角的距离，文档的左上角为原点 ，横向为X轴，纵向为Y轴 |
+| 属性               | 类型     | 说明                                  |
+|:---------------- |:------ |:----------------------------------- |
+| identifier       | Number | 触摸点的标识符                             |
+| pageX, pageY     | Number | 距离文档左上角的距离，文档的左上角为原点 ，横向为X轴，纵向为Y轴   |
 | clientX, clientY | Number | 距离页面可显示区域（屏幕除去导航条）左上角距离，横向为X轴，纵向为Y轴 |
 
 ##### 事件绑定与冒泡捕获
@@ -1137,16 +1135,16 @@ wx.request({
 })
 ```
 
-| **参数名** | **类型**      | **必填** | **默认值** | **描述**                                                     |
-| :--------- | :------------ | :------- | :--------- | :----------------------------------------------------------- |
-| url        | String        | 是       |            | 开发者服务器接口地址                                         |
-| data       | Object/String | 否       |            | 请求的参数                                                   |
-| header     | Object        | 否       |            | 设置请求的 header，header 中不能设置 Referer，默认header['content-type'] = 'application/json' |
-| method     | String        | 否       | GET        | （需大写）有效值：OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT |
-| dataType   | String        | 否       | json       | 回包的内容格式，如果设为json，会尝试对返回的数据做一次 JSON解析 |
-| success    | Function      | 否       |            | 收到开发者服务成功返回的回调函数，其参数是一个Object，见表4-2。 |
-| fail       | Function      | 否       |            | 接口调用失败的回调函数                                       |
-| complete   | Function      | 否       |            | 接口调用结束的回调函数（调用成功、失败都会执行）             |
+| **参数名**  | **类型**        | **必填** | **默认值** | **描述**                                                                          |
+|:-------- |:------------- |:------ |:------- |:------------------------------------------------------------------------------- |
+| url      | String        | 是      |         | 开发者服务器接口地址                                                                      |
+| data     | Object/String | 否      |         | 请求的参数                                                                           |
+| header   | Object        | 否      |         | 设置请求的 header，header 中不能设置 Referer，默认header['content-type'] = 'application/json' |
+| method   | String        | 否      | GET     | （需大写）有效值：OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT                  |
+| dataType | String        | 否      | json    | 回包的内容格式，如果设为json，会尝试对返回的数据做一次 JSON解析                                            |
+| success  | Function      | 否      |         | 收到开发者服务成功返回的回调函数，其参数是一个Object，见表4-2。                                            |
+| fail     | Function      | 否      |         | 接口调用失败的回调函数                                                                     |
+| complete | Function      | 否      |         | 接口调用结束的回调函数（调用成功、失败都会执行）                                                        |
 
 ##### 服务器接口
 
@@ -1228,10 +1226,10 @@ wx.request({
 
 小程序端收到回包后会触发success回调，同时回调会带上一个Object信息，wx.request的success回调参数返回参数：
 
-| **参数名** | **类型**      | **描述**                                |
-| :--------- | :------------ | :-------------------------------------- |
-| data       | Object/String | 开发者服务器返回的数据                  |
-| statusCode | Number        | 开发者服务器返回的 HTTP 状态码          |
+| **参数名**    | **类型**        | **描述**                         |
+|:---------- |:------------- |:------------------------------ |
+| data       | Object/String | 开发者服务器返回的数据                    |
+| statusCode | Number        | 开发者服务器返回的 HTTP 状态码             |
 | header     | Object        | 开发者服务器返回的 HTTP Response Header |
 
 尤其注意，只要成功收到服务器返回，无论HTTP状态码是多少都会进入success回调。因此开发者自己通过对回包的返回码进行判断后再执行后续的业务逻辑。
@@ -1393,10 +1391,10 @@ Page({
 
 带上AppId和AppSecret去换。返回字段如下：
 
-| **字段**    | **描述**                                                     |
-| :---------- | :----------------------------------------------------------- |
-| openid      | 微信用户的唯一标识                                           |
-| session_key | 会话密钥：开发者服务器和微信服务器的会话密钥                 |
+| **字段**      | **描述**                             |
+|:----------- |:---------------------------------- |
+| openid      | 微信用户的唯一标识                          |
+| session_key | 会话密钥：开发者服务器和微信服务器的会话密钥             |
 | unionid     | 用户在微信开放平台的唯一标识符。本字段在满足一定条件的情况下才返回。 |
 
 4. 绑定微信用户身份id和业务用户身份
@@ -1407,7 +1405,7 @@ Page({
 
 用户登录成功之后，开发者服务器需要生成会话密钥SessionId，在服务端保持SessionId对应的用户身份信息，同时把SessionId返回给小程序。小程序后续发起的请求中携带上SessionId，开发者服务器就可以通过服务器端的Session信息查询到当前登录用户的身份，这样我们就不需要每次都重新获取code，省去了很多通信消耗。
 
-#### 本地数据缓存 
+#### 本地数据缓存
 
 ##### 读写本地缓存
 
@@ -1450,12 +1448,12 @@ try{
 
 wx.getStorage/wx.getStorageSync详细参数
 
-| **参数名** | **类型** | **必填** | **描述**                                                     |
-| :--------- | :------- | :------- | :----------------------------------------------------------- |
-| key        | String   | 是       | 本地缓存中指定的 key                                         |
-| success    | Function | 否       | 异步接口调用成功的回调函数，回调参数格式: {data: key对应的内容} |
-| fail       | Function | 否       | 异步接口调用失败的回调函数                                   |
-| complete   | Function | 否       | 异步接口调用结束的回调函数（调用成功、失败都会执行）         |
+| **参数名**  | **类型**   | **必填** | **描述**                                 |
+|:-------- |:-------- |:------ |:-------------------------------------- |
+| key      | String   | 是      | 本地缓存中指定的 key                           |
+| success  | Function | 否      | 异步接口调用成功的回调函数，回调参数格式: {data: key对应的内容} |
+| fail     | Function | 否      | 异步接口调用失败的回调函数                          |
+| complete | Function | 否      | 异步接口调用结束的回调函数（调用成功、失败都会执行）             |
 
 ```javascript
 // 异步调用缓存
@@ -1499,13 +1497,13 @@ try{
 
 wx.setStorage/wx.setStorageSync详细参数
 
-| **参数名** | **类型**      | **必填** | **描述**                                             |
-| :--------- | :------------ | :------- | :--------------------------------------------------- |
-| key        | String        | 是       | 本地缓存中指定的 key                                 |
-| data       | Object/String | 是       | 需要存储的内容                                       |
-| success    | Function      | 否       | 异步接口调用成功的回调函数                           |
-| fail       | Function      | 否       | 异步接口调用失败的回调函数                           |
-| complete   | Function      | 否       | 异步接口调用结束的回调函数（调用成功、失败都会执行） |
+| **参数名**  | **类型**        | **必填** | **描述**                     |
+|:-------- |:------------- |:------ |:-------------------------- |
+| key      | String        | 是      | 本地缓存中指定的 key               |
+| data     | Object/String | 是      | 需要存储的内容                    |
+| success  | Function      | 否      | 异步接口调用成功的回调函数              |
+| fail     | Function      | 否      | 异步接口调用失败的回调函数              |
+| complete | Function      | 否      | 异步接口调用结束的回调函数（调用成功、失败都会执行） |
 
 ##### 缓存限制和隔离
 
@@ -1748,7 +1746,6 @@ App({
 * 如果不是页面根组件，需要根据组件节点上的属性定义，来设置组件的属性值；
 
 * 当组件实例被展示在页面上时，触发组件的attached 生命周期函数，如果Shadw Tree中有其他组件，也逐个触发它们的生命周期函数。
-
 3. 组件通信
 
 不同组件实例间的通信有WXML属性值传递、事件系统、selectComponent和relations等方式。其中，WXML属性值传递是从父组件向子组件的基本通信方式，而事件系统是从子组件向父组件的基本通信方式。
@@ -1873,7 +1870,6 @@ Component({
 ```
 
 3. 注意事项
-
 * 自定义组件的标签名只是小写字母，中划线和下划线的组合
 * 自定义组件和页面所在项目根目录名不能以“wx-”为前缀，否则会报错
 * 在组件wxss中不应使用ID选择器、属性选择器和标签名选择器。
@@ -2030,7 +2026,7 @@ Component({
     },
     myProperty2: String // 简化的定义方式
   },
-  
+
   data: {}, // 私有数据，可用于模板渲染
 
   lifetimes: {
@@ -2107,14 +2103,14 @@ Component({
 
 ###### 组件生命周期
 
-| 生命周期 | 参数           | 描述                                     | 最低版本                                                     |
-| :------- | :------------- | :--------------------------------------- | :----------------------------------------------------------- |
-| created  | 无             | 在组件实例刚刚被创建时执行               | [1.6.3](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
-| attached | 无             | 在组件实例进入页面节点树时执行           | [1.6.3](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
-| ready    | 无             | 在组件在视图层布局完成后执行             | [1.6.3](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
-| moved    | 无             | 在组件实例被移动到节点树另一个位置时执行 | [1.6.3](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
-| detached | 无             | 在组件实例被从页面节点树移除时执行       | [1.6.3](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
-| error    | `Object Error` | 每当组件方法抛出错误时执行               | [2.4.1](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
+| 生命周期     | 参数             | 描述                   | 最低版本                                                                                   |
+|:-------- |:-------------- |:-------------------- |:-------------------------------------------------------------------------------------- |
+| created  | 无              | 在组件实例刚刚被创建时执行        | [1.6.3](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
+| attached | 无              | 在组件实例进入页面节点树时执行      | [1.6.3](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
+| ready    | 无              | 在组件在视图层布局完成后执行       | [1.6.3](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
+| moved    | 无              | 在组件实例被移动到节点树另一个位置时执行 | [1.6.3](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
+| detached | 无              | 在组件实例被从页面节点树移除时执行    | [1.6.3](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
+| error    | `Object Error` | 每当组件方法抛出错误时执行        | [2.4.1](https://developers.weixin.qq.com/miniprogram/dev/framework/compatibility.html) |
 
 ###### [behaviors](https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/behaviors.html)
 
@@ -2388,4 +2384,7 @@ https://developers.weixin.qq.com/miniprogram/dev/framework/subpackages.html
 ### 开发模式
 
 https://developers.weixin.qq.com/miniprogram/dev/devtools/ext.html
+
+## 小程序云开发
+
 
